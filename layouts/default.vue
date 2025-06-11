@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen flex-col">
+  <div class="flex min-h-screen flex-col bg-white">
     <navBar />
 
     <main class="flex-1">
@@ -16,10 +16,5 @@
 const year = new Date().getFullYear()
 </script>
 <style>
-body {
-  background-color: #ffffff;
-}
-footer {
-  background-color: #f1f1f1;
-}
+
 </style>
