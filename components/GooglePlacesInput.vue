@@ -15,12 +15,20 @@ const predictions = ref<google.maps.places.AutocompletePrediction[]>([])
 const loading = ref(false)
 const debounceTimer = ref<NodeJS.Timeout | null>(null)
 
-const { public: { googlePlacesApiKey } } = useRuntimeConfig()
+const isSelectionInProgress = ref(false)
 
 // --- Logique d'autocomplétion ---
 watch(searchTerm, (newVal) => {
   emit('update:modelValue', newVal)
 
+  // 1. Si le drapeau est levé, on l'abaisse et on s'arrête là.
+  // La recherche est court-circuitée.
+  if (isSelectionInProgress.value) {
+    isSelectionInProgress.value = false
+    return
+  }
+
+  // Si le drapeau n'est pas levé, on procède à la recherche normalement.
   if (debounceTimer.value) {
     clearTimeout(debounceTimer.value)
   }
@@ -28,7 +36,6 @@ watch(searchTerm, (newVal) => {
     predictions.value = []
     return
   }
-
   debounceTimer.value = setTimeout(async () => {
     loading.value = true
     try {
@@ -51,16 +58,23 @@ watch(searchTerm, (newVal) => {
   }, 300)
 })
 
+watch(() => props.modelValue, (newValueFromParent) => {
+  // Si la valeur du parent est différente de celle de notre input, on met à jour.
+  // Cela synchronise le composant avec les changements externes (comme l'URL).
+  if (newValueFromParent !== searchTerm.value) {
+    searchTerm.value = newValueFromParent
+  }
+})
+
 // --- Quand l'utilisateur sélectionne un lieu ---
 function selectPlace(place: google.maps.places.AutocompletePrediction) {
-  // On met à jour l'input avec la description principale du lieu
+  // On lève le drapeau AVANT de modifier searchTerm.
+  isSelectionInProgress.value = true
+
   const mainText = place.structured_formatting?.main_text ?? place.description ?? '';
   searchTerm.value = mainText;
+  predictions.value = []; // On ferme la liste immédiatement
 
-  // On vide la liste des prédictions
-  predictions.value = []
-
-  // On notifie le parent du lieu sélectionné (si besoin de plus de détails)
   emit('place_changed', place)
 }
 
