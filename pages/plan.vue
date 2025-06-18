@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import GooglePlacesInput from '~/components/GooglePlacesInput.vue'
 
 const route = useRoute()
 const departure = ref('')
@@ -10,19 +11,6 @@ const returnDate = ref('21/07/25')
 const budget = ref('High')
 const takeRoadTrip = ref(true)
 const travelStyle = ref('Confort')
-
-const departureInputRef = ref<HTMLInputElement | null>(null)
-const destinationInputRef = ref<HTMLInputElement | null>(null)
-
-// --- Utilisation des composables ---
-// Un pour chaque input
-useGooglePlaces(departureInputRef, (place) => {
-  if (place.name) departure.value = place.name
-})
-
-useGooglePlaces(destinationInputRef, (place) => {
-  if (place.name) destination.value = place.name
-})
 
 onMounted(() => {
   if (route.query.departure) {
@@ -57,11 +45,20 @@ function generateItinerary() {
           <div class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
             <div>
               <label for="departure" class="block text-sm font-medium text-gray-700">Departure</label>
-              <input v-model="departure" ref="departureInputRef" type="text" id="departure" class="mt-1 block w-full rounded-md text-gray-700 border-gray-300 px-4 py-3 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+              <GooglePlacesInput
+                  v-model="departure"
+                  id="departure"
+                  class="mt-1 block w-full rounded-md text-gray-700 border-gray-300 px-4 py-3 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+              />
             </div>
             <div>
               <label for="destination" class="block text-sm font-medium text-gray-700">Destination(s)</label>
-              <input v-model="destination" ref="destinationInputRef" placeholder="Tokyo, Osaka" type="text" id="destination" class="mt-1 block w-full rounded-md text-gray-700 border-gray-300 px-4 py-3 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+              <GooglePlacesInput
+                  v-model="destination"
+                  id="destination"
+                  placeholder="Tokyo, Osaka"
+                  class="mt-1 block w-full rounded-md text-gray-700 border-gray-300 px-4 py-3 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+              />
             </div>
           </div>
 

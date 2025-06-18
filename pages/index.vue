@@ -1,27 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import GooglePlacesInput from '~/components/GooglePlacesInput.vue'
 
 // 1. Initialiser la ref avec une chaîne vide au lieu de 'Paris'
 const departureCity = ref('')
-const departureInputRef = ref<HTMLInputElement | null>(null)
 const router = useRouter()
 
-// On utilise notre composable
-useGooglePlaces(departureInputRef, (place) => {
-  // Quand un lieu est sélectionné, on met à jour notre v-model
-  if (place.name) {
-    departureCity.value = place.name
-  }
-})
-
 function startPlanning() {
-  // 2. Déterminer la ville à envoyer.
-  // Si l'utilisateur a tapé quelque chose (departureCity.value n'est pas vide), on l'utilise.
-  // Sinon, on utilise 'Paris' comme valeur par défaut.
   const cityToSend = departureCity.value || 'Paris';
-
-  // On navigue vers la page /plan en passant la ville déterminée
   router.push({ path: '/plan', query: { departure: cityToSend } })
 }
 </script>
@@ -47,10 +34,8 @@ function startPlanning() {
                 <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h7.5" />
               </svg>
             </div>
-            <!-- 3. Ajouter l'attribut placeholder -->
-            <input
+            <GooglePlacesInput
                 v-model="departureCity"
-                type="text"
                 placeholder="Paris"
                 class="w-full rounded-full border-gray-300 py-3 pl-10 pr-4 text-gray-900 focus:ring-2 focus:ring-inset focus:ring-teal-500"
             />

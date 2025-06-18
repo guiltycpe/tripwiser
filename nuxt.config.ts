@@ -10,8 +10,10 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
   ],
   runtimeConfig: {
+    googlePlacesApiKey: process.env.NUXT_PUBLIC_GOOGLE_PLACES_API_KEY,
+    geoapifyApiKey: process.env.GEOAPIFY_API_KEY,
     public: {
-      googlePlacesApiKey: process.env.NUXT_PUBLIC_GOOGLE_PLACES_API_KEY
+
     }
   }
 })
