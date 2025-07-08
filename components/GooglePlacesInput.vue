@@ -17,47 +17,6 @@ const debounceTimer = ref<NodeJS.Timeout | null>(null)
 
 const isSelectionInProgress = ref(false)
 
-// --- Logique d'autocomplétion ---
-watch(searchTerm, (newVal) => {
-  emit('update:modelValue', newVal)
-
-  // 1. Si le drapeau est levé, on l'abaisse et on s'arrête là.
-  // La recherche est court-circuitée.
-  if (isSelectionInProgress.value) {
-    isSelectionInProgress.value = false
-    return
-  }
-
-  // Si le drapeau n'est pas levé, on procède à la recherche normalement.
-  if (debounceTimer.value) {
-    clearTimeout(debounceTimer.value)
-  }
-  if (!newVal) {
-    predictions.value = []
-    return
-  }
-  debounceTimer.value = setTimeout(async () => {
-    loading.value = true
-    try {
-      // ===== MODIFICATION PRINCIPALE ICI =====
-      // On appelle notre propre API, pas celle de Google directement.
-      const data = await $fetch<google.maps.places.AutocompletePrediction[]>(`/api/places`, {
-        // On passe le terme de recherche en paramètre
-        params: { input: newVal }
-      })
-
-      predictions.value = data
-      // =======================================
-
-    } catch (error) {
-      console.error('Failed to fetch places from our API:', error)
-      predictions.value = []
-    } finally {
-      loading.value = false
-    }
-  }, 300)
-})
-
 watch(() => props.modelValue, (newValueFromParent) => {
   // Si la valeur du parent est différente de celle de notre input, on met à jour.
   // Cela synchronise le composant avec les changements externes (comme l'URL).
@@ -66,15 +25,50 @@ watch(() => props.modelValue, (newValueFromParent) => {
   }
 })
 
+function handleInput(event: Event) {
+  const inputValue = (event.target as HTMLInputElement).value
+  // On met à jour nos refs manuellement
+  searchTerm.value = inputValue
+  emit('update:modelValue', inputValue)
+
+  // On court-circuite la recherche si une sélection est en cours (utile si on retape juste après un clic)
+  if (isSelectionInProgress.value) {
+    isSelectionInProgress.value = false
+    return
+  }
+
+  // On garde la logique de debounce et de recherche ici
+  if (debounceTimer.value) {
+    clearTimeout(debounceTimer.value)
+  }
+  if (!inputValue) {
+    predictions.value = []
+    return
+  }
+  debounceTimer.value = setTimeout(async () => {
+    loading.value = true
+    try {
+      const data = await $fetch<any[]>(`/api/places`, { params: { input: inputValue } })
+      // On s'assure de ne pas afficher la liste si l'utilisateur a déjà fait une sélection
+      if (!isSelectionInProgress.value) {
+        predictions.value = data
+      }
+    } catch (error) {
+      console.error('Failed to fetch places from our API:', error)
+      predictions.value = []
+    } finally {
+      loading.value = false
+    }
+  }, 300)
+}
+
 // --- Quand l'utilisateur sélectionne un lieu ---
-function selectPlace(place: google.maps.places.AutocompletePrediction) {
-  // On lève le drapeau AVANT de modifier searchTerm.
+function selectPlace(place: any) {
   isSelectionInProgress.value = true
-
-  const mainText = place.structured_formatting?.main_text ?? place.description ?? '';
-  searchTerm.value = mainText;
-  predictions.value = []; // On ferme la liste immédiatement
-
+  const mainText = place.structured_formatting?.main_text ?? place.description ?? ''
+  searchTerm.value = mainText
+  emit('update:modelValue', mainText) // On notifie aussi le parent !
+  predictions.value = []
   emit('place_changed', place)
 }
 
@@ -87,7 +81,8 @@ function closePredictions() {
 <template>
   <div class="relative w-full">
     <input
-        v-model="searchTerm"
+        :value="searchTerm"
+        @input="handleInput"
         type="text"
         :placeholder="placeholder"
         class="w-full"
