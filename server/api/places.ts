@@ -27,9 +27,6 @@ export default defineEventHandler(async (event: H3Event) => {
         const response = await $fetch<{ results: any[] }>(url)
 
         if (response.results && response.results.length > 0) {
-
-            // --- C'EST ICI QUE LA MAGIE OPÈRE ---
-
             const uniqueResults = response.results.reduce((accumulator, currentItem) => {
                 // 1. On formate la description comme on veut l'afficher
                 const city = currentItem.city || currentItem.name
@@ -39,7 +36,7 @@ export default defineEventHandler(async (event: H3Event) => {
                 // 2. On vérifie si un lieu avec la même description existe déjà dans notre liste finale
                 const isDuplicate = accumulator.some(item => item.description === description)
 
-                // 3. Si ce n'est PAS un doublon, on l'ajoute à notre liste !
+                // 3. Si ce n'est PAS un doublon, on l'ajoute à notre liste 
                 if (!isDuplicate) {
                     accumulator.push({
                         description: description,
