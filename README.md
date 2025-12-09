@@ -1,75 +1,56 @@
-# Nuxt Minimal Starter
+# ✈️ TripWiser
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+![Status](https://img.shields.io/badge/Status-Work_in_Progress-yellow)
+![Tech](https://img.shields.io/badge/Stack-Nuxt.js_|_Vue.js_|_APIs-00C58E)
 
-## Setup
+**TripWiser** is a modular web application designed to simplify travel planning by generating personalized itineraries based on budget and preferences.
 
-Make sure to install dependencies:
+> 🚧 **Note :** This project is currently under active development. It represents my playground for mastering **Nuxt.js**, **API integration**, and **Modern Web Architecture**.
+
+## 🎯 Project Goal
+The main goal of TripWiser is to solve the "fragmentation problem" in travel planning. Instead of visiting 10 different sites, users get a centralized, AI-assisted plan.
+
+From a technical perspective, I am building this to demonstrate:
+- **Headless/API-centric Architecture:** Consuming external data sources efficiently.
+- **Frontend State Management:** Using Vue ecosystem tools.
+- **Modern UI/UX:** Creating a responsive interface with Nuxt.
+
+## 🛠️ Tech Stack
+
+- **Framework:** [Nuxt.js](https://nuxt.com/) (Vue.js)
+- **Language:** JavaScript / TypeScript
+- **Styling:** CSS / Tailwind CSS (Work in progress)
+- **Data:** REST API integration
+- **AI Component:** *[In Development]* Integration for personalized recommendations
+
+## 🚀 Features & Roadmap
+
+Here is the current status of the development:
+
+- [x] **Project Initialization:** Nuxt environment and directory structure setup.
+- [x] **Routing:** Basic page navigation architecture.
+- [ ] **API Integration:** Connection to Travel/Booking APIs (fetching destinations).
+- [ ] **Budget Algorithm:** Logic to filter options based on user constraints.
+- [ ] **AI Recommendation Engine:** Implementing the "smart" suggestion feature.
+- [ ] **Authentication:** User accounts to save itineraries.
+
+## 📦 Setup & Installation
+
+To run this project locally:
 
 ```bash
-# npm
+# Clone the repository
+git clone https://github.com/guiltycpe/tripwiser.git
+
+# Navigate to the directory
+cd tripwiser
+
+# Install dependencies
 npm install
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
+# Run the development server
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
