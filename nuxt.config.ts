@@ -3,7 +3,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   ssr: true,
   devtools: { enabled: true },
-  css: ['~/assets/css/tailwind.css', '~/assets/css/global.css'],
+  css: [
+    '~/assets/css/tailwind.css',
+    '~/assets/css/global.css',
+    'leaflet/dist/leaflet.css'
+  ],
   modules: [
     '@nuxt/icon',
     '@nuxt/ui',
@@ -23,7 +27,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/auth/login',
       callback: '/',
-      exclude: ['/', '/auth/*', '/features', '/pricing', '/about', '/plan'],
+      exclude: ['/', '/auth/*', '/features', '/pricing', '/about', '/about'], // Removing /plan to force redirect
     }
   },
   runtimeConfig: {
