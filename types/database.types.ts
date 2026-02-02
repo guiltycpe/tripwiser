@@ -26,6 +26,7 @@ export interface Database {
                     budget: string | null
                     travel_style: string | null
                     road_trip: boolean
+                    itinerary: Json | null
                 }
                 Insert: {
                     id?: string
@@ -38,6 +39,7 @@ export interface Database {
                     budget?: string | null
                     travel_style?: string | null
                     road_trip?: boolean
+                    itinerary?: Json | null
                 }
                 Update: {
                     id?: string
@@ -50,6 +52,7 @@ export interface Database {
                     budget?: string | null
                     travel_style?: string | null
                     road_trip?: boolean
+                    itinerary?: Json | null
                 }
             }
         }

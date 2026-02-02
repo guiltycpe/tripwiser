@@ -1,65 +1,74 @@
 // server/api/places.ts
 import type { H3Event } from 'h3'
 
-export default defineEventHandler(async (event: H3Event) => {
+interface PhotonFeature {
+    properties: {
+        city?: string;
+        name?: string;
+        state?: string;
+        country?: string;
+        street?: string;
+        osm_id?: string | number;
+    }
+}
+
+interface PhotonResponse {
+    features: PhotonFeature[];
+}
+
+interface PlaceResult {
+    description: string;
+    place_id: string;
+    structured_formatting: {
+        main_text: string;
+        secondary_text: string;
+    }
+}
+
+/**
+ * Alternative gratuite à Google Places utilisant Photon (OpenStreetMap)
+ * Ne nécessite PAS de clé API.
+ */
+export default defineEventHandler(async (event: H3Event): Promise<PlaceResult[]> => {
     const query = getQuery(event)
     const text = query.input as string
 
-    if (!text) { return [] }
+    if (!text || text.length < 2) { return [] }
 
-    const config = useRuntimeConfig(event)
-    const apiKey = config.geoapifyApiKey
     const lang = getHeader(event, 'accept-language')?.substring(0, 2) || 'en'
 
-    const params = new URLSearchParams({
-        text: text,
-        apiKey: apiKey,
-        type: 'city',
-        lang: lang,
-        // On demande un peu plus de résultats pour avoir de la marge après le filtrage
-        limit: '10',
-        format: 'json',
-    })
-
-    const url = `https://api.geoapify.com/v1/geocode/autocomplete?${params.toString()}`
+    // Photon endpoint (OpenStreetMap Geocoding)
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(text)}&limit=10&lang=${lang}`
 
     try {
-        const response = await $fetch<{ results: any[] }>(url)
+        const response = await $fetch<PhotonResponse>(url)
 
-        if (response.results && response.results.length > 0) {
-            const uniqueResults = response.results.reduce((accumulator, currentItem) => {
-                // 1. On formate la description comme on veut l'afficher
-                const city = currentItem.city || currentItem.name
-                const country = currentItem.country
-                const description = [city, country].filter(Boolean).join(', ')
+        if (response.features && response.features.length > 0) {
+            return response.features.map((f: PhotonFeature): PlaceResult => {
+                const props = f.properties
+                const city = props.city || props.name || props.state || 'Unknown'
+                const country = props.country || 'Unknown'
+                const street = props.street
 
-                // 2. On vérifie si un lieu avec la même description existe déjà dans notre liste finale
-                const isDuplicate = accumulator.some(item => item.description === description)
+                // On construit une description propre
+                let description = city
+                if (street) description = `${street}, ${description}`
+                if (country) description = `${description}, ${country}`
 
-                // 3. Si ce n'est PAS un doublon, on l'ajoute à notre liste 
-                if (!isDuplicate) {
-                    accumulator.push({
-                        description: description,
-                        place_id: currentItem.place_id,
-                        structured_formatting: {
-                            main_text: city,
-                            secondary_text: country
-                        }
-                    })
+                return {
+                    description: description,
+                    place_id: String(props.osm_id || Math.random()),
+                    structured_formatting: {
+                        main_text: city,
+                        secondary_text: country
+                    }
                 }
-
-                // 4. On retourne la liste (potentiellement mise à jour) pour la prochaine itération
-                return accumulator
-            }, [] as any[]) // On commence avec un tableau vide
-
-            // On renvoie la liste propre et dédupliquée
-            // On la coupe à 5 résultats pour garder une liste courte et pertinente
-            return uniqueResults.slice(0, 5)
+            }).slice(0, 5)
         }
 
         return []
     } catch (error) {
-        console.error('Error fetching from Geoapify:', error)
+        console.error('Error fetching from Photon:', error)
         return []
     }
 })

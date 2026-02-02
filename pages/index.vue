@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import GooglePlacesInput from '~/components/GooglePlacesInput.vue'
+import LocationInput from '~/components/LocationInput.vue'
 
 const departureCity = ref('')
 const router = useRouter()
@@ -38,10 +38,10 @@ function startPlanning() {
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                   <Icon name="heroicons:map-pin-20-solid" class="h-6 w-6 text-teal-500" />
                 </div>
-                <GooglePlacesInput
+                <LocationInput
                   v-model="departureCity"
                   placeholder="Paris, London, Tokyo..."
-                  class="w-full rounded-xl border-2 border-gray-200 bg-white py-4 pl-12 pr-4 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                  inputClass="w-full rounded-xl border-2 border-gray-200 bg-white py-4 pl-12 pr-4 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
                 />
               </div>
               <button 
