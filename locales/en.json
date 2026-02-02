@@ -1,0 +1,224 @@
+{
+    "nav": {
+        "home": "Home",
+        "features": "Features",
+        "pricing": "Pricing",
+        "about": "About",
+        "login": "Login",
+        "signup": "Sign Up",
+        "dashboard": "Dashboard",
+        "logout": "Logout"
+    },
+    "home": {
+        "hero": {
+            "title": "Plan Your Perfect",
+            "titleGradient": "Adventure",
+            "subtitle": "Create personalized travel itineraries with AI-powered recommendations. Discover hidden gems and make every trip unforgettable.",
+            "searchLabel": "Where do you want to start?",
+            "searchPlaceholder": "Paris, London, Tokyo...",
+            "startButton": "Start Planning"
+        },
+        "howItWorks": {
+            "title": "How It Works",
+            "step1_title": "Tell Us Your Preferences",
+            "step1_desc": "Share your destination, dates, and travel style.",
+            "step2_title": "We Build Your Itinerary",
+            "step2_desc": "Our AI creates a personalized day-by-day plan.",
+            "step3_title": "Explore & Adjust",
+            "step3_desc": "Fine-tune your trip and discover new places."
+        },
+        "features": {
+            "title": "Why Choose TripWiser?",
+            "feature1_title": "Smart Planning",
+            "feature1_desc": "AI-powered itineraries tailored to your preferences",
+            "feature2_title": "Budget Tracking",
+            "feature2_desc": "Keep your expenses organized throughout your trip",
+            "feature3_title": "Collaborative",
+            "feature3_desc": "Plan with friends and family in real-time",
+            "exploreButton": "Explore All Features"
+        },
+        "cta": {
+            "title": "Ready to Start Your Next Adventure?",
+            "getStarted": "Get Started",
+            "viewPricing": "View Pricing"
+        }
+    },
+    "features": {
+        "hero": {
+            "title": "Powerful Features for",
+            "titleGradient": "Seamless Travel",
+            "subtitle": "Everything you need to plan, organize, and enjoy your perfect trip"
+        },
+        "smart_itinerary": {
+            "title": "Smart Itinerary Planning",
+            "desc": "Create optimized travel itineraries with AI-powered recommendations."
+        },
+        "place_discovery": {
+            "title": "Place Discovery",
+            "desc": "Discover hidden gems and popular attractions tailored to your interests."
+        },
+        "budget_tracking": {
+            "title": "Budget Tracking",
+            "desc": "Keep track of your expenses and stay within your budget effortlessly."
+        },
+        "multi_destination": {
+            "title": "Multi-destination Support",
+            "desc": "Plan trips with multiple stops and optimize your route automatically."
+        },
+        "collaborative": {
+            "title": "Collaborative Planning",
+            "desc": "Invite friends and family to plan your trip together in real-time."
+        },
+        "offline_access": {
+            "title": "Offline Access",
+            "desc": "Access your itinerary even without an internet connection."
+        },
+        "flexible_scheduling": {
+            "title": "Flexible Scheduling",
+            "desc": "Easily adjust your plans on the go with drag-and-drop interface."
+        },
+        "smart_notifications": {
+            "title": "Smart Notifications",
+            "desc": "Get timely reminders for bookings, flights, and activities."
+        },
+        "personalized": {
+            "title": "Personalized Recommendations",
+            "desc": "Receive suggestions based on your travel history and preferences."
+        },
+        "cta": {
+            "title": "Ready to Experience Effortless Travel Planning?",
+            "startPlanning": "Start Planning",
+            "viewPricing": "View Pricing"
+        }
+    },
+    "pricing": {
+        "hero": {
+            "title": "Simple,",
+            "titleGradient": "Transparent Pricing",
+            "subtitle": "Choose the plan that fits your travel needs",
+            "monthly": "Monthly",
+            "yearly": "Yearly",
+            "save": "Save 17%"
+        },
+        "free": {
+            "tier": "Free",
+            "description": "Perfect for occasional travelers",
+            "cta": "Get Started",
+            "features": [
+                "Up to 3 trips per month",
+                "Basic itinerary planning",
+                "Place discovery",
+                "Mobile app access"
+            ]
+        },
+        "pro": {
+            "tier": "Pro",
+            "description": "For frequent travelers",
+            "cta": "Start Free Trial",
+            "features": [
+                "Unlimited trips",
+                "AI-powered recommendations",
+                "Budget tracking",
+                "Collaborative planning",
+                "Offline access",
+                "Priority support"
+            ]
+        },
+        "enterprise": {
+            "tier": "Enterprise",
+            "description": "For travel agencies & teams",
+            "cta": "Contact Sales",
+            "features": [
+                "Everything in Pro",
+                "Custom branding",
+                "API access",
+                "Dedicated account manager",
+                "Advanced analytics",
+                "24/7 premium support"
+            ]
+        },
+        "faq": {
+            "title": "Frequently Asked Questions",
+            "q1": "Can I switch plans anytime?",
+            "a1": "Yes! You can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.",
+            "q2": "Is there a free trial?",
+            "a2": "Pro plan comes with a 14-day free trial. No credit card required to start.",
+            "q3": "What payment methods do you accept?",
+            "a3": "We accept all major credit cards, PayPal, and bank transfers for Enterprise plans.",
+            "q4": "Can I cancel my subscription?",
+            "a4": "Absolutely. You can cancel your subscription at any time from your account settings."
+        },
+        "contact": {
+            "title": "Need a Custom Plan?",
+            "subtitle": "Contact us for tailored solutions",
+            "button": "Contact Us"
+        }
+    },
+    "about": {
+        "hero": {
+            "title": "About",
+            "titleGradient": "TripWiser",
+            "subtitle": "Making travel planning effortless and enjoyable"
+        },
+        "mission": {
+            "title": "Our Mission",
+            "content": "We believe travel should be about discovery and enjoyment, not endless planning. TripWiser uses cutting-edge AI to transform trip planning from a chore into an exciting part of your adventure."
+        },
+        "story": {
+            "title": "Our Story",
+            "p1": "TripWiser was born from a simple frustration: planning a multi
+
+-city trip shouldn't take weeks of research. Our founders, avid travelers themselves, experienced the pain of juggling spreadsheets, multiple booking sites, and endless browser tabs.","p2": "We set out to create a solution that makes travel planning as enjoyable as the trip itself. Today, TripWiser helps thousands of travelers plan their perfect adventures with ease."
+        },
+        "stats": {
+            "users": "Active Users",
+            "trips": "Trips Planned",
+            "countries": "Countries Covered"
+        },
+        "values": {
+            "title": "Our Values",
+            "innovation_title": "Innovation",
+            "innovation_desc": "Continuously improving with the latest AI technology",
+            "user_centric_title": "User-Centric",
+            "user_centric_desc": "Every feature designed with travelers in mind",
+            "trust_title": "Trust & Security",
+            "trust_desc": "Your data is safe and privacy is our priority"
+        },
+        "contact": {
+            "title": "Get in Touch",
+            "subtitle": "Have questions? We'd love to hear from you",
+            "email": "Email Us"
+        }
+    },
+    "plan": {
+        "hero": {
+            "title": "Plan Your",
+            "titleGradient": "Perfect Trip",
+            "subtitle": "Tell us about your travel preferences and we'll create the perfect itinerary"
+        },
+        "form": {
+            "title": "Your Travel Preferences",
+            "departure": "Departure",
+            "departurePlaceholder": "Paris, London...",
+            "destination": "Destination(s)",
+            "destinationPlaceholder": "Tokyo, Osaka...",
+            "dates": "Departure and Return Dates",
+            "datePlaceholder": "DD/MM/YY",
+            "budget": "Budget",
+            "budgetLow": "Low",
+            "budgetMedium": "Medium",
+            "budgetHigh": "High",
+            "roadTrip": "Take a Road Trip",
+            "travelStyle": "Travel Style",
+            "styleBackpacker": "Backpacker",
+            "styleComfort": "Confort",
+            "styleLuxury": "Luxury",
+            "generateButton": "Generate My Itinerary"
+        }
+    },
+    "common": {
+        "month": "month",
+        "year": "year",
+        "free": "Free"
+    }
+}

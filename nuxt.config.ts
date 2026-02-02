@@ -1,19 +1,38 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-06-05',
-  ssr: true, // ou 'false' si tu vises 100 % SPA
+  compatibilityDate: '2024-04-03',
+  ssr: true,
   devtools: { enabled: true },
-  css: ['~/assets/css/tailwind.css'],
+  css: ['~/assets/css/tailwind.css', '~/assets/css/global.css'],
   modules: [
     '@nuxt/icon',
     '@nuxt/ui',
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/i18n',
+    '@nuxtjs/supabase',
   ],
+  i18n: {
+    vueI18n: './i18n.config.ts',
+    locales: [
+      { code: 'en', name: 'English' },
+      { code: 'fr', name: 'Français' }
+    ],
+    defaultLocale: 'en'
+  },
+  supabase: {
+    redirectOptions: {
+      login: '/auth/login',
+      callback: '/',
+      exclude: ['/', '/auth/*', '/features', '/pricing', '/about', '/plan'],
+    }
+  },
   runtimeConfig: {
-    googlePlacesApiKey: process.env.NUXT_PUBLIC_GOOGLE_PLACES_API_KEY,
-    geoapifyApiKey: process.env.GEOAPIFY_API_KEY,
+    // Private keys (server-only)
+    googlePlacesApiKey: '',
+    geoapifyApiKey: '',
+    // Public keys (exposed to client)
     public: {
-
+      googlePlacesApiKey: ''
     }
   }
 })

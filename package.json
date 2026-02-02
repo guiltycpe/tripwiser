@@ -13,6 +13,8 @@
     "@nuxt/eslint": "^1.4.1",
     "@nuxt/icon": "^1.13.0",
     "@nuxt/image": "^1.10.0",
+    "@nuxtjs/i18n": "^10.2.1",
+    "@nuxtjs/supabase": "^2.0.3",
     "@vueuse/nuxt": "^13.3.0",
     "eslint": "^9.28.0",
     "nuxt": "^3.17.5",

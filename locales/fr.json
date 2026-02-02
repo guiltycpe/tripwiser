@@ -1,0 +1,223 @@
+{
+    "nav": {
+        "home": "Accueil",
+        "features": "Fonctionnalités",
+        "pricing": "Tarifs",
+        "about": "À propos",
+        "login": "Connexion",
+        "signup": "S'inscrire",
+        "dashboard": "Tableau de bord",
+        "logout": "Déconnexion"
+    },
+    "home": {
+        "hero": {
+            "title": "Planifiez Votre",
+            "titleGradient": "Aventure Parfaite",
+            "subtitle": "Créez des itinéraires de voyage personnalisés avec des recommandations IA. Découvrez des trésors cachés et rendez chaque voyage inoubliable.",
+            "searchLabel": "Où voulez-vous commencer ?",
+            "searchPlaceholder": "Paris, Londres, Tokyo...",
+            "startButton": "Commencer à Planifier"
+        },
+        "howItWorks": {
+            "title": "Comment Ça Marche",
+            "step1_title": "Partagez Vos Préférences",
+            "step1_desc": "Indiquez votre destination, vos dates et votre style de voyage.",
+            "step2_title": "Nous Créons Votre Itinéraire",
+            "step2_desc": "Notre IA crée un plan personnalisé jour par jour.",
+            "step3_title": "Explorez et Ajustez",
+            "step3_desc": "Affinez votre voyage et découvrez de nouveaux endroits."
+        },
+        "features": {
+            "title": "Pourquoi Choisir TripWiser ?",
+            "feature1_title": "Planification Intelligente",
+            "feature1_desc": "Itinéraires IA adaptés à vos préférences",
+            "feature2_title": "Suivi du Budget",
+            "feature2_desc": "Gardez vos dépenses organisées tout au long du voyage",
+            "feature3_title": "Collaboratif",
+            "feature3_desc": "Planifiez avec vos amis et votre famille en temps réel",
+            "exploreButton": "Explorer Toutes les Fonctionnalités"
+        },
+        "cta": {
+            "title": "Prêt à Commencer Votre Prochaine Aventure ?",
+            "getStarted": "Commencer",
+            "viewPricing": "Voir les Tarifs"
+        }
+    },
+    "features": {
+        "hero": {
+            "title": "Fonctionnalités Puissantes pour",
+            "titleGradient": "un Voyage Fluide",
+            "subtitle": "Tout ce dont vous avez besoin pour planifier, organiser et profiter de votre voyage parfait"
+        },
+        "smart_itinerary": {
+            "title": "Planification Intelligente d'Itinéraire",
+            "desc": "Créez des itinéraires de voyage optimisés avec des recommandations IA."
+        },
+        "place_discovery": {
+            "title": "Découverte de Lieux",
+            "desc": "Découvrez des trésors cachés et des attractions populaires adaptés à vos intérêts."
+        },
+        "budget_tracking": {
+            "title": "Suivi du Budget",
+            "desc": "Gardez une trace de vos dépenses et restez dans votre budget sans effort."
+        },
+        "multi_destination": {
+            "title": "Support Multi-destinations",
+            "desc": "Planifiez des voyages avec plusieurs arrêts et optimisez votre itinéraire automatiquement."
+        },
+        "collaborative": {
+            "title": "Planification Collaborative",
+            "desc": "Invitez amis et famille à planifier votre voyage ensemble en temps réel."
+        },
+        "offline_access": {
+            "title": "Accès Hors Ligne",
+            "desc": "Accédez à votre itinéraire même sans connexion Internet."
+        },
+        "flexible_scheduling": {
+            "title": "Planning Flexible",
+            "desc": "Ajustez facilement vos plans en déplacement avec l'interface glisser-déposer."
+        },
+        "smart_notifications": {
+            "title": "Notifications Intelligentes",
+            "desc": "Recevez des rappels opportuns pour les réservations, vols et activités."
+        },
+        "personalized": {
+            "title": "Recommandations Personnalisées",
+            "desc": "Recevez des suggestions basées sur votre historique et vos préférences de voyage."
+        },
+        "cta": {
+            "title": "Prêt à Découvrir la Planification de Voyage Sans Effort ?",
+            "startPlanning": "Commencer à Planifier",
+            "viewPricing": "Voir les Tarifs"
+        }
+    },
+    "pricing": {
+        "hero": {
+            "title": "Tarifs Simples",
+            "titleGradient": "et Transparents",
+            "subtitle": "Choisissez le plan qui correspond à vos besoins de voyage",
+            "monthly": "Mensuel",
+            "yearly": "Annuel",
+            "save": "Économisez 17%"
+        },
+        "free": {
+            "tier": "Gratuit",
+            "description": "Parfait pour les voyageurs occasionnels",
+            "cta": "Commencer",
+            "features": [
+                "Jusqu'à 3 voyages par mois",
+                "Planification d'itinéraire basique",
+                "Découverte de lieux",
+                "Accès application mobile"
+            ]
+        },
+        "pro": {
+            "tier": "Pro",
+            "description": "Pour les voyageurs fréquents",
+            "cta": "Essai Gratuit",
+            "features": [
+                "Voyages illimités",
+                "Recommandations IA",
+                "Suivi du budget",
+                "Planification collaborative",
+                "Accès hors ligne",
+                "Support prioritaire"
+            ]
+        },
+        "enterprise": {
+            "tier": "Enterprise",
+            "description": "Pour agences de voyage et équipes",
+            "cta": "Contacter les Ventes",
+            "features": [
+                "Tout dans Pro",
+                "Branding personnalisé",
+                "Accès API",
+                "Gestionnaire de compte dédié",
+                "Analyses avancées",
+                "Support premium 24/7"
+            ]
+        },
+        "faq": {
+            "title": "Questions Fréquemment Posées",
+            "q1": "Puis-je changer de plan à tout moment ?",
+            "a1": "Oui ! Vous pouvez passer à un plan supérieur ou inférieur à tout moment. Les modifications seront appliquées lors de votre prochain cycle de facturation.",
+            "q2": "Y a-t-il un essai gratuit ?",
+            "a2": "Le plan Pro propose un essai gratuit de 14 jours. Aucune carte bancaire requise pour commencer.",
+            "q3": "Quels moyens de paiement acceptez-vous ?",
+            "a3": "Nous acceptons toutes les cartes bancaires principales, PayPal et les virements bancaires pour les plans Enterprise.",
+            "q4": "Puis-je annuler mon abonnement ?",
+            "a4": "Absolument. Vous pouvez annuler votre abonnement à tout moment depuis les paramètres de votre compte."
+        },
+        "contact": {
+            "title": "Besoin d'un Plan Personnalisé ?",
+            "subtitle": "Contactez-nous pour des solutions sur mesure",
+            "button": "Nous Contacter"
+        }
+    },
+    "about": {
+        "hero": {
+            "title": "À Propos de",
+            "titleGradient": "TripWiser",
+            "subtitle": "Rendre la planification de voyage simple et agréable"
+        },
+        "mission": {
+            "title": "Notre Mission",
+            "content": "Nous croyons que le voyage devrait être synonyme de découverte et de plaisir, pas de planification sans fin. TripWiser utilise l'IA de pointe pour transformer la planification de voyage d'une corvée en une partie passionnante de votre aventure."
+        },
+        "story": {
+            "title": "Notre Histoire",
+            "p1": "TripWiser est née d'une simple frustration : planifier un voyage multi-villes ne devrait pas prendre des semaines de recherche. Nos fondateurs, eux-mêmes voyageurs passionnés, ont vécu la douleur de jongler entre tableurs, multiples sites de réservation et onglets de navigation sans fin.",
+            "p2": "Nous nous sommes fixés pour objectif de créer une solution qui rend la planification de voyage aussi agréable que le voyage lui-même. Aujourd'hui, TripWiser aide des milliers de voyageurs à planifier leurs aventures parfaites en toute simplicité."
+        },
+        "stats": {
+            "users": "Utilisateurs Actifs",
+            "trips": "Voyages Planifiés",
+            "countries": "Pays Couverts"
+        },
+        "values": {
+            "title": "Nos Valeurs",
+            "innovation_title": "Innovation",
+            "innovation_desc": "Amélioration continue avec les dernières technologies IA",
+            "user_centric_title": "Centré Utilisateur",
+            "user_centric_desc": "Chaque fonctionnalité conçue pour les voyageurs",
+            "trust_title": "Confiance et Sécurité",
+            "trust_desc": "Vos données sont en sécurité et la confidentialité est notre priorité"
+        },
+        "contact": {
+            "title": "Contactez-Nous",
+            "subtitle": "Des questions ? Nous serions ravis de vous entendre",
+            "email": "Nous Écrire"
+        }
+    },
+    "plan": {
+        "hero": {
+            "title": "Planifiez Votre",
+            "titleGradient": "Voyage Parfait",
+            "subtitle": "Partagez vos préférences et nous créerons l'itinéraire parfait"
+        },
+        "form": {
+            "title": "Vos Préférences de Voyage",
+            "departure": "Départ",
+            "departurePlaceholder": "Paris, Londres...",
+            "destination": "Destination(s)",
+            "destinationPlaceholder": "Tokyo, Osaka...",
+            "dates": "Dates de Départ et Retour",
+            "datePlaceholder": "JJ/MM/AA",
+            "budget": "Budget",
+            "budgetLow": "Faible",
+            "budgetMedium": "Moyen",
+            "budgetHigh": "Élevé",
+            "roadTrip": "Faire un Road Trip",
+            "travelStyle": "Style de Voyage",
+            "styleBackpacker": "Routard",
+            "styleComfort": "Confort",
+            "styleLuxury": "Luxe",
+            "generateButton": "Générer Mon Itinéraire"
+        }
+    },
+    "common": {
+        "month": "mois",
+        "year": "an",
+        "free": "Gratuit"
+    }
+}
