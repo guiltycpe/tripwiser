@@ -1,11 +1,11 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 px-4 py-12">
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 px-4 py-12">
     <div class="w-full max-w-md">
       <!-- Card -->
       <div class="glass rounded-2xl p-8 shadow-2xl animate-scale-in">
         <!-- Logo -->
         <div class="text-center mb-8">
-          <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 mb-4">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 mb-4">
             <Icon name="heroicons:user-plus-20-solid" class="w-10 h-10 text-white" />
           </div>
           <h1 class="text-3xl font-bold text-gray-900">{{ t.auth.signup.title }}</h1>
@@ -38,7 +38,7 @@
                 v-model="fullName"
                 type="text"
                 required
-                class="block w-full pl-10 pr-3 py-3 bg-white text-gray-900 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all placeholder:text-gray-400"
+                class="block w-full pl-10 pr-3 py-3 bg-white text-gray-900 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all placeholder:text-gray-400"
                 :placeholder="t.auth.signup.fullNamePlaceholder"
               />
             </div>
@@ -58,7 +58,7 @@
                 v-model="email"
                 type="email"
                 required
-                class="block w-full pl-10 pr-3 py-3 bg-white text-gray-900 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all placeholder:text-gray-400"
+                class="block w-full pl-10 pr-3 py-3 bg-white text-gray-900 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all placeholder:text-gray-400"
                 :placeholder="t.auth.signup.emailPlaceholder"
               />
             </div>
@@ -79,7 +79,7 @@
                 type="password"
                 required
                 minlength="6"
-                class="block w-full pl-10 pr-3 py-3 bg-white text-gray-900 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all placeholder:text-gray-400"
+                class="block w-full pl-10 pr-3 py-3 bg-white text-gray-900 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all placeholder:text-gray-400"
                 :placeholder="t.auth.signup.passwordPlaceholder"
               />
             </div>
@@ -93,13 +93,13 @@
               v-model="acceptedTerms"
               type="checkbox"
               required
-              class="mt-1 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+              class="mt-1 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
             />
             <label for="terms" class="ml-2 text-sm text-gray-600">
               {{ t.auth.signup.terms }}
-              <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">{{ t.auth.signup.termsLink }}</a>
+              <a href="#" class="text-teal-600 hover:text-teal-700 font-medium">{{ t.auth.signup.termsLink }}</a>
               {{ t.auth.signup.and }}
-              <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">{{ t.auth.signup.privacyLink }}</a>
+               <a href="#" class="text-teal-600 hover:text-teal-700 font-medium">{{ t.auth.signup.privacyLink }}</a>
             </label>
           </div>
 
@@ -107,7 +107,7 @@
           <button
             type="submit"
             :disabled="loading || !acceptedTerms"
-            class="w-full py-3 px-6 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            class="btn-primary w-full hover-glow disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="!loading">{{ t.auth.signup.submit }}</span>
             <span v-else class="flex items-center justify-center">

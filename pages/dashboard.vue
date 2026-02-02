@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+  <div class="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50">
     <!-- Main Content -->
     <main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <!-- Header -->
@@ -50,8 +50,8 @@
               <p class="text-sm text-gray-600">{{ t.dashboard.stats.countries }}</p>
               <p class="mt-1 text-3xl font-bold text-gray-900">{{ countriesCount }}</p>
             </div>
-            <div class="rounded-full bg-purple-100 p-3">
-              <Icon name="heroicons:globe-americas-20-solid" class="h-6 w-6 text-purple-600" />
+            <div class="rounded-full bg-cyan-100 p-3">
+              <Icon name="heroicons:globe-americas-20-solid" class="h-6 w-6 text-cyan-600" />
             </div>
           </div>
         </div>
@@ -158,7 +158,10 @@
 
             <!-- Trip Footer -->
             <div class="flex gap-2 border-t border-gray-100 pt-4">
-              <button class="flex-1 rounded-lg bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-700 transition-all hover:bg-teal-100">
+              <button 
+                @click="openTripDetails(trip)"
+                class="flex-1 rounded-lg bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-700 transition-all hover:bg-teal-100"
+              >
                 {{ t.dashboard.trips.viewDetails }}
               </button>
               <button class="flex-1 rounded-lg border-2 border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition-all hover:border-teal-500 hover:text-teal-600">
@@ -169,6 +172,14 @@
         </div>
       </div>
     </main>
+
+    <!-- Modals -->
+    <TripDetailsModal 
+      v-if="selectedTrip"
+      :is-open="isModalOpen" 
+      :trip="selectedTrip" 
+      @close="closeModal" 
+    />
   </div>
 </template>
 
@@ -185,6 +196,22 @@ const { t, locale } = useTranslations()
 const trips = ref<any[]>([])
 const loading = ref(true)
 const filterStatus = ref('all')
+
+// Modal State
+const isModalOpen = ref(false)
+const selectedTrip = ref<any>(null)
+
+function openTripDetails(trip: any) {
+  selectedTrip.value = trip
+  isModalOpen.value = true
+}
+
+function closeModal() {
+  isModalOpen.value = false
+  setTimeout(() => {
+    selectedTrip.value = null
+  }, 300)
+}
 
 const userName = computed(() => {
   return user.value?.user_metadata?.full_name || user.value?.email?.split('@')[0] || 'Traveler'

@@ -52,25 +52,20 @@ const generationMessages = computed(() => [
 ])
 
 async function generateItinerary() {
-  console.log('--- STARTING GENERATION ---')
+  console.log('--- ITINERARY GENERATION v3 CHECK ---')
   
   try {
-    // 1. Force a fresh check of the user session (more reliable than the reactive value)
-    const { data: authData, error: authError } = await supabase.auth.getUser()
+    // 1. FORCE AUTH CHECK
+    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser()
     
-    if (authError || !authData.user) {
-      console.error('--- CRITICAL: AUTH FAILED ---', authError)
-      alert(locale.value === 'fr' ? 'Session expiree. Veuillez vous reconnecter.' : 'Session expired. Please log in again.')
+    if (authError || !authUser || !authUser.id) {
+      console.error('Session check failed:', authError)
+      alert("ERREUR SESSION (v3) : Votre session est absente ou expiree. Redirection vers le login...")
       return router.push('/auth/login')
     }
 
-    const userId = authData.user.id
-    if (!userId) {
-       console.error('--- CRITICAL: USER ID IS NULL ---')
-       alert('Internal Error: User ID could not be retrieved. Please try logging out and back in.')
-       return
-    }
-    console.log('--- SESSION VALIDATED --- User:', userId)
+    const currentUserId = authUser.id
+    console.log('--- SESSION VALIDATED (v3) --- User:', currentUserId)
 
     isGenerating.value = true
     generationStep.value = 0
@@ -81,7 +76,8 @@ async function generateItinerary() {
       }
     }, 1000)
 
-    // 2. Call our AI Generation API
+    // 2. AI GENERATION
+    console.log('Calling AI API...')
     const aiResponse = await $fetch('/api/generate-itinerary', {
       method: 'POST',
       body: {
@@ -95,12 +91,11 @@ async function generateItinerary() {
       }
     }) as any
 
-    console.log('AI Response received. Preparing payload...')
-
+    // 3. DATABASE INSERTION (using array for stability)
     const payload = {
-        user_id: userId,
-        departure: departure.value,
-        destination: destination.value,
+        user_id: currentUserId,
+        departure: departure.value || 'Unknown',
+        destination: destination.value || 'Asia',
         departure_date: parseDate(departureDate.value),
         return_date: parseDate(returnDate.value),
         budget: budget.value,
@@ -109,28 +104,23 @@ async function generateItinerary() {
         itinerary: aiResponse?.itinerary
     }
 
-    console.log('Final Database Payload:', payload)
+    console.log('DATABASE INSERT (v3) - Checking ID before send:', payload.user_id)
 
-    // 3. Save to Supabase
-    const { data: insertData, error: insertError } = await supabase
+    const { data: dbData, error: dbError } = await supabase
       .from('trips')
-      .insert(payload)
+      .insert([payload]) // Sending as array
       .select()
 
-    if (insertError) {
-      console.error('SUPABASE INSERT ERROR:', insertError)
-      // Special alert for this common error
-      if (insertError.message.includes('not-null constraint')) {
-        alert('Erreur Base de Données : L\'identifiant utilisateur (user_id) manque à l\'appel. Avez-vous bien ouvert votre session ?')
-      } else {
-        throw insertError
-      }
+    if (dbError) {
+      console.error('SUPABASE DB ERROR (v3):', dbError)
+      // Showing full message to user
+      alert(`ERREUR BASE DE DONNÉES (v3) :\nCode: ${dbError.code}\nMessage: ${dbError.message}\n\nHint: Verifiez si vous etes connecte sur un autre onglet.`)
       isGenerating.value = false
       clearInterval(stepInterval)
       return
     }
 
-    console.log('Trip saved successfully:', insertData)
+    console.log('Trip saved (v3). Entry ID:', dbData?.[0]?.id)
     
     setTimeout(() => {
       clearInterval(stepInterval)
@@ -139,7 +129,7 @@ async function generateItinerary() {
 
   } catch (err: any) {
     console.error('GLOBAL PLAN ERROR:', err)
-    alert('DEBUG ERROR: ' + (err.message || 'Unknown error'))
+    alert('DEBUG ERROR (v3): ' + (err.message || 'Unknown error'))
     isGenerating.value = false
   }
 }
