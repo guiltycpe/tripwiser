@@ -13,6 +13,7 @@ const returnDate = ref('21/07/25')
 const budget = ref('High')
 const takeRoadTrip = ref(true)
 const travelStyle = ref('Confort')
+const travelers = ref(2)
 const isGenerating = ref(false)
 
 const supabase = useSupabaseClient()
@@ -87,7 +88,8 @@ async function generateItinerary() {
         return_date: parseDate(returnDate.value),
         budget: budget.value,
         travel_style: travelStyle.value,
-        road_trip: takeRoadTrip.value
+        road_trip: takeRoadTrip.value,
+        travelers: travelers.value
       }
     }) as any
 
@@ -101,6 +103,7 @@ async function generateItinerary() {
         budget: budget.value,
         travel_style: travelStyle.value,
         road_trip: takeRoadTrip.value,
+        travelers: travelers.value,
         itinerary: aiResponse?.itinerary
     }
 
@@ -227,26 +230,56 @@ async function generateItinerary() {
               </div>
             </div>
 
-            <!-- Dates -->
-            <div>
-              <label class="block text-sm font-semibold text-gray-900 mb-2">
-                <Icon name="heroicons:calendar-20-solid" class="inline h-5 w-5 text-orange-500 mr-1" />
-                {{ t.plan.form.departureDate }} / {{ t.plan.form.returnDate }}
-              </label>
-              <div class="flex items-center gap-4">
-                <input 
-                  v-model="departureDate" 
-                  type="text" 
-                  placeholder="DD/MM/YY"
-                  class="block w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
-                >
-                <Icon name="heroicons:arrow-right-20-solid" class="h-5 w-5 text-gray-400" />
-                <input 
-                  v-model="returnDate" 
-                  type="text" 
-                  placeholder="DD/MM/YY"
-                  class="block w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
-                >
+            <!-- Dates & Travelers -->
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 mb-2">
+                  <Icon name="heroicons:calendar-20-solid" class="inline h-5 w-5 text-orange-500 mr-1" />
+                  {{ t.plan.form.departureDate }} / {{ t.plan.form.returnDate }}
+                </label>
+                <div class="flex items-center gap-2">
+                  <input 
+                    v-model="departureDate" 
+                    type="text" 
+                    placeholder="DD/MM/YY"
+                    class="block w-full rounded-xl border-2 border-gray-200 bg-white px-3 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 text-sm"
+                  >
+                  <Icon name="heroicons:arrow-right-20-solid" class="h-4 w-4 text-gray-400 flex-shrink-0" />
+                  <input 
+                    v-model="returnDate" 
+                    type="text" 
+                    placeholder="DD/MM/YY"
+                    class="block w-full rounded-xl border-2 border-gray-200 bg-white px-3 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 text-sm"
+                  >
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 mb-2">
+                  <Icon name="heroicons:users-20-solid" class="inline h-5 w-5 text-purple-500 mr-1" />
+                  {{ t.plan.form.travelers }}
+                </label>
+                <div class="flex items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-4 py-3 transition-all duration-300 hover:border-teal-500/50">
+                   <button 
+                    type="button"
+                    @click="travelers > 1 ? travelers-- : null"
+                    class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-teal-100 hover:text-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                    :disabled="travelers <= 1"
+                  >
+                    <Icon name="heroicons:minus-20-solid" class="h-5 w-5" />
+                  </button>
+                  
+                  <span class="text-lg font-bold text-gray-900 min-w-[2ch] text-center">{{ travelers }}</span>
+                  
+                  <button 
+                    type="button"
+                    @click="travelers < 20 ? travelers++ : null"
+                    class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-teal-100 hover:text-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                    :disabled="travelers >= 20"
+                  >
+                    <Icon name="heroicons:plus-20-solid" class="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
 

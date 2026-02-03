@@ -154,6 +154,7 @@ const translations = {
                 },
                 roadTrip: 'Road Trip?',
                 roadTripYes: 'Yes, I want a road trip!',
+                travelers: 'Travelers',
                 submit: 'Generate My Itinerary',
                 generating: 'Generating...'
             }
@@ -382,6 +383,7 @@ const translations = {
                 },
                 roadTrip: 'Road Trip ?',
                 roadTripYes: 'Oui, je veux un road trip !',
+                travelers: 'Voyageurs',
                 submit: 'Générer Mon Itinéraire',
                 generating: 'Génération en cours...'
             }
