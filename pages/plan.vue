@@ -9,8 +9,8 @@ const { t, locale } = useTranslations()
 const departure = ref('')
 const destinations = ref<string[]>([])
 const currentDestination = ref('')
-const departureDate = ref('07/07/25')
-const returnDate = ref('21/07/25')
+const departureDate = ref(new Date().toISOString().split('T')[0])
+const returnDate = ref(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
 const budget = ref('High')
 const takeRoadTrip = ref(true)
 const travelStyle = ref('adventure')
@@ -108,10 +108,10 @@ async function generateItinerary() {
     generationStep.value = 0
     
     const stepInterval = setInterval(() => {
-      if (generationStep.value < generationMessages.value.length - 1) {
+      if (generationStep.value < generationMessages.value.length - 2) {
         generationStep.value++
       }
-    }, 1000)
+    }, 1500)
 
     // 2. AI GENERATION
     console.log('Calling AI API...')
@@ -155,6 +155,7 @@ async function generateItinerary() {
       // Showing full message to user
       alert(`ERREUR BASE DE DONNÉES (v3) :\nCode: ${dbError.code}\nMessage: ${dbError.message}\n\nHint: Verifiez si vous etes connecte sur un autre onglet.`)
       isGenerating.value = false
+      generationStep.value = generationMessages.value.length - 1
       clearInterval(stepInterval)
       return
     }
@@ -162,9 +163,10 @@ async function generateItinerary() {
     console.log('Trip saved (v3). Entry ID:', (dbData as any)?.[0]?.id)
     
     setTimeout(() => {
+      generationStep.value = generationMessages.value.length - 1
       clearInterval(stepInterval)
       router.push('/dashboard')
-    }, 1200)
+    }, 800)
 
   } catch (err: any) {
     console.error('GLOBAL PLAN ERROR:', err)
@@ -221,6 +223,9 @@ async function generateItinerary() {
       <div class="mx-auto max-w-4xl text-center animate-fade-in">
         <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 md:text-6xl">
           {{ t.plan.hero.title }}
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">
+            {{ t.plan.hero.titleGradient || 'Adventure' }}
+          </span>
         </h1>
         <p class="mt-4 text-xl text-gray-600">
           {{ t.plan.hero.subtitle }}
@@ -314,19 +319,17 @@ async function generateItinerary() {
                   {{ t.plan.form.departureDate }} / {{ t.plan.form.returnDate }}
                 </label>
                 <div class="flex items-center gap-2">
-                  <input 
-                    v-model="departureDate" 
-                    type="text" 
-                    placeholder="DD/MM/YY"
-                    class="block w-full rounded-xl border-2 border-gray-200 bg-white px-3 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 text-sm"
-                  >
+                  <AppDatePicker
+                    v-model="departureDate"
+                    :min-date="new Date()"
+                    :placeholder="t.plan.form.departureDate"
+                  />
                   <Icon name="heroicons:arrow-right-20-solid" class="h-4 w-4 text-gray-400 flex-shrink-0" />
-                  <input 
-                    v-model="returnDate" 
-                    type="text" 
-                    placeholder="DD/MM/YY"
-                    class="block w-full rounded-xl border-2 border-gray-200 bg-white px-3 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 text-sm"
-                  >
+                  <AppDatePicker
+                    v-model="returnDate"
+                    :min-date="departureDate"
+                    :placeholder="t.plan.form.returnDate"
+                  />
                 </div>
               </div>
 
