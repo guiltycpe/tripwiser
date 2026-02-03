@@ -201,9 +201,9 @@
             "returnDate": "Date de Retour",
             "budget": "Budget",
             "budgetOptions": {
-                "budget": "Économique (Bas)",
-                "moderate": "Modéré (Moyen)",
-                "luxury": "Luxe (Élevé)"
+                "budget": "Économique",
+                "moderate": "Confort Équilibré",
+                "luxury": "Expérience Luxe"
             },
             "roadTrip": "Faire un Road Trip",
             "travelStyle": "Style de Voyage",
