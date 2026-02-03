@@ -84,7 +84,7 @@ async function generateItinerary() {
       method: 'POST',
       body: {
         departure: departure.value,
-        destination: destination.value,
+        destination: destinations.value.join(', '),
         departure_date: parseDate(departureDate.value),
         return_date: parseDate(returnDate.value),
         budget: budget.value,
