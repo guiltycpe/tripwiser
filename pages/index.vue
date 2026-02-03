@@ -23,7 +23,7 @@ function startPlanning() {
       
       <div class="relative mx-auto max-w-4xl text-center">
         <h1 class="animate-fade-in text-5xl font-extrabold tracking-tight text-gray-900 md:text-6xl lg:text-7xl">
-          {{ t.home.hero.title }}
+          {{ t.home.hero.title }} <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">{{ t.home.hero.titleGradient }}</span>
         </h1>
 
         <p class="animate-slide-up mt-6 text-xl leading-8 text-gray-600 md:text-2xl">
@@ -40,7 +40,7 @@ function startPlanning() {
                 </div>
                 <LocationInput
                   v-model="departureCity"
-                  placeholder="Paris, London, Tokyo..."
+                  :placeholder="t.home.hero.searchPlaceholder"
                   inputClass="w-full rounded-xl border-2 border-gray-200 bg-white py-4 pl-12 pr-4 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
                 />
               </div>

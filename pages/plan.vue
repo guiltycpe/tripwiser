@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import LocationInput from '~/components/LocationInput.vue'
 
@@ -13,7 +13,7 @@ const departureDate = ref('07/07/25')
 const returnDate = ref('21/07/25')
 const budget = ref('High')
 const takeRoadTrip = ref(true)
-const travelStyle = ref('Confort')
+const travelStyle = ref('adventure')
 const travelers = ref(2)
 const isGenerating = ref(false)
 
@@ -34,24 +34,54 @@ onMounted(async () => {
   }
 })
 
-// Utility to convert DD/MM/YY to YYYY-MM-DD
+// Improved utility to convert DD/MM/YY or YYYY-MM-DD to YYYY-MM-DD
 function parseDate(dateStr: string) {
   if (!dateStr) return null
-  const [day, month, year] = dateStr.split('/')
-  if (!day || !month || !year) return null
-  // Assuming 20xx for year
-  return `20${year}-${month}-${day}`
+  
+  // If already YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr
+
+  const parts = dateStr.split(/[-/]/)
+  if (parts.length !== 3) return null
+  
+  const d = parts[0] || ''
+  const m = parts[1] || ''
+  let y = parts[2] || ''
+  
+  // Handle case where year is first (YYYY/MM/DD)
+  if (d.length === 4) return `${d}-${m.padStart(2, '0')}-${y.padStart(2, '0')}`
+  
+  // Normalizing to 4 digits for year (assume 21st century)
+  if (y.length === 2) y = '20' + y
+  
+  return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
 }
 
 const generationStep = ref(0)
-const generationMessages = computed(() => [
-  t.value.plan.form.generating,
-  locale.value === 'fr' ? 'Analyse des destinations...' : 'Analyzing destinations...',
-  locale.value === 'fr' ? 'Calcul de l\'itinéraire optimal...' : 'Calculating optimal route...',
-  locale.value === 'fr' ? 'Optimisation du budget ' + budget.value + '...' : `Optimizing for ${budget.value} budget...`,
-  locale.value === 'fr' ? 'Recherche d\'activités ' + travelStyle.value + '...' : `Finding ${travelStyle.value} activities...`,
-  locale.value === 'fr' ? 'Finalisation de votre voyage...' : 'Finalizing your trip...'
-])
+const generationMessages = computed(() => {
+  const budgetOptions = t.value.plan.form.budgetOptions as any
+  const styleOptions = t.value.plan.form.styleOptions as any
+  
+  const budgetMap: Record<string, string> = {
+    'low': 'budget',
+    'medium': 'moderate',
+    'high': 'luxury'
+  }
+  const budgetKey = budgetMap[budget.value.toLowerCase()] || 'budget'
+  const budgetLabel = budgetOptions[budgetKey] || budget.value
+  const styleLabel = styleOptions[travelStyle.value] || travelStyle.value
+  
+  const steps = t.value.plan.form.steps as any
+  
+  return [
+    t.value.plan.form.generating,
+    steps.analyzing,
+    steps.calculating,
+    steps.optimizing.replace('{budget}', budgetLabel),
+    steps.finding.replace('{style}', styleLabel),
+    steps.finalizing
+  ]
+})
 
 async function generateItinerary() {
   console.log('--- ITINERARY GENERATION v3 CHECK ---')
@@ -62,8 +92,13 @@ async function generateItinerary() {
     
     if (authError || !authUser || !authUser.id) {
       console.error('Session check failed:', authError)
-      alert("ERREUR SESSION (v3) : Votre session est absente ou expiree. Redirection vers le login...")
+      alert(t.value.common.error + ": Session invalid")
       return router.push('/auth/login')
+    }
+
+    if (destinations.value.length === 0) {
+      alert(t.value.plan.form.noDestinations)
+      return
     }
 
     const currentUserId = authUser.id
@@ -110,10 +145,10 @@ async function generateItinerary() {
 
     console.log('DATABASE INSERT (v3) - Checking ID before send:', payload.user_id)
 
-    const { data: dbData, error: dbError } = await supabase
-      .from('trips')
-      .insert([payload]) // Sending as array
-      .select()
+    const { data: dbData, error: dbError } = await (supabase
+      .from('trips' as any)
+      .insert([payload] as any)
+      .select() as any)
 
     if (dbError) {
       console.error('SUPABASE DB ERROR (v3):', dbError)
@@ -124,7 +159,7 @@ async function generateItinerary() {
       return
     }
 
-    console.log('Trip saved (v3). Entry ID:', dbData?.[0]?.id)
+    console.log('Trip saved (v3). Entry ID:', (dbData as any)?.[0]?.id)
     
     setTimeout(() => {
       clearInterval(stepInterval)
@@ -264,7 +299,7 @@ async function generateItinerary() {
                       </div>
                     </TransitionGroup>
                     <span v-if="destinations.length === 0" class="text-xs text-gray-400 italic py-2">
-                       {{ locale === 'fr' ? 'Aucune destination sélectionnée' : 'No destination selected' }}
+                       {{ t.plan.form.noDestinations }}
                     </span>
                   </div>
                 </div>
@@ -378,7 +413,7 @@ async function generateItinerary() {
               class="w-full py-4 text-lg font-bold text-white bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl hover:from-teal-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <Icon name="heroicons:sparkles-20-solid" class="h-6 w-6" />
-              {{ t.plan.form.submit }}
+              {{ t.plan.form.generateButton }}
             </button>
           </form>
         </div>

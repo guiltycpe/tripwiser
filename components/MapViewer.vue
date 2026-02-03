@@ -4,8 +4,11 @@
     <div ref="mapContainer" class="h-full w-full"></div>
     
     <!-- Loading overlay -->
-    <div v-if="loading" class="absolute inset-0 z-[200] flex items-center justify-center bg-white/60 backdrop-blur-sm">
-      <Icon name="heroicons:arrow-path-20-solid" class="h-10 w-10 animate-spin text-teal-500" />
+    <div v-if="loading || fetchingRoute" class="absolute inset-0 z-[200] flex items-center justify-center bg-white/60 backdrop-blur-sm transition-opacity duration-300">
+      <div class="flex flex-col items-center gap-3">
+        <Icon name="heroicons:arrow-path-20-solid" class="h-10 w-10 animate-spin text-teal-500" />
+        <span v-if="fetchingRoute && !loading" class="text-xs font-bold text-teal-600 animate-pulse">Calcul de l'itinéraire...</span>
+      </div>
     </div>
 
     <!-- Map Legend/Overlay -->
@@ -54,16 +57,22 @@ interface Props {
   activities: Activity[]
   center?: [number, number]
   zoom?: number
+  transportMode?: 'driving' | 'walking' | 'cycling'
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  zoom: 13
+  zoom: 13,
+  transportMode: 'driving'
 })
+
+const emit = defineEmits(['route-updated'])
 
 const mapContainer = ref<HTMLElement | null>(null)
 const loading = ref(true)
+const fetchingRoute = ref(false)
 let map: any = null
 let L: any = null
+let routeLayer: any = null
 
 function recenterMap() {
   if (!map || !L) return
@@ -76,6 +85,49 @@ function recenterMap() {
       map.fitBounds(L.latLngBounds(points), { padding: [50, 50] })
     } else {
       map.setView(points[0], props.zoom)
+    }
+  }
+}
+
+let lastRequestId = 0
+
+async function fetchRoute(points: [number, number][]) {
+  if (points.length < 2) return null
+  
+  const requestId = ++lastRequestId
+  fetchingRoute.value = true
+  try {
+    const coords = points.map(p => `${p[1]},${p[0]}`).join(';')
+    const profile = props.transportMode === 'driving' ? 'driving' : 
+                   props.transportMode === 'walking' ? 'walking' : 'cycling'
+    
+    const response = await fetch(`https://router.project-osrm.org/route/v1/${profile}/${coords}?overview=full&geometries=geojson`)
+    const data = await response.json()
+    
+    // Ignore if a newer request has been started
+    if (requestId !== lastRequestId) return null
+
+    if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+      const route = data.routes[0]
+      return {
+        coordinates: route.geometry.coordinates.map((c: any) => [c[1], c[0]]),
+        duration: route.duration, // total seconds
+        distance: route.distance,  // total meters
+        legs: route.legs.map((l: any) => ({ 
+          duration: l.duration, 
+          distance: l.distance 
+        }))
+      }
+    }
+    return null
+  } catch (error) {
+    if (requestId === lastRequestId) {
+      console.error('Error fetching route:', error)
+    }
+    return null
+  } finally {
+    if (requestId === lastRequestId) {
+      fetchingRoute.value = false
     }
   }
 }
@@ -110,8 +162,9 @@ function initMap() {
   })
 
   // Set initial view
-  const initialCenter = props.activities.length > 0 
-    ? [props.activities[0].lat, props.activities[0].lng] 
+  const firstActivity = props.activities.find(a => a && a.lat && a.lng)
+  const initialCenter = firstActivity 
+    ? [firstActivity.lat, firstActivity.lng] as [number, number]
     : (props.center || [48.8566, 2.3522])
 
   map = L.map(mapContainer.value, {
@@ -126,9 +179,9 @@ function initMap() {
   }).addTo(map)
 
   // Add zoom control manually
-  L.control.zoom({ position: 'topright' }).addTo(map)
+  L.control.zoom({ position: 'bottomright' }).addTo(map)
 
-  updateMarkers()
+  updateMap()
   
   // Force size recalculation (common fix for hidden maps)
   setTimeout(() => {
@@ -136,7 +189,7 @@ function initMap() {
   }, 200)
 }
 
-function updateMarkers() {
+async function updateMap() {
   if (!map || !L) return
 
   // Clear existing markers/lines
@@ -146,48 +199,69 @@ function updateMarkers() {
     }
   })
 
-  if (!props.activities.length) return
+  const validActivities = props.activities.filter(a => a && a.lat && a.lng)
+  if (!validActivities.length) return
 
   const points: [number, number][] = []
   
-  props.activities.forEach((activity, index) => {
-    if (activity.lat && activity.lng) {
-      const latlng: [number, number] = [activity.lat, activity.lng]
-      points.push(latlng)
+  validActivities.forEach((activity, index) => {
+    const latlng: [number, number] = [activity.lat, activity.lng]
+    points.push(latlng)
 
-      const icon = L.divIcon({
-        className: 'custom-div-icon',
-        html: `
-          <div class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500 text-white font-bold shadow-lg border-2 border-white">
-            ${index + 1}
-          </div>
-        `,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16]
-      })
+    const icon = L.divIcon({
+      className: 'custom-div-icon',
+      html: `
+        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500 text-white font-bold shadow-lg border-2 border-white">
+          ${index + 1}
+        </div>
+      `,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
+    })
 
-      L.marker(latlng, { icon })
-        .addTo(map)
-        .bindPopup(`<b class="text-teal-600">${activity.time}</b><br>${activity.description}`)
-    }
+    L.marker(latlng, { icon })
+      .addTo(map)
+      .bindPopup(`<b class="text-teal-600">${activity.time}</b><br>${activity.description}`)
   })
 
   if (points.length > 1) {
-    L.polyline(points, {
-      color: '#14b8a6',
-      weight: 3,
-      opacity: 0.6,
-      dashArray: '5, 10'
-    }).addTo(map)
+    // Try to get real road path
+    const routeData = await fetchRoute(points)
+    
+    if (routeData) {
+      routeLayer = L.polyline(routeData.coordinates, {
+        color: '#14b8a6',
+        weight: 4,
+        opacity: 0.8,
+        lineJoin: 'round'
+      }).addTo(map)
+
+      emit('route-updated', {
+        duration: routeData.duration,
+        distance: routeData.distance,
+        legs: routeData.legs
+      })
+    } else {
+      // Fallback to straight line if OSRM fails
+      routeLayer = L.polyline(points, {
+        color: '#14b8a6',
+        weight: 3,
+        opacity: 0.6,
+        dashArray: '5, 10'
+      }).addTo(map)
+
+      emit('route-updated', null)
+    }
 
     map.fitBounds(L.latLngBounds(points), { padding: [50, 50] })
   } else if (points.length === 1) {
     map.setView(points[0], props.zoom)
+    emit('route-updated', null)
   }
 }
 
-watch(() => props.activities, () => {
-  updateMarkers()
+watch([() => props.activities, () => props.transportMode], () => {
+  updateMap()
 }, { deep: true })
 
 onUnmounted(() => {
