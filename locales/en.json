@@ -166,9 +166,8 @@
         },
         "story": {
             "title": "Our Story",
-            "p1": "TripWiser was born from a simple frustration: planning a multi
-
--city trip shouldn't take weeks of research. Our founders, avid travelers themselves, experienced the pain of juggling spreadsheets, multiple booking sites, and endless browser tabs.","p2": "We set out to create a solution that makes travel planning as enjoyable as the trip itself. Today, TripWiser helps thousands of travelers plan their perfect adventures with ease."
+            "p1": "TripWiser was born from a simple frustration: planning a multi-city trip shouldn't take weeks of research. Our founders, avid travelers themselves, experienced the pain of juggling spreadsheets, multiple booking sites, and endless browser tabs.",
+            "p2": "We set out to create a solution that makes travel planning as enjoyable as the trip itself. Today, TripWiser helps thousands of travelers plan their perfect adventures with ease."
         },
         "stats": {
             "users": "Active Users",
@@ -213,6 +212,7 @@
             "styleBackpacker": "Backpacker",
             "styleComfort": "Confort",
             "styleLuxury": "Luxury",
+            "travelers": "Travelers",
             "generateButton": "Generate My Itinerary"
         }
     },
