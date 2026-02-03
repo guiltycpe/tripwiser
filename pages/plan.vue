@@ -7,7 +7,8 @@ const route = useRoute()
 const { t, locale } = useTranslations()
 
 const departure = ref('')
-const destination = ref('')
+const destinations = ref<string[]>([])
+const currentDestination = ref('')
 const departureDate = ref('07/07/25')
 const returnDate = ref('21/07/25')
 const budget = ref('High')
@@ -97,7 +98,7 @@ async function generateItinerary() {
     const payload = {
         user_id: currentUserId,
         departure: departure.value || 'Unknown',
-        destination: destination.value || 'Asia',
+        destination: destinations.value.join(', ') || 'Asia',
         departure_date: parseDate(departureDate.value),
         return_date: parseDate(returnDate.value),
         budget: budget.value,
@@ -219,13 +220,53 @@ async function generateItinerary() {
                   <Icon name="heroicons:map-20-solid" class="inline h-5 w-5 text-cyan-500 mr-1" />
                   {{ t.plan.form.destination }}
                 </label>
-                <div class="relative">
-                  <LocationInput
-                    v-model="destination"
-                    id="destination"
-                    :placeholder="t.plan.form.destinationPlaceholder"
-                    inputClass="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
-                  />
+                <div class="space-y-3">
+                  <div class="relative">
+                    <LocationInput
+                      v-model="currentDestination"
+                      id="destination"
+                      :placeholder="t.plan.form.destinationPlaceholder"
+                      @place_changed="(place) => {
+                        if (place && place.description) {
+                           if (!destinations.includes(place.description)) {
+                              destinations.push(place.description)
+                           }
+                           currentDestination = ''
+                        }
+                      }"
+                      inputClass="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                    />
+                  </div>
+                  
+                  <!-- Selected Destinations Tags -->
+                  <div class="flex flex-wrap gap-2 min-h-[32px]">
+                    <TransitionGroup 
+                      enter-active-class="transition duration-300 ease-out"
+                      enter-from-class="opacity-0 scale-90"
+                      enter-to-class="opacity-100 scale-100"
+                      leave-active-class="transition duration-200 ease-in"
+                      leave-from-class="opacity-100 scale-100"
+                      leave-to-class="opacity-0 scale-90"
+                    >
+                      <div 
+                        v-for="(dest, index) in destinations" 
+                        :key="dest"
+                        class="group flex items-center gap-1.5 rounded-lg bg-cyan-50 px-3 py-1.5 text-sm font-medium text-cyan-700 border border-cyan-100 shadow-sm transition-all hover:bg-cyan-100 hover:border-cyan-200"
+                      >
+                         <span>{{ dest }}</span>
+                         <button 
+                            type="button" 
+                            @click="destinations.splice(index, 1)"
+                            class="ml-1 rounded-full p-0.5 text-cyan-400 hover:bg-cyan-200 hover:text-cyan-700 focus:outline-none"
+                         >
+                           <Icon name="heroicons:x-mark-20-solid" class="h-4 w-4" />
+                         </button>
+                      </div>
+                    </TransitionGroup>
+                    <span v-if="destinations.length === 0" class="text-xs text-gray-400 italic py-2">
+                       {{ locale === 'fr' ? 'Aucune destination sélectionnée' : 'No destination selected' }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
