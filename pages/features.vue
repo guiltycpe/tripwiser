@@ -10,7 +10,7 @@ const { t } = useTranslations()
     <section class="section bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-center">
       <div class="mx-auto max-w-4xl animate-fade-in">
         <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 md:text-6xl">
-          {{ t.features.hero.title }}
+          {{ t.features.hero.title }} <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">{{ t.features.hero.titleGradient }}</span>
         </h1>
         <p class="mt-6 text-xl leading-8 text-gray-600">
           {{ t.features.hero.subtitle }}
@@ -88,16 +88,13 @@ const { t } = useTranslations()
     <!-- CTA Section -->
     <section class="section section-alt text-center">
       <div class="mx-auto max-w-3xl">
-        <h2 class="text-4xl font-bold text-gray-900">{{ t.home.cta.title }}</h2>
-        <p class="mt-4 text-lg text-gray-600">
-          {{ t.home.cta.subtitle }}
-        </p>
+        <h2 class="text-4xl font-bold text-gray-900">{{ t.features.cta.title }}</h2>
         <div class="mt-8 flex flex-wrap justify-center gap-4">
           <NuxtLink to="/plan" class="btn-primary px-8 py-4 text-lg">
-            {{ t.home.cta.button }}
+            {{ t.features.cta.startPlanning }}
           </NuxtLink>
           <NuxtLink to="/pricing" class="btn-secondary px-8 py-4 text-lg">
-            {{ t.nav.pricing }}
+            {{ t.features.cta.viewPricing }}
           </NuxtLink>
         </div>
       </div>

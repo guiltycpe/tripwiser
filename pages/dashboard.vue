@@ -152,7 +152,7 @@
               </div>
               <div v-if="trip.road_trip" class="flex items-center text-sm text-gray-600">
                 <Icon name="heroicons:truck-20-solid" class="mr-2 h-4 w-4 text-orange-500" />
-                Road Trip
+                {{ t.plan.form.roadTrip }}
               </div>
             </div>
 
@@ -184,6 +184,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, computed, watchEffect } from 'vue'
 definePageMeta({
   middleware: 'auth'
 })
@@ -214,7 +215,7 @@ function closeModal() {
 }
 
 const userName = computed(() => {
-  return user.value?.user_metadata?.full_name || user.value?.email?.split('@')[0] || 'Traveler'
+  return user.value?.user_metadata?.full_name || user.value?.email?.split('@')[0] || (t.value.about as any).team?.founding_desc?.split(' & ')[0] || 'Traveler'
 })
 
 const memberSince = computed(() => {
