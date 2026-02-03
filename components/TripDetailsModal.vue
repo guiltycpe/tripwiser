@@ -18,7 +18,7 @@
           <div class="w-full md:w-3/5 h-[45vh] md:h-full relative border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50 flex flex-col">
             <div class="flex-1 min-h-0 relative">
               <MapViewer 
-                :activities="allActivities" 
+                :activities="visibleActivities" 
                 :transport-mode="selectedTransportMode" 
                 @route-updated="handleRouteUpdated"
               />
@@ -120,26 +120,50 @@
             <div class="space-y-6">
               <h3 class="text-lg font-bold text-gray-900">Itinéraire du voyage</h3>
               
-              <div v-for="(day, dayIndex) in trip.itinerary" :key="day.day" class="space-y-4">
-                <div class="flex items-center gap-3">
-                  <div class="h-8 w-8 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm">
-                    {{ day.day }}
+              <div v-for="day in trip.itinerary" :key="day.day" class="border rounded-xl overflow-hidden transition-all duration-300" :class="activeDay === day.day ? 'border-teal-500 bg-teal-50/10' : 'border-gray-100 hover:border-teal-200'">
+                <!-- Accordion Header -->
+                <button 
+                  @click="toggleDay(day.day)"
+                  class="w-full flex items-center justify-between p-4 text-left transition-colors"
+                  :class="activeDay === day.day ? 'bg-teal-50/50' : 'bg-white hover:bg-gray-50'"
+                >
+                  <div class="flex items-center gap-3">
+                    <div 
+                      class="h-8 w-8 rounded-xl flex items-center justify-center font-bold text-sm transition-colors"
+                      :class="activeDay === day.day ? 'bg-gradient-to-br from-teal-500 to-cyan-500 text-white shadow-md' : 'bg-gray-100 text-gray-500'"
+                    >
+                      {{ day.day }}
+                    </div>
+                    <h4 class="font-bold text-gray-900">{{ day.title }}</h4>
                   </div>
-                  <h4 class="font-bold text-gray-900">{{ day.title }}</h4>
-                </div>
+                  <Icon 
+                    name="heroicons:chevron-down-20-solid" 
+                    class="h-5 w-5 text-gray-400 transition-transform duration-300"
+                    :class="{ 'rotate-180': activeDay === day.day }"
+                  />
+                </button>
 
-                <div class="ml-4 pl-7 border-l-2 border-dashed border-teal-50 space-y-8 py-2">
-                  <div 
-                    v-for="activity in day.activities" 
-                    :key="activity.time"
-                    class="relative group"
-                  >
-                    <!-- Dot -->
-                    <div class="absolute -left-[37px] top-1.5 h-4 w-4 rounded-full border-4 border-white bg-teal-500 shadow-sm z-10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-teal-200"></div>
-                    
-                    <div class="transition-transform duration-300 group-hover:translate-x-1">
-                      <span class="text-xs font-black text-teal-600/60 uppercase tracking-widest block mb-1.5">{{ activity.time }}</span>
-                      <p class="text-sm font-medium text-gray-700 leading-relaxed group-hover:text-gray-900">{{ activity.description }}</p>
+                <!-- Accordion Body -->
+                <div v-show="activeDay === day.day" class="block p-4 bg-white border-t border-teal-100/50">
+                  <div class="ml-3 pl-6 border-l-2 border-dashed border-teal-100 space-y-6">
+                    <div 
+                      v-for="activity in day.activities" 
+                      :key="activity.time"
+                      class="relative group"
+                    >
+                      <!-- Dot -->
+                      <div class="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border-2 border-white bg-teal-400 shadow-sm z-10 transition-transform group-hover:scale-125 group-hover:bg-teal-600"></div>
+                      
+                      <div>
+                        <div class="flex items-baseline justify-between mb-1">
+                          <span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded">{{ activity.time }}</span>
+                        </div>
+                        <p class="text-sm text-gray-700 leading-relaxed font-medium">{{ activity.description }}</p>
+                        <p v-if="activity.location" class="text-xs text-gray-500 mt-1 flex items-center">
+                           <Icon name="heroicons:map-pin-20-solid" class="h-3 w-3 mr-1" />
+                           {{ activity.location }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -173,9 +197,20 @@ const props = defineProps({
 
 defineEmits(['close'])
 
-const allActivities = computed(() => {
+const activeDay = ref(1)
+
+function toggleDay(dayNum: number) {
+  if (activeDay.value === dayNum) {
+    return 
+  }
+  activeDay.value = dayNum
+}
+
+const visibleActivities = computed(() => {
   if (!props.trip.itinerary) return []
-  return props.trip.itinerary.flatMap((day: any) => day.activities)
+  // Filter for the active day
+  const day = props.trip.itinerary.find((d: any) => d.day === activeDay.value)
+  return day ? day.activities : []
 })
 
 const selectedTransportMode = ref<'driving' | 'walking' | 'cycling'>('driving')
