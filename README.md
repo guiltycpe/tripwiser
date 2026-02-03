@@ -1,56 +1,96 @@
-# ✈️ TripWiser
+# ✈️ TripWiser: The Next-Gen Travel Planner
 
-![Status](https://img.shields.io/badge/Status-Work_in_Progress-yellow)
-![Tech](https://img.shields.io/badge/Stack-Nuxt.js_|_Vue.js_|_APIs-00C58E)
+![Status](https://img.shields.io/badge/Status-Beta-brightgreen)
+![Tech](https://img.shields.io/badge/Stack-Nuxt_4_|_Vue_3_|_Supabase_|_Leaflet-00C58E)
+![I18n](https://img.shields.io/badge/Languages-EN_|_FR-blue)
 
-**TripWiser** is a modular web application designed to simplify travel planning by generating personalized itineraries based on budget and preferences.
+**TripWiser** is a high-performance travel planning application built with Nuxt 4. It leverages advanced routing engines, multiple geolocation APIs, and AI-driven logic to generate optimized, ready-to-use travel itineraries.
 
-> 🚧 **Note :** This project is currently under active development. It represents my playground for mastering **Nuxt.js**, **API integration**, and **Modern Web Architecture**.
+> 🚧 **Personal Note:** This project is currently under active development. It represents my **professional playground** for mastering **Nuxt 4**, complex **API integrations**, and **Modern Headless Architecture**.
 
-## 🎯 Project Goal
-The main goal of TripWiser is to solve the "fragmentation problem" in travel planning. Instead of visiting 10 different sites, users get a centralized, AI-assisted plan.
+---
 
-From a technical perspective, I am building this to demonstrate:
-- **Headless/API-centric Architecture:** Consuming external data sources efficiently.
-- **Frontend State Management:** Using Vue ecosystem tools.
-- **Modern UI/UX:** Creating a responsive interface with Nuxt.
+## 🎯 Project Vision & Goals
+
+The main goal of TripWiser is to solve the **"fragmentation problem"** in travel planning. Instead of visiting dozens of different sites, users get a centralized, intelligent, and visually stunning plan.
+
+From a technical perspective, this project serves as a showcase for:
+- **Headless/API-centric Architecture**: Consuming and merging multiple external data sources (OSRM, Geoapify, Photon) efficiently.
+- **Advanced Frontend State**: Implementing complex reactive logic for real-time map and timeline synchronization.
+- **Premium UI/UX**: Creating a "Wow" effect using Glassmorphism and micro-animations with Tailwind CSS 4.
+
+> 📂 **Deep Dive**: For detailed schemas and infrastructure details, check the [Technical Documentation](./docs/ARCHITECTURE.md).
+
+---
+
+## ✨ Key Features
+
+### 🗺️ Intelligent Mapping & Routing
+- **Real-Road Routing**: Integrated **OSRM (Open Source Routing Machine)** for real-time travel time and distance estimations.
+- **Multi-Modal Transport**: Support for **Driving**, **Walking**, and **Cycling**, with dynamic UI recalculations.
+- **Custom Map Engine**: Powered by **Leaflet**, featuring non-overlapping markers and optimized visual paths.
+
+### 🔍 Smart Global Search
+- **Hybrid Place Engine**: High-accuracy address autocomplete using **Geoapify** with a robust fallback to **Photon (OpenStreetMap)**.
+- **Zero-Config UX**: Intelligent suggestions for trip origins.
+
+### 🤖 Itinerary Logic
+- **Geographic Spreading**: Smart logic to distribute activities across travel days to minimize travel fatigue.
+- **Personalized Styles**: Tailored itineraries for "Luxury", "Comfort", or "Backpacker" budgets.
+- **Travel Analytics**: Precision travel time and distance summary for every leg of the journey.
+
+### 🌍 Localization (i18n)
+- **Native Bilingual Support**: Fully translated in English and French.
+- **Contextual Formatting**: Automatic unit conversion and duration strings.
+
+---
 
 ## 🛠️ Tech Stack
 
-- **Framework:** [Nuxt.js](https://nuxt.com/) (Vue.js)
-- **Language:** JavaScript / TypeScript
-- **Styling:** CSS / Tailwind CSS (Work in progress)
-- **Data:** REST API integration
-- **AI Component:** *[In Development]* Integration for personalized recommendations
+- **Framework**: [Nuxt 4](https://nuxt.com/) & [Vue 3](https://vuejs.org/)
+- **Backend/Auth**: [Supabase](https://supabase.com/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Map engine**: [Leaflet](https://leafletjs.com/)
+- **Tools**: [VueUse](https://vueuse.org/), `@nuxtjs/i18n`, `@nuxt/icon` (Heroicons)
 
-## 🚀 Features & Roadmap
+---
 
-Here is the current status of the development:
+## 🚀 Getting Started
 
-- [x] **Project Initialization:** Nuxt environment and directory structure setup.
-- [x] **Routing:** Basic page navigation architecture.
-- [ ] **API Integration:** Connection to Travel/Booking APIs (fetching destinations).
-- [ ] **Budget Algorithm:** Logic to filter options based on user constraints.
-- [ ] **AI Recommendation Engine:** Implementing the "smart" suggestion feature.
-- [ ] **Authentication:** User accounts to save itineraries.
+### Prerequisites
+- Node.js (v20+)
+- A Supabase project (URL & Secret Key)
+- Geoapify API Key (Optional)
 
-## 📦 Setup & Installation
+### Installation
 
-To run this project locally:
+1. **Clone & Enter**
+   ```bash
+   git clone https://github.com/guiltycpe/tripwiser.git
+   cd tripwiser
+   ```
 
-```bash
-# Clone the repository
-git clone https://github.com/guiltycpe/tripwiser.git
+2. **Environment**
+   ```bash
+   cp .env.example .env
+   ```
+   *Required variables:* `NUXT_PUBLIC_SUPABASE_URL`, `NUXT_PUBLIC_SUPABASE_KEY`.
 
-# Navigate to the directory
-cd tripwiser
+3. **Install & Run**
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-# Install dependencies
-npm install
+---
 
-# Run the development server
-npm run dev
-```
+## 📜 Roadmap
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [x] **V1.0 Beta**: Advanced Map/Routing, Hybrid Search, I18n Core.
+- [ ] **V1.1**: Itinerary export (PDF), Activity Drag-and-Drop.
+- [ ] **V1.2**: Collaborative planning & live sharing.
+- [ ] **V1.3**: Advanced AI generation via LLMs.
 
+---
+
+Made with ❤️ by [guiltycpe](https://github.com/guiltycpe)
