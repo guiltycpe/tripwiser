@@ -32,12 +32,39 @@ interface PlaceResult {
 export default defineEventHandler(async (event: H3Event): Promise<PlaceResult[]> => {
     const query = getQuery(event)
     const text = query.input as string
+    const config = useRuntimeConfig(event)
+    const geoapifyKey = config.geoapifyApiKey
 
     if (!text || text.length < 2) { return [] }
 
     const lang = getHeader(event, 'accept-language')?.substring(0, 2) || 'en'
 
-    // Photon endpoint (OpenStreetMap Geocoding)
+    if (geoapifyKey) {
+        // Geoapify Autocomplete API
+        const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(text)}&limit=5&lang=${lang}&apiKey=${geoapifyKey}`
+
+        try {
+            const response = await $fetch<any>(url)
+            if (response.features && response.features.length > 0) {
+                return response.features.map((f: any): PlaceResult => {
+                    const props = f.properties
+                    return {
+                        description: props.formatted,
+                        place_id: props.place_id,
+                        structured_formatting: {
+                            main_text: props.name || props.city || props.street,
+                            secondary_text: `${props.city ? props.city + ', ' : ''}${props.country}`
+                        }
+                    }
+                })
+            }
+        } catch (error) {
+            console.error('Error fetching from Geoapify:', error)
+            // Fallback to Photon if Geoapify fails
+        }
+    }
+
+    // Fallback: Photon endpoint (OpenStreetMap Geocoding)
     const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(text)}&limit=10&lang=${lang}`
 
     try {
@@ -50,7 +77,6 @@ export default defineEventHandler(async (event: H3Event): Promise<PlaceResult[]>
                 const country = props.country || 'Unknown'
                 const street = props.street
 
-                // On construit une description propre
                 let description = city
                 if (street) description = `${street}, ${description}`
                 if (country) description = `${description}, ${country}`

@@ -219,6 +219,12 @@
     "common": {
         "month": "month",
         "year": "year",
-        "free": "Free"
+        "free": "Free",
+        "transport": {
+            "driving": "Driving",
+            "walking": "Walking",
+            "cycling": "Cycling",
+            "title": "Transport Mode"
+        }
     }
 }
