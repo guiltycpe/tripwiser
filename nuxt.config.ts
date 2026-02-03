@@ -15,6 +15,12 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxtjs/supabase',
   ],
+  icon: {
+    clientBundle: {
+      scan: true,
+      includeCustomCollections: true,
+    }
+  },
   i18n: {
     vueI18n: './i18n.config.ts',
     locales: [
@@ -24,19 +30,28 @@ export default defineNuxtConfig({
     defaultLocale: 'en'
   },
   supabase: {
+    url: process.env.NUXT_PUBLIC_SUPABASE_URL,
+    key: process.env.NUXT_PUBLIC_SUPABASE_KEY,
     redirectOptions: {
       login: '/auth/login',
       callback: '/',
-      exclude: ['/', '/auth/*', '/features', '/pricing', '/about', '/about'], // Removing /plan to force redirect
+      exclude: ['/', '/auth/*', '/features', '/pricing', '/about'], // Removing /plan to force redirect
     }
   },
   runtimeConfig: {
     // Private keys (server-only)
-    googlePlacesApiKey: '',
-    geoapifyApiKey: '',
+    geoapifyApiKey: process.env.NUXT_GEOAPIFY_API_KEY,
     // Public keys (exposed to client)
     public: {
-      googlePlacesApiKey: ''
+      // Add public keys here
+    }
+  },
+  vite: {
+    css: {
+      devSourcemap: false
+    },
+    build: {
+      sourcemap: false
     }
   }
 })

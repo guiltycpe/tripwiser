@@ -57,32 +57,32 @@ export default defineEventHandler(async (event: H3Event): Promise<GenerateItiner
                 {
                     time: "09:00",
                     description: `Petit-déjeuner local et préparation`,
-                    lat: baseLat + (Math.random() - 0.5) * 0.01,
-                    lng: baseLng + (Math.random() - 0.5) * 0.01
+                    lat: baseLat + (Math.random() - 0.5) * 0.05,
+                    lng: baseLng + (Math.random() - 0.5) * 0.05
                 },
                 {
                     time: "11:00",
                     description: `Visite d'un site emblématique de ${destination}`,
-                    lat: baseLat + (Math.random() - 0.5) * 0.01,
-                    lng: baseLng + (Math.random() - 0.5) * 0.01
+                    lat: baseLat + (Math.random() - 0.5) * 0.05,
+                    lng: baseLng + (Math.random() - 0.5) * 0.05
                 },
                 {
                     time: "14:00",
                     description: `Pause déjeuner (${budget})`,
-                    lat: baseLat + (Math.random() - 0.5) * 0.01,
-                    lng: baseLng + (Math.random() - 0.5) * 0.01
+                    lat: baseLat + (Math.random() - 0.5) * 0.05,
+                    lng: baseLng + (Math.random() - 0.5) * 0.05
                 },
                 {
                     time: "16:00",
                     description: `Activité style ${travel_style}`,
-                    lat: baseLat + (Math.random() - 0.5) * 0.01,
-                    lng: baseLng + (Math.random() - 0.5) * 0.01
+                    lat: baseLat + (Math.random() - 0.5) * 0.05,
+                    lng: baseLng + (Math.random() - 0.5) * 0.05
                 },
                 {
                     time: "20:00",
                     description: `Dîner et soirée libre`,
-                    lat: baseLat + (Math.random() - 0.5) * 0.01,
-                    lng: baseLng + (Math.random() - 0.5) * 0.01
+                    lat: baseLat + (Math.random() - 0.5) * 0.05,
+                    lng: baseLng + (Math.random() - 0.5) * 0.05
                 }
             ]
         })
