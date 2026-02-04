@@ -41,6 +41,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Private keys (server-only)
     geoapifyApiKey: process.env.NUXT_GEOAPIFY_API_KEY,
+    unsplashAccessKey: process.env.UNSPLASH_ACCESS_KEY,
     // Public keys (exposed to client)
     public: {
       // Add public keys here
