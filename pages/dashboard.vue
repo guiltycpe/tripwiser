@@ -38,7 +38,7 @@
               <p class="text-sm text-gray-600">{{ t.dashboard.stats.totalTrips }}</p>
               <p class="mt-1 text-3xl font-bold text-gray-900">{{ trips.length }}</p>
             </div>
-            <div class="rounded-full bg-teal-100 p-3">
+            <div class="rounded-full bg-teal-100 w-12 h-12 flex items-center justify-center">
               <Icon name="heroicons:map-20-solid" class="h-6 w-6 text-teal-600" />
             </div>
           </div>
@@ -50,7 +50,7 @@
               <p class="text-sm text-gray-600">{{ t.dashboard.stats.countries }}</p>
               <p class="mt-1 text-3xl font-bold text-gray-900">{{ countriesCount }}</p>
             </div>
-            <div class="rounded-full bg-cyan-100 p-3">
+            <div class="rounded-full bg-cyan-100 w-12 h-12 flex items-center justify-center">
               <Icon name="heroicons:globe-americas-20-solid" class="h-6 w-6 text-cyan-600" />
             </div>
           </div>
@@ -62,7 +62,7 @@
               <p class="text-sm text-gray-600">{{ t.dashboard.stats.upcoming }}</p>
               <p class="mt-1 text-3xl font-bold text-gray-900">{{ upcomingTrips }}</p>
             </div>
-            <div class="rounded-full bg-orange-100 p-3">
+            <div class="rounded-full bg-orange-100 w-12 h-12 flex items-center justify-center">
               <Icon name="heroicons:calendar-20-solid" class="h-6 w-6 text-orange-600" />
             </div>
           </div>
@@ -74,7 +74,7 @@
               <p class="text-sm text-gray-600">{{ t.dashboard.stats.memberSince }}</p>
               <p class="mt-1 text-xl font-bold text-gray-900">{{ memberSince }}</p>
             </div>
-            <div class="rounded-full bg-cyan-100 p-3">
+            <div class="rounded-full bg-cyan-100 w-12 h-12 flex items-center justify-center">
               <Icon name="heroicons:user-20-solid" class="h-6 w-6 text-cyan-600" />
             </div>
           </div>
@@ -83,13 +83,19 @@
 
       <!-- Trips Section -->
       <div class="animate-slide-up" style="animation-delay: 0.1s">
-        <div class="mb-6 flex items-center justify-between">
+        <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h2 class="text-2xl font-bold text-gray-900">{{ t.dashboard.trips.title }}</h2>
-          <select v-model="filterStatus" class="rounded-lg border-2 border-gray-200 px-4 py-2 focus:border-teal-500 focus:ring-2 focus:ring-teal-500">
-            <option value="all">{{ t.dashboard.trips.all }}</option>
-            <option value="upcoming">{{ t.dashboard.trips.upcoming }}</option>
-            <option value="past">{{ t.dashboard.trips.past }}</option>
-          </select>
+          <div class="relative">
+             <select 
+               v-model="filterStatus" 
+               class="appearance-none cursor-pointer pl-4 pr-10 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm font-semibold shadow-sm hover:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all"
+             >
+               <option value="all" class="text-gray-900 bg-white">{{ t.dashboard.trips.all }}</option>
+               <option value="upcoming" class="text-gray-900 bg-white">{{ t.dashboard.trips.upcoming }}</option>
+               <option value="past" class="text-gray-900 bg-white">{{ t.dashboard.trips.past }}</option>
+             </select>
+             <Icon name="heroicons:chevron-down-20-solid" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          </div>
         </div>
 
         <!-- Loading State -->
@@ -115,60 +121,14 @@
 
         <!-- Trips Grid -->
         <div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div
+          <TripCard
             v-for="trip in filteredTrips"
             :key="trip.id"
-            class="card-hover group relative overflow-hidden bg-white"
-          >
-            <!-- Trip Header -->
-            <div class="mb-4">
-              <div class="mb-2 flex items-start justify-between">
-                <h3 class="text-xl font-bold text-gray-900">{{ trip.destination }}</h3>
-                <button
-                  @click="deleteTrip(trip.id)"
-                  class="opacity-0 transition-opacity group-hover:opacity-100 rounded-lg p-2 hover:bg-red-50"
-                  :title="t.common.delete"
-                >
-                  <Icon name="heroicons:trash-20-solid" class="h-5 w-5 text-red-500" />
-                </button>
-              </div>
-              <p class="text-sm text-gray-600">{{ t.dashboard.trips.from }} {{ trip.departure }}</p>
-            </div>
-
-            <!-- Trip Details -->
-            <div class="space-y-2 mb-4">
-              <div v-if="trip.departure_date" class="flex items-center text-sm text-gray-600">
-                <Icon name="heroicons:calendar-20-solid" class="mr-2 h-4 w-4 text-teal-500" />
-                {{ formatDate(trip.departure_date) }}
-                <span v-if="trip.return_date"> - {{ formatDate(trip.return_date) }}</span>
-              </div>
-              <div v-if="trip.budget" class="flex items-center text-sm text-gray-600">
-                <Icon name="heroicons:currency-euro-20-solid" class="mr-2 h-4 w-4 text-green-500" />
-                {{ trip.budget }} {{ t.dashboard.trips.budget }}
-              </div>
-              <div v-if="trip.travel_style" class="flex items-center text-sm text-gray-600">
-                <Icon name="heroicons:sparkles-20-solid" class="mr-2 h-4 w-4 text-purple-500" />
-                {{ trip.travel_style }}
-              </div>
-              <div v-if="trip.road_trip" class="flex items-center text-sm text-gray-600">
-                <Icon name="heroicons:truck-20-solid" class="mr-2 h-4 w-4 text-orange-500" />
-                {{ t.plan.form.roadTrip }}
-              </div>
-            </div>
-
-            <!-- Trip Footer -->
-            <div class="flex gap-2 border-t border-gray-100 pt-4">
-              <button 
-                @click="openTripDetails(trip)"
-                class="flex-1 rounded-lg bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-700 transition-all hover:bg-teal-100"
-              >
-                {{ t.dashboard.trips.viewDetails }}
-              </button>
-              <button class="flex-1 rounded-lg border-2 border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition-all hover:border-teal-500 hover:text-teal-600">
-                {{ t.dashboard.trips.edit }}
-              </button>
-            </div>
-          </div>
+            :trip="trip"
+            @click="openTripDetails(trip)"
+            @delete="deleteTrip"
+            @refresh-image="handleRefreshImage"
+          />
         </div>
       </div>
     </main>
@@ -179,6 +139,7 @@
       :is-open="isModalOpen" 
       :trip="selectedTrip" 
       @close="closeModal" 
+      @delete="deleteTrip"
     />
   </div>
 </template>
@@ -297,9 +258,54 @@ async function deleteTrip(tripId: string) {
 
     // Remove from local array
     trips.value = trips.value.filter(t => t.id !== tripId)
+    
+    // Close modal if it's open
+    if (isModalOpen.value && selectedTrip.value?.id === tripId) {
+      closeModal()
+    }
   } catch (err) {
     console.error('Error deleting trip:', err)
     alert('Failed to delete trip. Please try again.')
+  }
+}
+
+async function handleRefreshImage(tripId: string) {
+  const trip = trips.value.find(t => t.id === tripId)
+  if (!trip) return
+
+  try {
+    // Show loading state on card (optional, but good UX - here we just wait)
+    // Ideally we would have a loading state on the card itself, but for now we just do it.
+    
+    // Fetch new image
+    const { url } = await $fetch('/api/get-destination-image', {
+      params: { 
+        destination: trip.destination.split(',')[0], 
+        // Add random param to bypass cache if needed, but Unsplash 'random' endpoint should handle it.
+        // But the browser or server might cache?
+        timestamp: Date.now() 
+      }
+    }) as any
+
+    if (!url) {
+      alert('Could not find a new image.')
+      return
+    }
+
+    // Update DB
+    const { error } = await supabase
+      .from('trips')
+      .update({ destination_image_url: url })
+      .eq('id', tripId)
+
+    if (error) throw error
+
+    // Update local
+    trip.destination_image_url = url
+    
+  } catch (err) {
+    console.error('Error refreshing image:', err)
+    alert('Failed to refresh image.')
   }
 }
 
@@ -308,9 +314,12 @@ async function handleLogout() {
   router.push('/')
 }
 
-function formatDate(dateString: string) {
-  const date = new Date(dateString)
-  const localeStr = locale.value === 'fr' ? 'fr-FR' : 'en-US'
-  return date.toLocaleDateString(localeStr, { month: 'short', day: 'numeric', year: 'numeric' })
+
+// Helpers can be removed or kept if used elsewhere. Removed unused ones for clarity.
+function formatDestination(dest: string) {
+  if (!dest) return 'Unknown'
+  return dest.split(',')[0].trim()
 }
+// Other helpers moved to TripCard or unused
+
 </script>

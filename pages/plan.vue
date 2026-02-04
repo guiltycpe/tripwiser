@@ -129,6 +129,24 @@ async function generateItinerary() {
       }
     }) as any
 
+    // 2.5 FETCH DESTINATION IMAGE (Unsplash)
+    console.log('Fetching destination image...')
+    let destinationImageUrl = null
+    try {
+      // Use the first destination for the image search
+      const mainDestination = destinations.value[0] || 'Travel'
+      const imageResponse = await $fetch('/api/get-destination-image', {
+        params: { destination: mainDestination }
+      }) as any
+      
+      if (imageResponse && imageResponse.url) {
+        destinationImageUrl = imageResponse.url
+      }
+    } catch (imgErr) {
+      console.error('Error fetching image:', imgErr)
+      // Continue anyway, don't block trip creation
+    }
+
     // 3. DATABASE INSERTION (using array for stability)
     const payload = {
         user_id: currentUserId,
@@ -140,7 +158,8 @@ async function generateItinerary() {
         travel_style: travelStyle.value,
         road_trip: takeRoadTrip.value,
         travelers: travelers.value,
-        itinerary: aiResponse?.itinerary
+        itinerary: aiResponse, // Store full response (days, summary, transport)
+        destination_image_url: destinationImageUrl
     }
 
     console.log('DATABASE INSERT (v3) - Checking ID before send:', payload.user_id)

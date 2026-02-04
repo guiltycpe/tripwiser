@@ -1,0 +1,14 @@
+function getBudgetLabel(tier: string) {
+  if (!tier) return ''
+  const t = tier.toLowerCase()
+  const map: Record<string, string> = {
+    'low': 'Économique',
+    'budget': 'Économique',
+    'medium': 'Confort',
+    'moderate': 'Confort',
+    'balanced': 'Confort',
+    'high': 'Luxe',
+    'luxury': 'Luxe'
+  }
+  return map[t] || tier
+}
