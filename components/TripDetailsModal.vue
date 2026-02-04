@@ -12,56 +12,66 @@
       <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-md" @click="$emit('close')"></div>
       
         <!-- Main Container -->
-        <div class="relative w-full max-w-7xl h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl flex flex-col border border-white/20">
+        <div class="relative w-full max-w-7xl h-[90vh] overflow-hidden rounded-3xl bg-gradient-to-br from-gray-50 to-white shadow-2xl flex flex-col border border-gray-200/60">
           
           <!-- Header (Always Visible) -->
-          <div class="bg-white/80 backdrop-blur-md p-6 border-b border-gray-100 flex items-center justify-between z-20">
-            <div>
-               <h2 class="text-3xl font-black text-gray-900 flex items-center gap-3 tracking-tight">
-                 {{ tripData.trip_summary.destination }}
-                 <span class="text-xs px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-100 uppercase tracking-widest font-bold shadow-sm">
-                   {{ getBudgetLabel(tripData.trip_summary.budget_tier) }}
-                 </span>
-               </h2>
-               <p class="text-sm font-medium text-gray-500 mt-2 flex items-center gap-2">
-                 <Icon name="heroicons:calendar-20-solid" class="h-4 w-4 text-gray-400" />
-                 {{ formatDate(props.trip.departure_date) }} - {{ formatDate(props.trip.return_date) }}
-                 <span class="text-gray-300">•</span>
-                 {{ tripData.trip_summary.duration_days }} Jours
-               </p>
-            </div>
-
-            <div class="flex items-center gap-4">
-              <!-- Delete button (left side) -->
-              <button 
-                @click="$emit('delete', props.trip.id)" 
-                class="p-2 rounded-full hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors group cursor-pointer"
-                title="Supprimer le voyage"
-              >
-                <Icon name="heroicons:trash-20-solid" class="h-5 w-5" />
-              </button>
-
-              <!-- Tabs -->
-              <div class="hidden md:flex bg-gray-100/50 p-1 rounded-xl">
-                 <button 
-                   @click="activeTab = 'overview'"
-                   class="px-4 py-2 rounded-lg text-sm font-bold transition-all"
-                   :class="activeTab === 'overview' ? 'bg-white shadow text-teal-600' : 'text-gray-500 hover:text-gray-700'"
-                 >
-                   Vue d'ensemble
-                 </button>
-                 <button 
-                   @click="activeTab = 'itinerary'"
-                   class="px-4 py-2 rounded-lg text-sm font-bold transition-all"
-                   :class="activeTab === 'itinerary' ? 'bg-white shadow text-teal-600' : 'text-gray-500 hover:text-gray-700'"
-                 >
-                   Itinéraire Détaillé
-                 </button>
+          <div class="bg-white/95 backdrop-blur-xl p-8 border-b border-gray-200/50 z-20">
+            <div class="flex items-start justify-between mb-6">
+              <div class="flex-1">
+                 <div class="flex items-center gap-3 mb-2">
+                   <h2 class="text-4xl font-black text-gray-900 tracking-tight bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text">
+                     {{ tripData.trip_summary.destination }}
+                   </h2>
+                   <span class="text-xs px-3 py-1.5 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white uppercase tracking-widest font-bold shadow-lg shadow-teal-500/30">
+                     {{ getBudgetLabel(tripData.trip_summary.budget_tier) }}
+                   </span>
+                 </div>
+                 <p class="text-sm font-semibold text-gray-500 flex items-center gap-2.5">
+                   <Icon name="heroicons:calendar-20-solid" class="h-4 w-4 text-teal-500" />
+                   {{ formatDate(props.trip.departure_date) }} - {{ formatDate(props.trip.return_date) }}
+                   <span class="text-gray-300">•</span>
+                   <span class="text-teal-600">{{ tripData.trip_summary.duration_days }} Jours</span>
+                 </p>
               </div>
 
-              <button @click="$emit('close')" class="p-2 rounded-full hover:bg-gray-100 text-gray-400 transition-colors cursor-pointer">
-                <Icon name="heroicons:x-mark-20-solid" class="h-6 w-6" />
-              </button>
+              <div class="flex items-center gap-3">
+                <!-- Delete button -->
+                <button 
+                  @click="$emit('delete', props.trip.id)" 
+                  class="p-2.5 rounded-xl hover:bg-red-50 text-gray-400 hover:text-red-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-red-200"
+                  title="Supprimer le voyage"
+                >
+                  <Icon name="heroicons:trash-20-solid" class="h-5 w-5" />
+                </button>
+
+                <button @click="$emit('close')" class="p-2.5 rounded-xl hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-all duration-300 cursor-pointer border border-gray-200 hover:border-gray-300">
+                  <Icon name="heroicons:x-mark-20-solid" class="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex bg-gray-100 p-1.5 rounded-2xl w-fit shadow-inner">
+               <button 
+                 @click="activeTab = 'overview'"
+                 class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer origin-center"
+                 :class="activeTab === 'overview' ? 'bg-white shadow-lg text-teal-600 scale-105' : 'text-gray-500 hover:text-gray-700'"
+               >
+                 <span class="flex items-center gap-2">
+                   <Icon name="heroicons:squares-2x2-20-solid" class="h-4 w-4" />
+                   Vue d'ensemble
+                 </span>
+               </button>
+               <button 
+                 @click="activeTab = 'itinerary'"
+                 class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer origin-center"
+                 :class="activeTab === 'itinerary' ? 'bg-white shadow-lg text-teal-600 scale-105' : 'text-gray-500 hover:text-gray-700'"
+               >
+                 <span class="flex items-center gap-2">
+                   <Icon name="heroicons:map-20-solid" class="h-4 w-4" />
+                   Itinéraire Détaillé
+                 </span>
+               </button>
             </div>
           </div>
 
@@ -69,147 +79,162 @@
           <div class="flex-1 overflow-hidden relative flex flex-col md:flex-row">
             
             <!-- OVERVIEW TAB -->
-            <div v-if="activeTab === 'overview'" class="w-full h-full overflow-y-auto p-6 md:p-8 space-y-8 animate-fade-in">
+            <div v-if="activeTab === 'overview'" class="w-full h-full overflow-y-auto p-8 space-y-6 animate-fade-in">
                
-               <!-- Top Stats Row -->
-               <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <!-- Budget Breakdown -->
-                  <!-- Budget Breakdown -->
-                  <div class="card p-0 border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
-                     <div class="p-6 border-b border-gray-50 bg-gray-50/50">
-                        <div class="flex items-center justify-between mb-4">
-                           <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
-                              <div class="p-1.5 bg-teal-100 rounded-lg text-teal-600">
+               <!-- Compact 2-Column Layout -->
+               <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                  
+                  <!-- LEFT COLUMN: Budget Summary (1/3) -->
+                  <div class="lg:col-span-1 space-y-6">
+                     
+                     <!-- Budget Card - Compact -->
+                     <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+                        <div class="bg-gradient-to-r from-teal-500 to-cyan-500 p-4 text-white">
+                           <div class="flex items-center justify-between mb-2">
+                              <h3 class="text-xs font-bold uppercase tracking-wider flex items-center gap-2">
                                  <Icon name="heroicons:banknotes-20-solid" class="h-4 w-4" />
+                                 Budget Total
+                              </h3>
+                              <span class="text-xs font-bold bg-white/20 px-2 py-1 rounded-full">
+                                 {{ props.trip.travelers }} pers.
+                              </span>
+                           </div>
+                           <div class="text-4xl font-black tracking-tight">${{ tripData.trip_summary.total_estimated_cost_usd }}</div>
+                        </div>
+                        
+                        <div class="p-4 space-y-3">
+                           <!-- Quick Stats -->
+                           <div class="flex gap-2">
+                              <div class="flex-1 bg-teal-50 rounded-lg p-2.5 text-center border border-teal-100">
+                                 <div class="text-xs text-teal-600 font-semibold mb-0.5">Par personne</div>
+                                 <div class="text-lg font-black text-teal-700">${{ Math.round(tripData.trip_summary.total_estimated_cost_usd / props.trip.travelers) }}</div>
                               </div>
-                              Budget Estimé
+                              <div class="flex-1 bg-blue-50 rounded-lg p-2.5 text-center border border-blue-100">
+                                 <div class="text-xs text-blue-600 font-semibold mb-0.5">Par jour</div>
+                                 <div class="text-lg font-black text-blue-700">${{ Math.round(tripData.trip_summary.total_estimated_cost_usd / tripData.trip_summary.duration_days) }}</div>
+                              </div>
+                           </div>
+
+                           <!-- Compact Breakdown -->
+                           <div class="space-y-2.5 pt-2 border-t border-gray-100">
+                              <div class="flex items-center justify-between text-sm">
+                                 <span class="flex items-center gap-2 text-gray-700 font-medium">
+                                    <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
+                                    Hébergement
+                                 </span>
+                                 <span class="font-bold text-gray-900">${{ tripData.trip_summary.cost_breakdown?.accommodation_total || 0 }}</span>
+                              </div>
+                              <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                 <div class="bg-indigo-500 h-full rounded-full" :style="{ width: ((tripData.trip_summary.cost_breakdown?.accommodation_total || 0) / tripData.trip_summary.total_estimated_cost_usd * 100) + '%' }"></div>
+                              </div>
+
+                              <div class="flex items-center justify-between text-sm">
+                                 <span class="flex items-center gap-2 text-gray-700 font-medium">
+                                    <span class="h-2 w-2 rounded-full bg-teal-500"></span>
+                                    Nourriture
+                                 </span>
+                                 <span class="font-bold text-gray-900">${{ tripData.trip_summary.cost_breakdown?.food_total || 0 }}</span>
+                              </div>
+                              <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                 <div class="bg-teal-500 h-full rounded-full" :style="{ width: ((tripData.trip_summary.cost_breakdown?.food_total || 0) / tripData.trip_summary.total_estimated_cost_usd * 100) + '%' }"></div>
+                              </div>
+
+                              <div class="flex items-center justify-between text-sm">
+                                 <span class="flex items-center gap-2 text-gray-700 font-medium">
+                                    <span class="h-2 w-2 rounded-full bg-orange-500"></span>
+                                    Activités
+                                 </span>
+                                 <span class="font-bold text-gray-900">${{ tripData.trip_summary.cost_breakdown?.activities_total || 0 }}</span>
+                              </div>
+                              <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                 <div class="bg-orange-500 h-full rounded-full" :style="{ width: ((tripData.trip_summary.cost_breakdown?.activities_total || 0) / tripData.trip_summary.total_estimated_cost_usd * 100) + '%' }"></div>
+                              </div>
+                           </div>
+
+                           <button 
+                              @click="budgetPanelOpen = true"
+                              class="w-full mt-3 py-2.5 px-4 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                           >
+                              <Icon name="heroicons:calculator-20-solid" class="h-4 w-4" />
+                              Détails Complets
+                              <Icon name="heroicons:arrow-right-20-solid" class="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                           </button>
+                        </div>
+                     </div>
+
+                  </div>
+
+                  <!-- RIGHT COLUMN: Flights + Accommodation (2/3) -->
+                  <div class="lg:col-span-2 space-y-6">
+                     
+                     <!-- Flights - Priority -->
+                     <div v-if="tripData.transport" class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 overflow-hidden">
+                        <div class="p-5">
+                           <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                              <Icon name="heroicons:paper-airplane-20-solid" class="h-4 w-4 text-blue-600" />
+                              Vols Recommandés
                            </h3>
-                           <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-white border border-gray-200 text-gray-600 shadow-sm">
-                              {{ props.trip.travelers }} voyageur{{ props.trip.travelers > 1 ? 's' : '' }}
-                           </span>
-                        </div>
-                        
-                        <div class="flex items-baseline gap-1.5">
-                           <span class="text-4xl font-black text-gray-900 tracking-tight">${{ tripData.trip_summary.total_estimated_cost_usd }}</span>
-                           <span class="text-sm text-gray-500 font-medium">total</span>
-                        </div>
-                        
-                        <!-- Per Person / Per Day Stats -->
-                        <div class="mt-4 flex flex-wrap gap-2 text-xs font-bold">
-                           <span class="inline-flex items-center gap-1.5 bg-teal-50 text-teal-700 px-2.5 py-1.5 rounded-md border border-teal-100/50">
-                              <Icon name="heroicons:user-20-solid" class="h-3 w-3 opacity-60" />
-                              ~${{ Math.round(tripData.trip_summary.total_estimated_cost_usd / props.trip.travelers) }} / pers.
-                           </span>
-                           <span class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 px-2.5 py-1.5 rounded-md border border-blue-100/50">
-                              <Icon name="heroicons:clock-20-solid" class="h-3 w-3 opacity-60" />
-                              ~${{ Math.round(tripData.trip_summary.total_estimated_cost_usd / tripData.trip_summary.duration_days) }} / jour
-                           </span>
+                           
+                           <div class="grid md:grid-cols-2 gap-4">
+                              <a :href="tripData.transport.outbound_flight.kayak_link || tripData.transport.outbound_flight.google_flights_link || tripData.transport.outbound_flight.skyscanner_link" target="_blank" class="group/flight bg-white rounded-xl p-4 hover:shadow-md transition-all border border-blue-100 hover:border-blue-300">
+                                 <div class="flex items-center gap-3">
+                                    <div class="h-10 w-10 rounded-xl bg-blue-500 flex items-center justify-center text-white shadow group-hover/flight:scale-110 transition-transform">
+                                       <Icon name="heroicons:arrow-up-right-20-solid" class="h-5 w-5" />
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                       <p class="text-xs text-blue-600 uppercase font-bold tracking-wide">Aller</p>
+                                       <p class="font-bold text-gray-900 truncate">{{ tripData.trip_summary.destination }}</p>
+                                       <p class="text-xs text-gray-600 font-medium">{{ tripData.transport.outbound_flight.departure_date }}</p>
+                                    </div>
+                                 </div>
+                              </a>
+                              
+                              <a :href="tripData.transport.return_flight.kayak_link || tripData.transport.return_flight.google_flights_link || tripData.transport.return_flight.skyscanner_link" target="_blank" class="group/flight bg-white rounded-xl p-4 hover:shadow-md transition-all border border-indigo-100 hover:border-indigo-300">
+                                 <div class="flex items-center gap-3">
+                                    <div class="h-10 w-10 rounded-xl bg-indigo-500 flex items-center justify-center text-white shadow group-hover/flight:scale-110 transition-transform">
+                                       <Icon name="heroicons:arrow-down-left-20-solid" class="h-5 w-5" />
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                       <p class="text-xs text-indigo-600 uppercase font-bold tracking-wide">Retour</p>
+                                       <p class="font-bold text-gray-900 truncate">Vol de retour</p>
+                                       <p class="text-xs text-gray-600 font-medium">{{ tripData.transport.return_flight.return_date }}</p>
+                                    </div>
+                                 </div>
+                              </a>
+                           </div>
                         </div>
                      </div>
 
-                     <!-- Detailed Breakdown List -->
-                     <div class="p-5 space-y-5">
-                        <!-- Accommodation -->
-                        <div class="group">
-                           <div class="flex justify-between items-center mb-2">
-                              <span class="text-sm font-bold text-gray-700 flex items-center gap-2.5">
-                                 <span class="h-2.5 w-2.5 rounded-full bg-indigo-500 shadow-sm shadow-indigo-200"></span> Hébergement
-                              </span>
-                              <span class="text-sm font-extrabold text-gray-900">${{ tripData.trip_summary.cost_breakdown?.accommodation_total || 0 }}</span>
+                     <!-- Accommodation Strategy - Streamlined -->
+                     <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                        <div class="p-5">
+                           <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                              <Icon name="heroicons:home-modern-20-solid" class="h-4 w-4 text-purple-600" />
+                              Où Dormir
+                           </h3>
+                           
+                           <div class="mb-4 p-3 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg border-l-4 border-teal-500">
+                              <p class="text-sm text-gray-700 italic leading-relaxed">
+                                "{{ tripData.accommodation_strategy?.reasoning }}"
+                              </p>
                            </div>
-                           <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                              <div class="bg-indigo-500 h-full rounded-full transition-all duration-1000 ease-out group-hover:bg-indigo-600" :style="{ width: ((tripData.trip_summary.cost_breakdown?.accommodation_total || 0) / tripData.trip_summary.total_estimated_cost_usd * 100) + '%' }"></div>
-                           </div>
-                           <p class="text-[10px] uppercase tracking-wider text-gray-400 mt-1.5 text-right font-semibold">
-                              {{ Math.round(((tripData.trip_summary.cost_breakdown?.accommodation_total || 0) / tripData.trip_summary.total_estimated_cost_usd * 100)) }}% du budget
-                           </p>
-                        </div>
 
-                        <!-- Food -->
-                        <div class="group">
-                           <div class="flex justify-between items-center mb-2">
-                              <span class="text-sm font-bold text-gray-700 flex items-center gap-2.5">
-                                 <span class="h-2.5 w-2.5 rounded-full bg-teal-500 shadow-sm shadow-teal-200"></span> Nourriture
-                              </span>
-                              <span class="text-sm font-extrabold text-gray-900">${{ tripData.trip_summary.cost_breakdown?.food_total || 0 }}</span>
+                           <div class="grid md:grid-cols-2 gap-3">
+                              <a v-for="(base, idx) in tripData.accommodation_strategy?.bases" :key="idx" :href="base.booking_link" target="_blank" class="block p-4 rounded-xl border-2 border-gray-200 hover:border-teal-400 transition-all bg-gray-50 hover:bg-white hover:shadow-md group/base cursor-pointer">
+                                 <div class="flex items-start justify-between mb-2">
+                                    <h4 class="font-bold text-gray-900 group-hover/base:text-teal-600 transition-colors">{{ base.neighborhood }}</h4>
+                                    <Icon name="heroicons:arrow-top-right-on-square-20-solid" class="h-4 w-4 text-gray-400 group-hover/base:text-teal-500 transition-colors flex-shrink-0" />
+                                 </div>
+                                 <div class="flex gap-2 mb-2">
+                                    <span class="text-xs font-bold px-2 py-1 rounded-md bg-indigo-100 text-indigo-700">{{ base.nights }} Nuits</span>
+                                    <span class="text-xs font-bold px-2 py-1 rounded-md bg-green-100 text-green-700">${{ base.estimated_cost_per_night_usd }}/nuit</span>
+                                 </div>
+                                 <p class="text-xs text-gray-600 leading-relaxed line-clamp-2">{{ base.why_here }}</p>
+                              </a>
                            </div>
-                           <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                              <div class="bg-teal-500 h-full rounded-full transition-all duration-1000 ease-out group-hover:bg-teal-600" :style="{ width: ((tripData.trip_summary.cost_breakdown?.food_total || 0) / tripData.trip_summary.total_estimated_cost_usd * 100) + '%' }"></div>
-                           </div>
-                           <p class="text-[10px] uppercase tracking-wider text-gray-400 mt-1.5 text-right font-semibold">
-                              {{ Math.round(((tripData.trip_summary.cost_breakdown?.food_total || 0) / tripData.trip_summary.total_estimated_cost_usd * 100)) }}% du budget
-                           </p>
-                        </div>
-
-                        <!-- Activities -->
-                        <div class="group">
-                           <div class="flex justify-between items-center mb-2">
-                              <span class="text-sm font-bold text-gray-700 flex items-center gap-2.5">
-                                 <span class="h-2.5 w-2.5 rounded-full bg-orange-500 shadow-sm shadow-orange-200"></span> Activités
-                              </span>
-                              <span class="text-sm font-extrabold text-gray-900">${{ tripData.trip_summary.cost_breakdown?.activities_total || 0 }}</span>
-                           </div>
-                           <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                              <div class="bg-orange-500 h-full rounded-full transition-all duration-1000 ease-out group-hover:bg-orange-600" :style="{ width: ((tripData.trip_summary.cost_breakdown?.activities_total || 0) / tripData.trip_summary.total_estimated_cost_usd * 100) + '%' }"></div>
-                           </div>
-                           <p class="text-[10px] uppercase tracking-wider text-gray-400 mt-1.5 text-right font-semibold">
-                              {{ Math.round(((tripData.trip_summary.cost_breakdown?.activities_total || 0) / tripData.trip_summary.total_estimated_cost_usd * 100)) }}% du budget
-                           </p>
                         </div>
                      </div>
-                  </div>
 
-                  <!-- Accommodation Strategy -->
-                  <div class="card p-6 border border-gray-100 bg-white md:col-span-2">
-                     <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center">
-                        <Icon name="heroicons:home-modern-20-solid" class="h-4 w-4 mr-2" />
-                        Stratégie d'Hébergement
-                     </h3>
-                     <p class="text-gray-700 italic mb-6 border-l-4 border-teal-500 pl-4 py-1 bg-teal-50/50 rounded-r-lg">
-                       "{{ tripData.accommodation_strategy?.reasoning }}"
-                     </p>
-
-                     <div class="grid md:grid-cols-2 gap-4">
-                        <div v-for="(base, idx) in tripData.accommodation_strategy?.bases" :key="idx" class="p-4 rounded-xl border border-gray-200 hover:border-teal-300 transition-colors bg-gray-50 hover:bg-white group relative">
-                           <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Icon name="heroicons:arrow-top-right-on-square-20-solid" class="h-4 w-4 text-teal-500" />
-                           </div>
-                           <h4 class="font-bold text-gray-900">{{ base.neighborhood }}</h4>
-                           <p class="text-xs text-gray-500 mb-2">{{ base.nights }} Nuits • ${{ base.estimated_cost_per_night_usd }}/nuit</p>
-                           <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ base.why_here }}</p>
-                           <a :href="base.booking_link" target="_blank" class="text-xs font-bold text-teal-600 uppercase tracking-wide flex items-center hover:underline">
-                             Voir logements <Icon name="heroicons:chevron-right-20-solid" class="h-3 w-3 ml-1" />
-                           </a>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-
-               <!-- Flights Card -->
-               <div v-if="tripData.transport" class="card p-6 border border-blue-100 bg-blue-50/30">
-                  <h3 class="text-sm font-bold text-blue-400 uppercase tracking-wider mb-4 flex items-center">
-                     <Icon name="heroicons:paper-airplane-20-solid" class="h-4 w-4 mr-2" />
-                     Transport Aérien Recommandé
-                  </h3>
-                  <div class="grid md:grid-cols-2 gap-6">
-                     <a :href="tripData.transport.outbound_flight.kayak_link || tripData.transport.outbound_flight.google_flights_link || tripData.transport.outbound_flight.skyscanner_link" target="_blank" class="flex items-center gap-4 group p-3 rounded-xl hover:bg-white hover:shadow-sm transition-all cursor-pointer">
-                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                           <Icon name="heroicons:arrow-up-right-20-solid" class="h-5 w-5" />
-                        </div>
-                        <div>
-                           <p class="text-xs text-gray-500 uppercase font-bold">Aller • {{ tripData.transport.outbound_flight.departure_date }}</p>
-                           <p class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">Rechercher vols vers {{ tripData.trip_summary.destination }}</p>
-                        </div>
-                     </a>
-                     <a :href="tripData.transport.return_flight.kayak_link || tripData.transport.return_flight.google_flights_link || tripData.transport.return_flight.skyscanner_link" target="_blank" class="flex items-center gap-4 group p-3 rounded-xl hover:bg-white hover:shadow-sm transition-all cursor-pointer">
-                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                           <Icon name="heroicons:arrow-down-left-20-solid" class="h-5 w-5" />
-                        </div>
-                        <div>
-                           <p class="text-xs text-gray-500 uppercase font-bold">Retour • {{ tripData.transport.return_flight.return_date }}</p>
-                           <p class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">Rechercher vols retour</p>
-                        </div>
-                     </a>
                   </div>
                </div>
 
@@ -219,76 +244,80 @@
             <div v-if="activeTab === 'itinerary'" class="flex w-full h-full flex-col md:flex-row animate-fade-in">
                
                <!-- Left: Map (Desktop) / Top (Mobile) -->
-               <div class="w-full md:w-1/2 h-[300px] md:h-full relative border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50">
+               <div class="w-full md:w-1/2 h-[300px] md:h-full relative border-b md:border-b-0 md:border-r border-gray-200 bg-gradient-to-br from-gray-100 to-gray-50">
                   <MapViewer 
                     :activities="flatActivities" 
                   />
-                  <!-- Map Controls -->
-
                </div>
 
                <!-- Right: Timeline -->
-               <div class="w-full md:w-1/2 h-full overflow-y-auto bg-gray-50/50 p-6">
-                  <div class="space-y-10">
+               <div class="w-full md:w-1/2 h-full overflow-y-auto bg-white p-8">
+                  <div class="space-y-12">
                      
                      <div v-for="(section, sIdx) in tripData.itinerary_sections" :key="sIdx" class="relative">
                         <!-- Section Header -->
-                        <div class="mb-6 pt-4 border-b border-gray-100 pb-2">
-                           <h3 class="text-xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-cyan-600">{{ section.section_title }}</h3>
-                           <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
-                              <span class="flex items-center"><Icon name="heroicons:map-pin-20-solid" class="h-3 w-3 mr-1" /> {{ section.geographic_focus }}</span>
-                              <span class="flex items-center"><Icon name="heroicons:home-20-solid" class="h-3 w-3 mr-1" /> Base: {{ section.accommodation_base }}</span>
+                        <div class="mb-8 pb-4 border-b-2 border-gray-100">
+                           <h3 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-600 mb-2">{{ section.section_title }}</h3>
+                           <div class="flex items-center gap-4 text-sm text-gray-600 font-semibold">
+                              <span class="flex items-center gap-1.5">
+                                 <Icon name="heroicons:map-pin-20-solid" class="h-4 w-4 text-teal-500" /> 
+                                 {{ section.geographic_focus }}
+                              </span>
+                              <span class="flex items-center gap-1.5">
+                                 <Icon name="heroicons:home-20-solid" class="h-4 w-4 text-indigo-500" /> 
+                                 Base: {{ section.accommodation_base }}
+                              </span>
                            </div>
                         </div>
 
                         <!-- Days in Section -->
-                         <div class="space-y-8 pl-4 border-l-2 border-teal-200 ml-3">
+                         <div class="space-y-10 pl-6 border-l-4 border-gradient-to-b from-teal-300 to-cyan-300 ml-4">
                             <div v-for="day in section.daily_plans" :key="day.day" class="relative">
                                <!-- Day Dot -->
-                               <div class="absolute -left-[23px] top-0 h-4 w-4 rounded-full border-2 border-white bg-teal-500 shadow-md"></div>
+                               <div class="absolute -left-[30px] top-0 h-5 w-5 rounded-full border-4 border-white bg-gradient-to-br from-teal-500 to-cyan-500 shadow-lg ring-2 ring-teal-100"></div>
                                
-                               <div class="mb-4">
-                                  <h4 class="font-bold text-gray-900 text-lg">Jour {{ day.day }} : {{ day.title }}</h4>
-                                  <p class="text-xs font-bold text-teal-600 bg-teal-50 inline-block px-2 py-0.5 rounded-full mt-1">{{ day.daily_pace }}</p>
+                               <div class="mb-5">
+                                  <h4 class="font-black text-gray-900 text-xl mb-2">Jour {{ day.day }} : {{ day.title }}</h4>
+                                  <p class="text-xs font-bold text-teal-700 bg-gradient-to-r from-teal-50 to-cyan-50 inline-block px-3 py-1.5 rounded-full border border-teal-200">{{ day.daily_pace }}</p>
                                </div>
 
                                <!-- Activities -->
-                               <div class="space-y-4">
-                                  <div v-for="(act, aIdx) in day.activities" :key="aIdx" class="card p-4 hover:shadow-md transition-shadow bg-white rounded-xl border border-gray-100 group">
-                                     <div class="flex gap-4">
+                               <div class="space-y-5">
+                                  <div v-for="(act, aIdx) in day.activities" :key="aIdx" class="group/activity bg-white rounded-2xl border-2 border-gray-100 hover:border-teal-300 p-5 hover:shadow-xl transition-all duration-300">
+                                     <div class="flex gap-5">
                                         <!-- Time / Icon -->
-                                        <div class="flex-shrink-0 flex flex-col items-center gap-2 w-16">
-                                           <div class="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
-                                              <Icon :name="getActivityIcon(act.activity_type)" class="h-5 w-5" />
+                                        <div class="flex-shrink-0">
+                                           <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center text-gray-400 group-hover/activity:from-teal-500 group-hover/activity:to-cyan-500 group-hover/activity:text-white transition-all duration-300 shadow-sm">
+                                              <Icon :name="getActivityIcon(act.activity_type)" class="h-6 w-6" />
                                            </div>
                                         </div>
 
                                         <!-- Content -->
                                         <div class="flex-1 min-w-0">
-                                           <div class="flex justify-between items-start">
-                                              <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-0.5">{{ act.time_flexible }}</p>
-                                              <span v-if="act.estimated_cost_usd > 0" class="text-xs font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                                           <div class="flex justify-between items-start mb-2">
+                                              <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">{{ act.time_flexible }}</p>
+                                              <span v-if="act.estimated_cost_usd > 0" class="text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-full border border-green-200">
                                                 ${{ act.estimated_cost_usd }}
                                               </span>
                                            </div>
                                            
-                                           <h5 class="text-gray-900 font-medium leading-snug" :class="{'text-lg': act.has_physical_location}">
+                                           <h5 class="text-gray-900 font-bold leading-tight text-lg mb-2" :class="{'text-xl': act.has_physical_location}">
                                               {{ act.name || act.description }}
                                            </h5>
                                            
-                                           <p v-if="act.name" class="text-sm text-gray-600 mt-1">{{ act.description }}</p>
+                                           <p v-if="act.name" class="text-sm text-gray-600 leading-relaxed mb-3">{{ act.description }}</p>
                                            
                                            <!-- Location/Details -->
-                                           <div v-if="act.has_physical_location" class="mt-3 flex flex-wrap gap-2">
-                                              <a v-if="act.google_maps_link" :href="act.google_maps_link" target="_blank" class="inline-flex items-center text-xs font-bold text-blue-600 hover:underline">
-                                                 <Icon name="heroicons:map-20-solid" class="h-3 w-3 mr-1" /> View Map
+                                           <div v-if="act.has_physical_location" class="flex flex-wrap gap-2 mb-3">
+                                              <a v-if="act.google_maps_link" :href="act.google_maps_link" target="_blank" class="inline-flex items-center text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-colors">
+                                                 <Icon name="heroicons:map-20-solid" class="h-4 w-4 mr-1" /> Voir sur Maps
                                               </a>
-                                              <span v-if="act.rating" class="inline-flex items-center text-xs text-yellow-600 bg-yellow-50 px-1.5 rounded">
-                                                 <Icon name="heroicons:star-20-solid" class="h-3 w-3 mr-1" /> {{ act.rating }}
+                                              <span v-if="act.rating" class="inline-flex items-center text-xs font-bold text-yellow-700 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-200">
+                                                 <Icon name="heroicons:star-20-solid" class="h-4 w-4 mr-1" /> {{ act.rating }}
                                               </span>
                                            </div>
 
-                                           <p v-if="act.notes" class="mt-2 text-xs text-gray-500 italic border-l-2 border-gray-200 pl-2">
+                                           <p v-if="act.notes" class="text-xs text-gray-600 italic bg-gray-50 border-l-4 border-gray-300 pl-4 py-2 rounded-r-lg">
                                               "{{ act.notes }}"
                                            </p>
                                         </div>
@@ -307,6 +336,14 @@
 
           </div>
         </div>
+
+        <!-- Budget Detail Panel -->
+        <BudgetDetailPanel 
+          :is-open="budgetPanelOpen"
+          :trip-data="tripData"
+          :travelers="props.trip.travelers"
+          @close="budgetPanelOpen = false"
+        />
     </div>
   </Transition>
 </template>
@@ -325,6 +362,7 @@ const props = defineProps({
 defineEmits(['close', 'delete'])
 
 const activeTab = ref('overview')
+const budgetPanelOpen = ref(false)
 
 // Helper to access the correct root property structure
 const tripData = computed(() => {
