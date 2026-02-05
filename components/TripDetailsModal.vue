@@ -85,10 +85,10 @@
                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
                   
                   <!-- LEFT COLUMN: Budget Summary (1/3) -->
-                  <div class="lg:col-span-1 space-y-6">
+                  <div class="lg:col-span-1 space-y-6 flex flex-col">
                      
                      <!-- Budget Card - Compact -->
-                     <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+                     <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow flex-1 flex flex-col">
                         <div class="bg-gradient-to-r from-teal-500 to-cyan-500 p-4 text-white">
                            <div class="flex items-center justify-between mb-2">
                               <h3 class="text-xs font-bold uppercase tracking-wider flex items-center gap-2">
@@ -102,7 +102,7 @@
                            <div class="text-4xl font-black tracking-tight">${{ tripData.trip_summary.total_estimated_cost_usd }}</div>
                         </div>
                         
-                        <div class="p-4 space-y-3">
+                        <div class="p-4 space-y-3 flex-1 flex flex-col">
                            <!-- Quick Stats -->
                            <div class="flex gap-2">
                               <div class="flex-1 bg-teal-50 rounded-lg p-2.5 text-center border border-teal-100">
@@ -116,7 +116,7 @@
                            </div>
 
                            <!-- Compact Breakdown -->
-                           <div class="space-y-2.5 pt-2 border-t border-gray-100">
+                           <div class="space-y-2.5 pt-2 border-t border-gray-100 flex-1">
                               <div class="flex items-center justify-between text-sm">
                                  <span class="flex items-center gap-2 text-gray-700 font-medium">
                                     <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
@@ -153,7 +153,7 @@
 
                            <button 
                               @click="budgetPanelOpen = true"
-                              class="w-full mt-3 py-2.5 px-4 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                              class="w-full py-2.5 px-4 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-2 group cursor-pointer mt-auto"
                            >
                               <Icon name="heroicons:calculator-20-solid" class="h-4 w-4" />
                               Détails Complets
