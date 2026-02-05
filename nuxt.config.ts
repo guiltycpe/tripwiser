@@ -32,10 +32,16 @@ export default defineNuxtConfig({
   supabase: {
     url: process.env.NUXT_PUBLIC_SUPABASE_URL,
     key: process.env.NUXT_PUBLIC_SUPABASE_KEY,
+    redirect: true,
     redirectOptions: {
       login: '/auth/login',
       callback: '/',
-      exclude: ['/', '/auth/*', '/features', '/pricing', '/about'], // Removing /plan to force redirect
+      exclude: ['/', '/auth/*', '/features', '/pricing', '/about'],
+    },
+    cookieOptions: {
+      maxAge: 60 * 60 * 8, // 8 hours
+      sameSite: 'lax',
+      secure: false // Set to true in production with HTTPS
     }
   },
   runtimeConfig: {
@@ -52,7 +58,54 @@ export default defineNuxtConfig({
       devSourcemap: false
     },
     build: {
-      sourcemap: false
+      sourcemap: false,
+      rollupOptions: {
+        onwarn(warning, warn) {
+          // Ignore Supabase unused import warnings
+          if (
+            warning.code === 'UNUSED_EXTERNAL_IMPORT' &&
+            warning.exporter?.includes('@supabase/')
+          ) {
+            return
+          }
+          warn(warning)
+        }
+      }
+    },
+    server: {
+      hmr: {
+        overlay: true
+      }
+    },
+    // Suppress specific warnings in dev mode
+    optimizeDeps: {
+      exclude: []
+    }
+  },
+  // Suppress build warnings globally
+  build: {
+    transpile: []
+  },
+  // Custom hook to suppress console warnings
+  hooks: {
+    'vite:extendConfig'(config) {
+      if (config.build?.rollupOptions) {
+        const originalOnwarn = config.build.rollupOptions.onwarn
+        config.build.rollupOptions.onwarn = (warning, warn) => {
+          if (
+            warning.code === 'UNUSED_EXTERNAL_IMPORT' &&
+            (warning.exporter?.includes('@supabase/') || 
+             warning.exporter?.includes('node_modules/@supabase/'))
+          ) {
+            return
+          }
+          if (originalOnwarn) {
+            originalOnwarn(warning, warn)
+          } else {
+            warn(warning)
+          }
+        }
+      }
     }
   }
 })

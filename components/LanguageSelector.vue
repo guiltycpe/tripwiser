@@ -3,7 +3,7 @@
     <!-- Current Language Button -->
     <button 
       @click="isOpen = !isOpen"
-      class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/80 border border-gray-200 hover:bg-white hover:border-teal-300 transition-all duration-300 shadow-sm"
+      class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/80 border border-gray-200 hover:bg-white hover:border-teal-300 transition-all duration-300 shadow-sm cursor-pointer"
     >
       <span class="text-sm font-medium text-gray-700">{{ currentLanguage.shortName }}</span>
       <Icon 
@@ -31,7 +31,7 @@
             v-for="lang in languages"
             :key="lang.code"
             @click="selectLanguage(lang.code)"
-            class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+            class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors cursor-pointer"
             :class="{ 'bg-teal-50': locale === lang.code }"
           >
             <span class="text-xl">{{ lang.flag }}</span>

@@ -14,17 +14,13 @@
           <div class="flex gap-3">
             <button
               @click="router.push('/plan')"
-              class="btn-primary hover-glow"
+              class="group relative px-6 py-3 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden"
             >
-              <Icon name="heroicons:plus-20-solid" class="mr-2 h-5 w-5" />
-              {{ t.dashboard.newTrip }}
-            </button>
-            <button
-              @click="handleLogout"
-              class="btn-secondary"
-            >
-              <Icon name="heroicons:arrow-right-on-rectangle-20-solid" class="mr-2 h-5 w-5" />
-              {{ t.dashboard.logout }}
+              <div class="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="relative flex items-center gap-2">
+                <Icon name="heroicons:plus-20-solid" class="h-5 w-5" />
+                {{ t.dashboard.newTrip }}
+              </div>
             </button>
           </div>
         </div>
@@ -32,50 +28,50 @@
 
       <!-- Stats Cards -->
       <div class="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 animate-slide-up">
-        <div class="card hover-lift">
+        <div class="card hover-lift group transition-all duration-300 hover:shadow-xl">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm text-gray-600">{{ t.dashboard.stats.totalTrips }}</p>
-              <p class="mt-1 text-3xl font-bold text-gray-900">{{ trips.length }}</p>
+              <p class="mt-1 text-3xl font-bold text-gray-900 group-hover:text-teal-600 transition-colors">{{ trips.length }}</p>
             </div>
-            <div class="rounded-full bg-teal-100 w-12 h-12 flex items-center justify-center">
+            <div class="rounded-full bg-teal-100 w-12 h-12 flex items-center justify-center group-hover:scale-110 group-hover:bg-teal-200 transition-all">
               <Icon name="heroicons:map-20-solid" class="h-6 w-6 text-teal-600" />
             </div>
           </div>
         </div>
 
-        <div class="card hover-lift">
+        <div class="card hover-lift group transition-all duration-300 hover:shadow-xl">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm text-gray-600">{{ t.dashboard.stats.countries }}</p>
-              <p class="mt-1 text-3xl font-bold text-gray-900">{{ countriesCount }}</p>
+              <p class="mt-1 text-3xl font-bold text-gray-900 group-hover:text-cyan-600 transition-colors">{{ countriesCount }}</p>
             </div>
-            <div class="rounded-full bg-cyan-100 w-12 h-12 flex items-center justify-center">
+            <div class="rounded-full bg-cyan-100 w-12 h-12 flex items-center justify-center group-hover:scale-110 group-hover:bg-cyan-200 transition-all">
               <Icon name="heroicons:globe-americas-20-solid" class="h-6 w-6 text-cyan-600" />
             </div>
           </div>
         </div>
 
-        <div class="card hover-lift">
+        <div class="card hover-lift group transition-all duration-300 hover:shadow-xl">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm text-gray-600">{{ t.dashboard.stats.upcoming }}</p>
-              <p class="mt-1 text-3xl font-bold text-gray-900">{{ upcomingTrips }}</p>
+              <p class="mt-1 text-3xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{{ upcomingTrips }}</p>
             </div>
-            <div class="rounded-full bg-orange-100 w-12 h-12 flex items-center justify-center">
+            <div class="rounded-full bg-orange-100 w-12 h-12 flex items-center justify-center group-hover:scale-110 group-hover:bg-orange-200 transition-all">
               <Icon name="heroicons:calendar-20-solid" class="h-6 w-6 text-orange-600" />
             </div>
           </div>
         </div>
 
-        <div class="card hover-lift">
+        <div class="card hover-lift group transition-all duration-300 hover:shadow-xl">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-gray-600">{{ t.dashboard.stats.memberSince }}</p>
-              <p class="mt-1 text-xl font-bold text-gray-900">{{ memberSince }}</p>
+              <p class="text-sm text-gray-600">{{ t.dashboard.stats.totalBudget || 'Total Budget' }}</p>
+              <p class="mt-1 text-3xl font-bold text-gray-900 group-hover:text-purple-600 transition-colors">{{ totalBudget }}</p>
             </div>
-            <div class="rounded-full bg-cyan-100 w-12 h-12 flex items-center justify-center">
-              <Icon name="heroicons:user-20-solid" class="h-6 w-6 text-cyan-600" />
+            <div class="rounded-full bg-purple-100 w-12 h-12 flex items-center justify-center group-hover:scale-110 group-hover:bg-purple-200 transition-all">
+              <Icon name="heroicons:currency-dollar-20-solid" class="h-6 w-6 text-purple-600" />
             </div>
           </div>
         </div>
@@ -88,13 +84,13 @@
           <div class="relative">
              <select 
                v-model="filterStatus" 
-               class="appearance-none cursor-pointer pl-4 pr-10 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm font-semibold shadow-sm hover:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all"
+               class="appearance-none cursor-pointer pl-4 pr-10 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 text-sm font-semibold shadow-sm hover:border-teal-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all"
              >
                <option value="all" class="text-gray-900 bg-white">{{ t.dashboard.trips.all }}</option>
                <option value="upcoming" class="text-gray-900 bg-white">{{ t.dashboard.trips.upcoming }}</option>
                <option value="past" class="text-gray-900 bg-white">{{ t.dashboard.trips.past }}</option>
              </select>
-             <Icon name="heroicons:chevron-down-20-solid" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+             <Icon name="heroicons:chevron-down-20-solid" class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 pointer-events-none" />
           </div>
         </div>
 
@@ -112,10 +108,13 @@
           <p class="mb-6 text-gray-600">{{ t.dashboard.trips.emptySubtitle }}</p>
           <button
             @click="router.push('/plan')"
-            class="btn-primary hover-glow"
+            class="group relative px-6 py-3 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden"
           >
-            <Icon name="heroicons:plus-20-solid" class="mr-2 h-5 w-5" />
-            {{ t.dashboard.trips.createFirst }}
+            <div class="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="relative flex items-center gap-2">
+              <Icon name="heroicons:plus-20-solid" class="h-5 w-5" />
+              {{ t.dashboard.trips.createFirst }}
+            </div>
           </button>
         </div>
 
@@ -197,6 +196,19 @@ const upcomingTrips = computed(() => {
     if (!t.departure_date) return false
     return new Date(t.departure_date) > now
   }).length
+})
+
+const totalBudget = computed(() => {
+  const total = trips.value.reduce((sum, trip) => {
+    // Le budget est dans l'itinéraire JSON sous trip_summary.total_estimated_cost_usd
+    if (trip.itinerary && typeof trip.itinerary === 'object') {
+      const itinerary = trip.itinerary as any
+      const budget = itinerary?.trip_summary?.total_estimated_cost_usd || 0
+      return sum + budget
+    }
+    return sum
+  }, 0)
+  return total > 0 ? `$${Math.round(total).toLocaleString()}` : '$0'
 })
 
 const filteredTrips = computed(() => {

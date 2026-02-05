@@ -56,10 +56,30 @@
                 <Icon name="heroicons:rectangle-stack-20-solid" class="h-4 w-4" />
                 {{ t.nav.dashboard }}
               </NuxtLink>
-              <button @click="handleLogout" class="btn-primary flex items-center gap-2">
-                <Icon name="heroicons:arrow-right-on-rectangle-20-solid" class="h-4 w-4" />
-                {{ t.nav.logout }}
-              </button>
+              <!-- Profile Avatar -->
+              <NuxtLink to="/profile" class="group relative">
+                <div class="h-10 w-10 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 p-0.5 shadow-md hover:shadow-lg transition-all cursor-pointer">
+                  <div class="h-full w-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+                    <img 
+                      v-if="userProfile?.avatar_url" 
+                      :src="userProfile.avatar_url" 
+                      :alt="userProfile.full_name || 'User avatar'"
+                      class="h-full w-full object-cover"
+                    />
+                    <Icon 
+                      v-else 
+                      name="heroicons:user-circle-20-solid" 
+                      class="h-7 w-7 text-teal-600" 
+                    />
+                  </div>
+                </div>
+                <!-- Tooltip on hover -->
+                <div class="absolute right-0 top-12 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <div class="bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap">
+                    {{ t.nav.profile }}
+                  </div>
+                </div>
+              </NuxtLink>
             </template>
           </div>
         </div>
@@ -69,17 +89,51 @@
 </template>
 
 <script setup lang="ts">
+import type { UserProfile } from '~/types/profile.types'
+
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
-const router = useRouter()
+const userProfile = ref<UserProfile | null>(null)
+const isLoadingProfile = ref(false)
 
 // Use global translations
 const { t } = useTranslations()
 
-async function handleLogout() {
-  await supabase.auth.signOut()
-  router.push('/')
-}
+// Load user profile when user is authenticated
+watch(user, async (newUser) => {
+  if (newUser && !isLoadingProfile.value) {
+    isLoadingProfile.value = true
+    try {
+      // Add a small delay to ensure session is fully ready
+      await new Promise(resolve => setTimeout(resolve, 100))
+      userProfile.value = await $fetch<UserProfile>('/api/profile')
+    } catch (error: any) {
+      // Silently handle 401 errors during initial load
+      if (error?.status !== 401 && error?.statusCode !== 401) {
+        console.error('Failed to load user profile in navbar:', error)
+      }
+    } finally {
+      isLoadingProfile.value = false
+    }
+  } else if (!newUser) {
+    userProfile.value = null
+  }
+}, { immediate: true })
+
+// Also listen to auth state changes
+onMounted(() => {
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session?.user && !userProfile.value) {
+      try {
+        userProfile.value = await $fetch<UserProfile>('/api/profile')
+      } catch (error) {
+        // Silently ignore errors
+      }
+    } else if (event === 'SIGNED_OUT') {
+      userProfile.value = null
+    }
+  })
+})
 </script>
 
 <style scoped>
