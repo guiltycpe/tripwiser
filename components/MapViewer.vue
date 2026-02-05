@@ -4,7 +4,7 @@
     <div ref="mapContainer" class="h-full w-full"></div>
     
     <!-- Loading overlay -->
-    <div v-if="loading" class="absolute inset-0 z-[200] flex items-center justify-center bg-white/60 backdrop-blur-sm transition-opacity duration-300">
+    <div v-if="loading" class="absolute inset-0 z-[200] flex items-center justify-center bg-white/80 transition-opacity duration-300">
       <div class="flex flex-col items-center gap-3">
         <Icon name="heroicons:arrow-path-20-solid" class="h-10 w-10 animate-spin text-teal-500" />
       </div>
@@ -37,10 +37,12 @@ interface Props {
   activities: Activity[]
   center?: [number, number]
   zoom?: number
+  active?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  zoom: 13
+  zoom: 13,
+  active: true
 })
 
 const mapContainer = ref<HTMLElement | null>(null)
@@ -66,13 +68,13 @@ function recenterMap() {
 onMounted(async () => {
   if (process.client) {
     try {
-      // Import Leaflet only on client side
       const leaflet = await import('leaflet')
       L = leaflet.default
-      
-      // Wait for next tick to ensure ref is populated and transitions finished
       await nextTick()
-      initMap()
+      // Only init if container is visible (active); otherwise wait for active watch
+      if (props.active) {
+        initMap()
+      }
     } catch (error) {
       console.error('Error loading Leaflet:', error)
     } finally {
@@ -160,9 +162,27 @@ function updateMap() {
   }
 }
 
+// Map data is now a shallowRef from parent — only changes on save events.
+// No need for deep watch; reference equality is sufficient.
 watch(() => props.activities, () => {
   updateMap()
-}, { deep: true })
+})
+
+// Handle visibility: init map when first becoming visible, resize on re-show
+watch(() => props.active, (isActive) => {
+  if (isActive) {
+    if (!map && L) {
+      // First time becoming visible — create the map
+      nextTick(() => initMap())
+    } else if (map) {
+      // Already created — resize to fill the now-visible container
+      nextTick(() => {
+        map.invalidateSize()
+        updateMap()
+      })
+    }
+  }
+})
 
 onUnmounted(() => {
   if (map) map.remove()
