@@ -7,6 +7,7 @@
         "login": "Login",
         "signup": "Sign Up",
         "dashboard": "Dashboard",
+        "profile": "Profile",
         "logout": "Logout"
     },
     "home": {
@@ -301,11 +302,96 @@
         "cancel": "Cancel",
         "edit": "Edit",
         "close": "Close",
+        "back": "Back",
         "transport": {
             "driving": "Driving",
             "walking": "Walking",
             "cycling": "Cycling",
             "title": "Transport Mode"
+        }
+    },
+    "profile": {
+        "title": "My Profile",
+        "subtitle": "Manage your personal information and travel preferences",
+        "save": "Save Changes",
+        "saving": "Saving...",
+        "saveSuccess": "Profile saved successfully!",
+        "saveError": "Failed to save profile. Please try again.",
+        "form": {
+            "fullName": "Full Name",
+            "fullNamePlaceholder": "Enter your name",
+            "bio": "Bio",
+            "bioPlaceholder": "Tell us a bit about yourself and your travel style...",
+            "language": "Preferred Language",
+            "currency": "Preferred Currency"
+        },
+        "avatar": {
+            "uploadSuccess": "Avatar updated successfully!",
+            "uploadError": "Failed to upload avatar",
+            "fileTooLarge": "File too large. Maximum size is 5MB.",
+            "invalidFileType": "Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed."
+        },
+        "preferences": {
+            "title": "Travel Preferences",
+            "defaultBudget": "Default Budget",
+            "defaultStyle": "Default Travel Style",
+            "pace": "Preferred Pace",
+            "paceOptions": {
+                "slow": "Slow & Relaxed",
+                "moderate": "Moderate",
+                "fast": "Fast-Paced"
+            },
+            "interests": "Interests",
+            "interestOptions": {
+                "history": "History",
+                "nature": "Nature",
+                "food": "Food",
+                "art": "Art & Culture",
+                "shopping": "Shopping",
+                "nightlife": "Nightlife",
+                "sports": "Sports",
+                "photography": "Photography"
+            },
+            "foodPreferences": "Food Preferences",
+            "foodOptions": {
+                "vegetarian": "Vegetarian",
+                "vegan": "Vegan",
+                "halal": "Halal",
+                "kosher": "Kosher",
+                "gluten_free": "Gluten-Free",
+                "local_cuisine": "Local Cuisine",
+                "street_food": "Street Food"
+            },
+            "avoid": "Things to Avoid",
+            "avoidOptions": {
+                "extreme_sports": "Extreme Sports",
+                "heights": "Heights",
+                "water_activities": "Water Activities",
+                "crowded_places": "Crowded Places",
+                "long_walks": "Long Walks",
+                "early_mornings": "Early Mornings",
+                "late_nights": "Late Nights"
+            }
+        },
+        "dietary": {
+            "title": "Dietary Restrictions",
+            "options": {
+                "vegetarian": "Vegetarian",
+                "vegan": "Vegan",
+                "gluten_free": "Gluten-Free",
+                "dairy_free": "Dairy-Free",
+                "nut_allergy": "Nut Allergy",
+                "halal": "Halal",
+                "kosher": "Kosher"
+            }
+        },
+        "stats": {
+            "title": "Travel Statistics",
+            "totalTrips": "Total Trips",
+            "countries": "Countries",
+            "days": "Days Traveled",
+            "member": "Member Since",
+            "favorites": "Favorite Destinations"
         }
     }
 }

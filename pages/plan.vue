@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import LocationInput from '~/components/LocationInput.vue'
+import type { UserProfile } from '~/types/profile.types'
 
 const route = useRoute()
 const { t, locale } = useTranslations()
@@ -20,6 +21,7 @@ const isGenerating = ref(false)
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const router = useRouter()
+const userProfile = ref<UserProfile | null>(null)
 
 onMounted(async () => {
   if (route.query.departure) {
@@ -31,8 +33,31 @@ onMounted(async () => {
   if (!data?.user) {
     console.warn('No user session on mount, redirecting to login...')
     router.push('/auth/login')
+    return
   }
+
+  // Load user profile and pre-fill preferences
+  await loadUserProfile()
 })
+
+async function loadUserProfile() {
+  try {
+    const profile = await $fetch<UserProfile>('/api/profile')
+    userProfile.value = profile
+    
+    // Pre-fill form with user preferences
+    if (profile.travel_preferences) {
+      if (profile.travel_preferences.budget_default) {
+        budget.value = profile.travel_preferences.budget_default
+      }
+      if (profile.travel_preferences.travel_style_default) {
+        travelStyle.value = profile.travel_preferences.travel_style_default
+      }
+    }
+  } catch (error) {
+    console.log('Could not load user profile, using defaults:', error)
+  }
+}
 
 // Improved utility to convert DD/MM/YY or YYYY-MM-DD to YYYY-MM-DD
 function parseDate(dateStr: string) {
@@ -125,7 +150,15 @@ async function generateItinerary() {
         budget: budget.value,
         travel_style: travelStyle.value,
         road_trip: takeRoadTrip.value,
-        travelers: travelers.value
+        travelers: travelers.value,
+        user_preferences: userProfile.value ? {
+          interests: userProfile.value.travel_preferences?.interests,
+          food_preferences: userProfile.value.travel_preferences?.food_preferences,
+          dietary_restrictions: userProfile.value.dietary_restrictions,
+          avoid: userProfile.value.travel_preferences?.avoid,
+          preferred_pace: userProfile.value.travel_preferences?.preferred_pace,
+          accessibility_needs: userProfile.value.travel_preferences?.accessibility_needs
+        } : undefined
       }
     }) as any
 
@@ -390,7 +423,8 @@ async function generateItinerary() {
               <select 
                 v-model="budget" 
                 id="budget" 
-                class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 font-semibold shadow-sm hover:border-teal-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all cursor-pointer appearance-none"
+                style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%236b7280%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
               >
                 <option value="Low">{{ t.plan.form.budgetOptions.budget }}</option>
                 <option value="Medium">{{ t.plan.form.budgetOptions.moderate }}</option>
@@ -419,7 +453,8 @@ async function generateItinerary() {
               <select 
                 v-model="travelStyle" 
                 id="travel-style" 
-                class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 font-semibold shadow-sm hover:border-teal-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all cursor-pointer appearance-none"
+                style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%236b7280%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
               >
                 <option value="adventure">{{ t.plan.form.styleOptions.adventure }}</option>
                 <option value="relaxation">{{ t.plan.form.styleOptions.relaxation }}</option>

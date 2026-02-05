@@ -7,6 +7,7 @@
         "login": "Connexion",
         "signup": "S'inscrire",
         "dashboard": "Tableau de bord",
+        "profile": "Profil",
         "logout": "Déconnexion"
     },
     "home": {
@@ -301,11 +302,96 @@
         "cancel": "Annuler",
         "edit": "Modifier",
         "close": "Fermer",
+        "back": "Retour",
         "transport": {
             "driving": "Voiture",
             "walking": "À pied",
             "cycling": "Vélo",
             "title": "Mode de transport"
+        }
+    },
+    "profile": {
+        "title": "Mon Profil",
+        "subtitle": "Gérez vos informations personnelles et vos préférences de voyage",
+        "save": "Enregistrer les Modifications",
+        "saving": "Enregistrement...",
+        "saveSuccess": "Profil enregistré avec succès !",
+        "saveError": "Échec de l'enregistrement du profil. Veuillez réessayer.",
+        "form": {
+            "fullName": "Nom Complet",
+            "fullNamePlaceholder": "Entrez votre nom",
+            "bio": "Bio",
+            "bioPlaceholder": "Parlez-nous un peu de vous et de votre style de voyage...",
+            "language": "Langue Préférée",
+            "currency": "Devise Préférée"
+        },
+        "avatar": {
+            "uploadSuccess": "Avatar mis à jour avec succès !",
+            "uploadError": "Échec du téléchargement de l'avatar",
+            "fileTooLarge": "Fichier trop volumineux. La taille maximale est de 5 Mo.",
+            "invalidFileType": "Type de fichier invalide. Seuls JPEG, PNG, WebP et GIF sont autorisés."
+        },
+        "preferences": {
+            "title": "Préférences de Voyage",
+            "defaultBudget": "Budget par Défaut",
+            "defaultStyle": "Style de Voyage par Défaut",
+            "pace": "Rythme Préféré",
+            "paceOptions": {
+                "slow": "Lent & Détendu",
+                "moderate": "Modéré",
+                "fast": "Rapide"
+            },
+            "interests": "Centres d'Intérêt",
+            "interestOptions": {
+                "history": "Histoire",
+                "nature": "Nature",
+                "food": "Gastronomie",
+                "art": "Art & Culture",
+                "shopping": "Shopping",
+                "nightlife": "Vie Nocturne",
+                "sports": "Sports",
+                "photography": "Photographie"
+            },
+            "foodPreferences": "Préférences Alimentaires",
+            "foodOptions": {
+                "vegetarian": "Végétarien",
+                "vegan": "Végétalien",
+                "halal": "Halal",
+                "kosher": "Casher",
+                "gluten_free": "Sans Gluten",
+                "local_cuisine": "Cuisine Locale",
+                "street_food": "Street Food"
+            },
+            "avoid": "À Éviter",
+            "avoidOptions": {
+                "extreme_sports": "Sports Extrêmes",
+                "heights": "Hauteurs",
+                "water_activities": "Activités Aquatiques",
+                "crowded_places": "Lieux Bondés",
+                "long_walks": "Longues Marches",
+                "early_mornings": "Matins Tôt",
+                "late_nights": "Soirées Tardives"
+            }
+        },
+        "dietary": {
+            "title": "Restrictions Alimentaires",
+            "options": {
+                "vegetarian": "Végétarien",
+                "vegan": "Végétalien",
+                "gluten_free": "Sans Gluten",
+                "dairy_free": "Sans Lactose",
+                "nut_allergy": "Allergie aux Noix",
+                "halal": "Halal",
+                "kosher": "Casher"
+            }
+        },
+        "stats": {
+            "title": "Statistiques de Voyage",
+            "totalTrips": "Total Voyages",
+            "countries": "Pays",
+            "days": "Jours de Voyage",
+            "member": "Membre Depuis",
+            "favorites": "Destinations Favorites"
         }
     }
 }

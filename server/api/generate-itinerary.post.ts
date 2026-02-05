@@ -222,7 +222,8 @@ export default defineEventHandler(async (event: H3Event): Promise<GenerateItiner
         budget,
         travel_style,
         road_trip,
-        travelers
+        travelers,
+        user_preferences // New: optional user preferences
     } = body
 
     const apiKey = process.env.GOOGLE_AI_API_KEY
@@ -249,6 +250,22 @@ export default defineEventHandler(async (event: H3Event): Promise<GenerateItiner
     const maxFunctionCalls = tripDuration * 4 * 2;
     console.log(`Trip duration: ${tripDuration} days. Safety limit: ${maxFunctionCalls} calls.`);
 
+    // Build user preferences context
+    let preferencesContext = ''
+    if (user_preferences) {
+        const prefs = user_preferences
+        preferencesContext = `\n=== USER PREFERENCES & CONSTRAINTS ===
+${prefs.interests && prefs.interests.length > 0 ? `Interests: ${prefs.interests.join(', ')}` : ''}
+${prefs.food_preferences && prefs.food_preferences.length > 0 ? `Food Preferences: ${prefs.food_preferences.join(', ')}` : ''}
+${prefs.dietary_restrictions && prefs.dietary_restrictions.length > 0 ? `Dietary Restrictions: ${prefs.dietary_restrictions.join(', ')} - MUST be respected in all restaurant suggestions` : ''}
+${prefs.avoid && prefs.avoid.length > 0 ? `Avoid: ${prefs.avoid.join(', ')} - Do NOT suggest activities involving these` : ''}
+${prefs.preferred_pace ? `Pace: ${prefs.preferred_pace} - Adjust daily activity count accordingly` : ''}
+${prefs.accessibility_needs && prefs.accessibility_needs.length > 0 ? `Accessibility: ${prefs.accessibility_needs.join(', ')} - All venues must accommodate these needs` : ''}
+
+IMPORTANT: Tailor ALL recommendations to match these preferences. Filter activities and restaurants accordingly.
+`
+    }
+
     const prompt = `
     Role: Expert local travel planner for TripWiser. Plan as a knowledgeable local who understands realistic travel logistics.
 
@@ -256,6 +273,7 @@ export default defineEventHandler(async (event: H3Event): Promise<GenerateItiner
     Destination: ${destination} | Origin: ${departure} | Duration: ${tripDuration} days
     Dates: ${departure_date} to ${return_date} | Budget: ${budget} (${getBudgetRange(budget)}/person/day)
     Travel Style: ${travel_style} | Travelers: ${travelers} | Road Trip: ${road_trip ? 'Yes' : 'No'}
+    ${preferencesContext}
 
     === BUDGET BREAKDOWN (per person/day) ===
     Budget Friendly ($30-80): 40% accommodation, 35% food, 20% activities, 5% souvenirs
