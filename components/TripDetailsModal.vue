@@ -341,19 +341,12 @@
                                  @close="handleAiDayClose"
                                />
 
-                               <!-- Drop zone — premium drag-and-drop with CSS-based insertion indicators -->
-                               <div
-                                 class="space-y-4 rounded-xl transition-colors duration-200"
-                                 @dragover.prevent="onDayDragOver($event, sIdx, dIdx)"
-                                 @dragleave="onDayDragLeave($event)"
-                                 @drop="onDayDrop($event, sIdx, dIdx)"
-                               >
+                               <!-- Activities list -->
+                               <div class="space-y-4 rounded-xl">
                                   <div
                                     v-for="(act, aIdx) in day.activities"
                                     :key="`${sIdx}-${dIdx}-${aIdx}-${act.time_flexible}`"
-                                    :data-activity-idx="aIdx"
                                     class="relative"
-                                    :class="isInsertionAt(sIdx, dIdx, aIdx) && 'dnd-insert-here'"
                                   >
                                     <ViewportRender :placeholder-height="140">
                                       <ActivityCard
@@ -367,27 +360,27 @@
                                         :edit-mode="editMode"
                                         @save-field="(field: string, value: any, prev: any) => handleSaveField(sIdx, dIdx, aIdx, field, value, prev)"
                                         @delete="handleDelete(sIdx, dIdx, aIdx)"
-                                        @drag-start="handleDragStart(sIdx, dIdx, aIdx)"
-                                        @drag-end="handleDragEnd"
+                                        @request-move="openMovePopover(sIdx, dIdx, aIdx, $event)"
                                       />
                                     </ViewportRender>
-                                  </div>
 
-                                  <!-- Bottom drop sentinel (always in DOM, indicator shown via CSS class) -->
-                                  <div
-                                    class="relative h-2"
-                                    :class="isInsertionAt(sIdx, dIdx, day.activities.length) && 'dnd-insert-here'"
-                                  ></div>
+                                    <!-- Move Activity Popover -->
+                                    <MoveActivityPopover
+                                      :is-open="isMovePopoverOpen(sIdx, dIdx, aIdx)"
+                                      :all-days="allDaysList"
+                                      :current-section-idx="sIdx"
+                                      :current-day-idx="dIdx"
+                                      @select="(day: { sectionIdx: number; dayIdx: number }) => handleMoveToDay(sIdx, dIdx, aIdx, day.sectionIdx, day.dayIdx)"
+                                      @close="closeMovePopover"
+                                    />
+                                  </div>
 
                                   <!-- Empty day hint -->
                                   <div
                                     v-if="editMode && day.activities.length === 0"
-                                    class="py-6 border-2 border-dashed rounded-xl text-center text-sm font-medium transition-colors duration-200"
-                                    :class="isInsertionAt(sIdx, dIdx, 0)
-                                      ? 'border-teal-400 bg-teal-50/50 text-teal-600'
-                                      : 'border-gray-200 text-gray-400'"
+                                    class="py-6 border-2 border-dashed rounded-xl text-center text-sm font-medium border-gray-200 text-gray-400"
                                   >
-                                    {{ dragSource ? 'Déposer ici' : 'Glissez une activité ici' }}
+                                    Aucune activité
                                   </div>
                                </div>
 
@@ -467,7 +460,7 @@ const {
   saveField,
   saveDayTitle,
   deleteActivity,
-  moveActivity,
+  moveActivityToDay,
   replaceDayActivities,
   aiModification,
   startAiModification,
@@ -511,129 +504,39 @@ function handleDelete(sIdx: number, dIdx: number, aIdx: number) {
   scheduleMapUpdate()
 }
 
-// ─── Premium Drag and Drop ───
-const dragSource = ref<ActivityIdentifier | null>(null)
-const insertionPoint = ref<{ sectionIdx: number; dayIdx: number; position: number } | null>(null)
-let autoScrollRAF: number | null = null
-let autoScrollSpeed = 0
+// ─── Move Activity Popover ───
+const movePopoverTarget = ref<ActivityIdentifier | null>(null)
 
-function handleDragStart(sIdx: number, dIdx: number, aIdx: number) {
-  dragSource.value = { sectionIdx: sIdx, dayIdx: dIdx, activityIdx: aIdx }
+/** Flat list of all days for the popover picker */
+const allDaysList = computed(() => {
+  if (!tripData.value?.itinerary_sections) return []
+  const days: { sectionIdx: number; dayIdx: number; dayNumber: number; title: string }[] = []
+  tripData.value.itinerary_sections.forEach((section: any, sIdx: number) => {
+    section.daily_plans.forEach((day: any, dIdx: number) => {
+      days.push({ sectionIdx: sIdx, dayIdx: dIdx, dayNumber: day.day, title: day.title })
+    })
+  })
+  return days
+})
+
+function openMovePopover(sIdx: number, dIdx: number, aIdx: number, _event?: Event) {
+  movePopoverTarget.value = makeId(sIdx, dIdx, aIdx)
 }
 
-function handleDragEnd() {
-  dragSource.value = null
-  insertionPoint.value = null
-  stopAutoScroll()
+function closeMovePopover() {
+  movePopoverTarget.value = null
 }
 
-function onDayDragOver(e: DragEvent, sIdx: number, dIdx: number) {
-  e.preventDefault()
-  if (!dragSource.value || !e.dataTransfer) return
-  e.dataTransfer.dropEffect = 'move'
-
-  // Calculate insertion position from mouse Y vs card midpoints
-  const container = e.currentTarget as HTMLElement
-  const cards = container.querySelectorAll<HTMLElement>('[data-activity-idx]')
-  const mouseY = e.clientY
-  let insertPos = 0
-
-  for (const card of cards) {
-    const rect = card.getBoundingClientRect()
-    if (mouseY > rect.top + rect.height / 2) {
-      insertPos = Number(card.dataset.activityIdx) + 1
-    }
-  }
-
-  // Skip no-op positions (dragging card over itself)
-  const src = dragSource.value
-  if (src && src.sectionIdx === sIdx && src.dayIdx === dIdx) {
-    if (insertPos === src.activityIdx || insertPos === src.activityIdx + 1) {
-      insertionPoint.value = null
-      handleAutoScroll(e.clientY)
-      return
-    }
-  }
-
-  insertionPoint.value = { sectionIdx: sIdx, dayIdx: dIdx, position: insertPos }
-  handleAutoScroll(e.clientY)
+function isMovePopoverOpen(sIdx: number, dIdx: number, aIdx: number): boolean {
+  const t = movePopoverTarget.value
+  if (!t) return false
+  return t.sectionIdx === sIdx && t.dayIdx === dIdx && t.activityIdx === aIdx
 }
 
-function onDayDragLeave(e: DragEvent) {
-  const container = e.currentTarget as HTMLElement
-  if (!container.contains(e.relatedTarget as Node)) {
-    insertionPoint.value = null
-  }
-}
-
-function onDayDrop(e: DragEvent, toSectionIdx: number, toDayIdx: number) {
-  e.preventDefault()
-  if (!dragSource.value) { handleDragEnd(); return }
-
-  const from = dragSource.value
-  let insertPos = insertionPoint.value?.position
-
-  if (insertPos == null || insertPos < 0) {
-    // Fallback: insert at end
-    const acts = tripData.value?.itinerary_sections?.[toSectionIdx]?.daily_plans?.[toDayIdx]?.activities
-    insertPos = acts ? acts.length : 0
-  }
-
-  // Adjust for same-day removal (removing source shifts indices)
-  if (from.sectionIdx === toSectionIdx && from.dayIdx === toDayIdx) {
-    if (from.activityIdx < insertPos) insertPos--
-    if (from.activityIdx === insertPos) {
-      handleDragEnd()
-      return
-    }
-  }
-
-  moveActivity(from, toSectionIdx, toDayIdx, insertPos)
+function handleMoveToDay(fromSIdx: number, fromDIdx: number, fromAIdx: number, toSIdx: number, toDIdx: number) {
+  moveActivityToDay(makeId(fromSIdx, fromDIdx, fromAIdx), toSIdx, toDIdx)
+  closeMovePopover()
   scheduleMapUpdate()
-  handleDragEnd()
-}
-
-function isInsertionAt(sIdx: number, dIdx: number, position: number): boolean {
-  const ip = insertionPoint.value
-  return !!ip && ip.sectionIdx === sIdx && ip.dayIdx === dIdx && ip.position === position
-}
-
-// ─── Auto-scroll during drag ───
-function handleAutoScroll(clientY: number) {
-  const timeline = timelineRef.value
-  if (!timeline) { stopAutoScroll(); return }
-  const rect = timeline.getBoundingClientRect()
-  const zone = 80
-  const maxSpeed = 14
-
-  if (clientY < rect.top + zone) {
-    const factor = 1 - Math.max(0, clientY - rect.top) / zone
-    autoScrollSpeed = -maxSpeed * factor
-    if (!autoScrollRAF) startAutoScrollLoop()
-  } else if (clientY > rect.bottom - zone) {
-    const factor = 1 - Math.max(0, rect.bottom - clientY) / zone
-    autoScrollSpeed = maxSpeed * factor
-    if (!autoScrollRAF) startAutoScrollLoop()
-  } else {
-    stopAutoScroll()
-  }
-}
-
-function startAutoScrollLoop() {
-  const tick = () => {
-    if (!timelineRef.value || autoScrollSpeed === 0) { stopAutoScroll(); return }
-    timelineRef.value.scrollTop += autoScrollSpeed
-    autoScrollRAF = requestAnimationFrame(tick)
-  }
-  autoScrollRAF = requestAnimationFrame(tick)
-}
-
-function stopAutoScroll() {
-  if (autoScrollRAF) {
-    cancelAnimationFrame(autoScrollRAF)
-    autoScrollRAF = null
-  }
-  autoScrollSpeed = 0
 }
 
 // ─── AI Popover (kept for future use, wired but no button triggers it from ActivityCard) ───
@@ -804,33 +707,5 @@ function formatDate(dateStr: string) {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #d1d5db;
-}
-
-/* DnD insertion indicator — pure CSS, no DOM mutation */
-.dnd-insert-here::before {
-  content: '';
-  position: absolute;
-  top: -0.625rem;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(to right, #14b8a6, #06b6d4);
-  border-radius: 9999px;
-  box-shadow: 0 0 10px rgba(20, 184, 166, 0.35);
-  z-index: 20;
-  pointer-events: none;
-}
-.dnd-insert-here::after {
-  content: '';
-  position: absolute;
-  top: -0.875rem;
-  left: -0.25rem;
-  width: 0.5rem;
-  height: 0.5rem;
-  background: #14b8a6;
-  border-radius: 9999px;
-  box-shadow: 0 0 8px rgba(20, 184, 166, 0.5);
-  z-index: 20;
-  pointer-events: none;
 }
 </style>

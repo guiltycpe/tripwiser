@@ -4,24 +4,18 @@
     
     Modes:
     - editMode=false → Static display, no interactions
-    - editMode=true  → Time picker, cost edit, delete on hover, draggable
+    - editMode=true  → Time picker, cost edit, delete on hover, move to day
     
     NOT editable: description, notes (view-only always)
   -->
   <div
     class="group/card relative rounded-2xl border bg-white"
     :class="[
-      isDragOver
-        ? 'border-teal-400 ring-2 ring-teal-500/20 shadow-lg'
-        : isActive
+      isActive
           ? 'border-blue-200 ring-2 ring-blue-500/10 shadow-lg z-10'
           : 'border-gray-100 shadow-sm hover:border-gray-200 hover:shadow-lg',
       'transition-[border-color,box-shadow] duration-200',
-      editMode && 'cursor-grab active:cursor-grabbing'
     ]"
-    :draggable="editMode"
-    @dragstart="onDragStart"
-    @dragend="onDragEnd"
   >
     <!-- AI Loading Overlay -->
     <div v-if="aiLoading" class="absolute inset-0 z-20 bg-white/80 rounded-2xl flex items-center justify-center">
@@ -35,11 +29,18 @@
       </div>
     </div>
 
-    <!-- Hover Action Bar — Delete only, edit mode only -->
+    <!-- Hover Action Bar — Move + Delete, edit mode only -->
     <div
       v-if="editMode"
       class="absolute -top-3 right-3 z-30 flex items-center gap-0.5 rounded-xl bg-white border border-gray-200 shadow-lg px-1 py-1 opacity-0 translate-y-1 pointer-events-none group-hover/card:opacity-100 group-hover/card:translate-y-0 group-hover/card:pointer-events-auto transition-[opacity,transform] duration-150"
     >
+      <button
+        class="p-1.5 rounded-lg text-gray-400 hover:text-teal-600 hover:bg-teal-50 transition-colors cursor-pointer"
+        title="Déplacer vers un autre jour"
+        @click.stop="$emit('request-move')"
+      >
+        <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" v-html="ICON_MOVE" />
+      </button>
       <button
         class="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
         title="Supprimer"
@@ -56,7 +57,6 @@
         <div class="flex-shrink-0">
           <div
             class="h-11 w-11 rounded-xl flex items-center justify-center transition-colors duration-200 bg-gray-50 text-gray-400 border border-gray-100 group-hover/card:bg-gradient-to-br group-hover/card:from-teal-500 group-hover/card:to-cyan-500 group-hover/card:text-white group-hover/card:border-transparent group-hover/card:shadow-md"
-            :class="editMode && 'cursor-grab active:cursor-grabbing'"
           >
             <svg viewBox="0 0 20 20" class="h-5 w-5" v-html="activityIconSvg" />
           </div>
@@ -181,6 +181,7 @@ import { ref } from 'vue'
 import {
   ICON_SPARKLES,
   ICON_TRASH,
+  ICON_MOVE,
   ICON_MAP,
   ICON_STAR,
   ICON_CLOCK,
@@ -202,40 +203,17 @@ const props = defineProps<{
 const emit = defineEmits<{
   'delete': []
   'save-field': [field: string, value: any, previousValue: any]
-  'drag-start': []
-  'drag-end': []
+  'request-move': []
 }>()
 
 const activityIconSvg = getActivityIconSvg(props.activityType)
 
 // ─── Time Picker State ───
 const showTimePicker = ref(false)
-const isDragOver = ref(false)
 
 function onTimeConfirm(time: string) {
   const prev = props.activity.time_flexible
   showTimePicker.value = false
   emit('save-field', 'time_flexible', time, prev)
-}
-
-// ─── Drag and Drop ───
-function onDragStart(e: DragEvent) {
-  if (!props.editMode || !e.dataTransfer) return
-  e.dataTransfer.effectAllowed = 'move'
-  e.dataTransfer.setData('application/json', JSON.stringify({
-    sectionIdx: props.sectionIdx,
-    dayIdx: props.dayIdx,
-    activityIdx: props.activityIdx,
-  }))
-  emit('drag-start')
-  // Use currentTarget (the draggable element) and rAF to not interfere with ghost capture
-  const el = (e.currentTarget || e.target) as HTMLElement
-  requestAnimationFrame(() => { el.style.opacity = '0.4' })
-}
-
-function onDragEnd(e: DragEvent) {
-  const el = (e.currentTarget || e.target) as HTMLElement
-  el.style.opacity = ''
-  emit('drag-end')
 }
 </script>

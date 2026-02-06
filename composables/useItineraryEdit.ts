@@ -5,7 +5,7 @@
  * - Full undo history back to original generated state (no cap)
  * - Saves initial snapshot on first edit for complete rollback
  * - Auto-sort activities by time after time_flexible changes
- * - Move activity across days (drag-and-drop support)
+ * - Move activity to another day (time-sorted insertion)
  * - Day title editing with undo
  * - structuredClone for safe snapshots
  * - shallowRef for AI state to avoid deep watching
@@ -187,7 +187,51 @@ export function useItineraryEdit(tripData: Ref<any>) {
       .activities.splice(id.activityIdx, 1)
   }
 
-  // ─── Move Activity (drag-and-drop across days) ───
+  // ─── Move Activity to a different day (auto-sorted by time) ───
+  function moveActivityToDay(
+    from: ActivityIdentifier,
+    toSectionIdx: number,
+    toDayIdx: number
+  ) {
+    const data = tripData.value
+    if (!data?.itinerary_sections) return
+
+    const srcActivities = getDayActivities(from.sectionIdx, from.dayIdx)
+    const dstActivities = getDayActivities(toSectionIdx, toDayIdx)
+    if (!srcActivities || !dstActivities) return
+
+    const activity = srcActivities[from.activityIdx]
+    if (!activity) return
+
+    // Determine insertion index based on time
+    const actTime = parseTimeToMinutes(activity.time_flexible)
+    let insertIdx = dstActivities.length // default: end
+    for (let i = 0; i < dstActivities.length; i++) {
+      if (parseTimeToMinutes(dstActivities[i].time_flexible) > actTime) {
+        insertIdx = i
+        break
+      }
+    }
+
+    // Push undo entry with source location info
+    pushUndo({
+      type: 'move',
+      target: { sectionIdx: toSectionIdx, dayIdx: toDayIdx, activityIdx: insertIdx },
+      previousData: cloneActivity(activity),
+      meta: {
+        fromSectionIdx: from.sectionIdx,
+        fromDayIdx: from.dayIdx,
+        fromActivityIdx: from.activityIdx,
+      },
+    })
+
+    // Remove from source
+    srcActivities.splice(from.activityIdx, 1)
+    // Insert at time-sorted position in destination
+    dstActivities.splice(insertIdx, 0, activity)
+  }
+
+  // ─── Move Activity (positional — legacy support) ───
   function moveActivity(
     from: ActivityIdentifier,
     toSectionIdx: number,
@@ -418,6 +462,7 @@ export function useItineraryEdit(tripData: Ref<any>) {
     replaceActivity,
     deleteActivity,
     moveActivity,
+    moveActivityToDay,
     replaceDayActivities,
     undo,
     canUndo,
