@@ -1,5 +1,7 @@
 import type { H3Event } from 'h3'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { requireAuth, rateLimit } from '~/server/utils/auth'
+import { parseAIResponse } from '~/server/utils/jsonExtractor'
 
 /**
  * POST /api/modify-day
@@ -8,6 +10,9 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
  * returns a modified set of activities via Gemini 2.5 Flash.
  */
 export default defineEventHandler(async (event: H3Event) => {
+  const { user } = await requireAuth(event)
+  rateLimit(user.id, { maxRequests: 20, windowMs: 60_000 })
+
   const body = await readBody(event)
   const { activities, instruction, dayTitle, dayNumber } = body
 
@@ -59,19 +64,7 @@ Return the modified day JSON now:
     const result = await model.generateContent(prompt)
     const text = result.response.text()
 
-    // Extract JSON from response
-    let cleaned = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim()
-    const firstBrace = cleaned.indexOf('{')
-    const lastBrace = cleaned.lastIndexOf('}')
-
-    if (firstBrace === -1 || lastBrace === -1) {
-      throw new Error('No valid JSON in AI response')
-    }
-
-    cleaned = cleaned.substring(firstBrace, lastBrace + 1)
-    cleaned = cleaned.replace(/,\s*([}\]])/g, '$1')
-
-    const parsed = JSON.parse(cleaned)
+    const parsed = parseAIResponse(text)
     const modifiedActivities: any[] = parsed.activities ?? parsed
 
     // Ensure costs are numbers

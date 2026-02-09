@@ -22,7 +22,7 @@
       <div class="relative z-50 w-52 bg-white rounded-2xl shadow-2xl border border-gray-200/80 overflow-hidden">
         <!-- Header -->
         <div class="px-3.5 py-2.5 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 flex items-center justify-between">
-          <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Déplacer vers</p>
+          <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">{{ t.activity.moveTo }}</p>
           <button
             class="p-0.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
             @click="$emit('close')"
@@ -94,6 +94,8 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useTranslations()
+
 interface DayOption {
   sectionIdx: number
   dayIdx: number

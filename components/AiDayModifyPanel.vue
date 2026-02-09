@@ -9,7 +9,7 @@
       <div class="h-6 w-6 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-sm">
         <svg viewBox="0 0 20 20" class="h-3.5 w-3.5 text-white" fill="currentColor" v-html="ICON_SPARKLES" />
       </div>
-      <h4 class="text-sm font-bold text-gray-800">Modifier ce jour</h4>
+      <h4 class="text-sm font-bold text-gray-800">{{ t.ai.modifyDay.title }}</h4>
       <button
         class="ml-auto p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100/80 transition-colors cursor-pointer"
         @click="$emit('close')"
@@ -27,7 +27,7 @@
           ref="promptInput"
           v-model="prompt"
           type="text"
-          placeholder="Ex: Rendre moins cher, plus de culture..."
+          :placeholder="t.ai.modifyDay.placeholder"
           class="w-full text-sm rounded-xl border border-violet-200 bg-white px-3.5 py-2.5 pr-10 text-gray-900 placeholder:text-gray-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20 transition-all"
           @keydown.enter="submit"
           @keydown.escape="$emit('close')"
@@ -65,7 +65,7 @@
     <div v-if="status === 'loading'" class="px-4 pb-4 space-y-3">
       <div class="flex items-center gap-2">
         <div class="h-4 w-4 rounded-full border-2 border-violet-500 border-t-transparent animate-spin"></div>
-        <span class="text-xs text-violet-600 font-medium">Génération en cours...</span>
+        <span class="text-xs text-violet-600 font-medium">{{ t.ai.modifyDay.generating }}</span>
       </div>
       <div class="space-y-2">
         <div class="h-3 bg-violet-100 rounded-full w-full animate-pulse"></div>
@@ -77,7 +77,7 @@
     <!-- Preview State -->
     <div v-if="status === 'preview' && preview" class="px-4 pb-4">
       <div class="bg-violet-50/80 rounded-xl border border-violet-100 p-3 mb-3">
-        <p class="text-xs font-semibold text-violet-700 mb-1.5">Proposition de l'IA</p>
+        <p class="text-xs font-semibold text-violet-700 mb-1.5">AI Proposal</p>
         <p class="text-xs text-gray-500 mb-2">
           {{ preview.length }} activité{{ preview.length > 1 ? 's' : '' }} proposée{{ preview.length > 1 ? 's' : '' }}
         </p>
@@ -98,13 +98,13 @@
           class="flex-1 text-xs font-semibold px-3 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white hover:from-violet-600 hover:to-purple-700 transition-all cursor-pointer shadow-sm shadow-violet-500/20"
           @click="$emit('accept')"
         >
-          ✓ Appliquer
+          ✓ {{ t.ai.modifyDay.apply }}
         </button>
         <button
           class="flex-1 text-xs font-semibold px-3 py-2.5 rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
           @click="$emit('discard')"
         >
-          ✕ Ignorer
+          ✕ {{ t.ai.modifyDay.discard }}
         </button>
       </div>
     </div>
@@ -132,15 +132,12 @@ const emit = defineEmits<{
   discard: []
 }>()
 
+const { t } = useTranslations()
+
 const prompt = ref('')
 const promptInput = ref<HTMLInputElement | null>(null)
 
-const suggestions = [
-  'Rendre moins cher',
-  'Plus authentique',
-  'Adapter pour enfants',
-  "Plus d'aventure",
-]
+const suggestions = computed(() => t.value.ai.modifyDay.suggestions as string[])
 
 function submit() {
   if (!prompt.value.trim()) return

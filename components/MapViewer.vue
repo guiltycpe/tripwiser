@@ -17,7 +17,7 @@
           class="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur shadow-lg rounded-full text-xs font-bold text-teal-700 hover:bg-white transition-all transform hover:scale-105"
         >
           <Icon name="heroicons:arrows-pointing-out-20-solid" class="h-4 w-4" />
-          Recentrer
+          Recenter
         </button>
     </div>
   </div>

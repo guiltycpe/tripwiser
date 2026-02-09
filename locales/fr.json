@@ -303,12 +303,94 @@
         "edit": "Modifier",
         "close": "Fermer",
         "back": "Retour",
+        "noActivities": "Aucune activité",
         "transport": {
             "driving": "Voiture",
             "walking": "À pied",
             "cycling": "Vélo",
             "title": "Mode de transport"
         }
+    },
+    "tripDetails": {
+        "days": "Jours",
+        "day": "Jour",
+        "tabs": {
+            "overview": "Vue d'ensemble",
+            "itinerary": "Itinéraire Détaillé"
+        },
+        "edit": {
+            "finish": "Terminer",
+            "modify": "Modifier",
+            "undo": "Annuler",
+            "deleteTrip": "Supprimer le voyage"
+        },
+        "overview": {
+            "totalBudget": "Budget Total",
+            "persons": "pers.",
+            "perPerson": "Par personne",
+            "perDay": "Par jour",
+            "accommodation": "Hébergement",
+            "food": "Nourriture",
+            "activities": "Activités",
+            "fullDetails": "Détails Complets",
+            "recommendedFlights": "Vols Recommandés",
+            "outbound": "Aller",
+            "return": "Retour",
+            "returnFlight": "Vol de retour",
+            "whereToSleep": "Où Dormir",
+            "nights": "Nuits",
+            "night": "nuit"
+        },
+        "budget": {
+            "title": "Budget Détaillé",
+            "accommodation": "Hébergement",
+            "food": "Nourriture & Boissons",
+            "activities": "Activités & Visites",
+            "transport": "Transport",
+            "total": "Total",
+            "perPerson": "Par personne",
+            "perDay": "Par jour"
+        },
+        "map": {
+            "recenter": "Recentrer"
+        }
+    },
+    "tripCard": {
+        "status": {
+            "ongoing": "EN COURS",
+            "upcoming": "À VENIR",
+            "completed": "TERMINÉ"
+        },
+        "traveler": "voyageur",
+        "travelers": "voyageurs"
+    },
+    "ai": {
+        "modifyDay": {
+            "title": "Modifier ce jour",
+            "placeholder": "Décrivez comment modifier cette journée...",
+            "generating": "Génération en cours...",
+            "apply": "Appliquer",
+            "discard": "Ignorer",
+            "suggestions": [
+                "Ajouter plus de visites culturelles",
+                "Rendre la journée plus reposante",
+                "Ajouter des restaurants locaux",
+                "Se concentrer sur les activités en plein air"
+            ]
+        },
+        "modifyActivity": {
+            "title": "Modifier avec l'IA",
+            "placeholder": "Comment modifier cette activité ?",
+            "keep": "Garder",
+            "discard": "Ignorer"
+        }
+    },
+    "activity": {
+        "moveToDay": "Déplacer vers un autre jour",
+        "delete": "Supprimer",
+        "regenerating": "Régénération...",
+        "time": "Heure...",
+        "moveTo": "Déplacer vers"
     },
     "profile": {
         "title": "Mon Profil",

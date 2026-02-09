@@ -74,12 +74,38 @@ function parseTimeToMinutes(timeStr: string | undefined): number {
   return 9999
 }
 
-export function useItineraryEdit(tripData: Ref<any>) {
+export function useItineraryEdit(tripData: Ref<any>, tripId?: Ref<string | null>) {
   // ─── Core State ───
   const aiModification = shallowRef<AiModification | null>(null)
   const aiDayModification = shallowRef<AiDayModification | null>(null)
   const undoStack = shallowRef<UndoEntry[]>([])
   const canUndo = computed(() => undoStack.value.length > 0)
+  const isSaving = ref(false)
+
+  // ─── Autosave (debounced) ───
+  let autosaveTimer: ReturnType<typeof setTimeout> | null = null
+
+  function scheduleAutosave() {
+    if (!tripId?.value || !tripData.value) return
+    if (autosaveTimer) clearTimeout(autosaveTimer)
+    autosaveTimer = setTimeout(async () => {
+      if (!tripId?.value || !tripData.value) return
+      isSaving.value = true
+      try {
+        await $fetch('/api/save-itinerary', {
+          method: 'POST',
+          body: {
+            tripId: tripId.value,
+            itinerary: toRaw(tripData.value),
+          },
+        })
+      } catch (err) {
+        console.error('Autosave failed:', err)
+      } finally {
+        isSaving.value = false
+      }
+    }, 2000)
+  }
 
   // ─── Activity Access ───
   function getActivity(id: ActivityIdentifier) {
@@ -120,6 +146,7 @@ export function useItineraryEdit(tripData: Ref<any>) {
     if (field === 'time_flexible') {
       sortDayActivities(id.sectionIdx, id.dayIdx)
     }
+    scheduleAutosave()
   }
 
   // ─── Sort activities within a day by time ───
@@ -147,6 +174,7 @@ export function useItineraryEdit(tripData: Ref<any>) {
       })
     }
     day.title = newTitle
+    scheduleAutosave()
   }
 
   // ─── Replace Activity (AI accept) ───
@@ -166,6 +194,7 @@ export function useItineraryEdit(tripData: Ref<any>) {
     data.itinerary_sections[id.sectionIdx]
       .daily_plans[id.dayIdx]
       .activities[id.activityIdx] = newActivity
+    scheduleAutosave()
   }
 
   // ─── Delete Activity ───
@@ -185,6 +214,7 @@ export function useItineraryEdit(tripData: Ref<any>) {
     data.itinerary_sections[id.sectionIdx]
       .daily_plans[id.dayIdx]
       .activities.splice(id.activityIdx, 1)
+    scheduleAutosave()
   }
 
   // ─── Move Activity to a different day (auto-sorted by time) ───
@@ -229,6 +259,7 @@ export function useItineraryEdit(tripData: Ref<any>) {
     srcActivities.splice(from.activityIdx, 1)
     // Insert at time-sorted position in destination
     dstActivities.splice(insertIdx, 0, activity)
+    scheduleAutosave()
   }
 
   // ─── Move Activity (positional — legacy support) ───
@@ -317,6 +348,7 @@ export function useItineraryEdit(tripData: Ref<any>) {
       // 'edit' — replace in-place
       activities[target.activityIdx] = previousData
     }
+    scheduleAutosave()
   }
 
   // ─── AI Modification ───
@@ -390,6 +422,7 @@ export function useItineraryEdit(tripData: Ref<any>) {
 
     activities.length = 0
     activities.push(...newActivities)
+    scheduleAutosave()
   }
 
   // ─── AI Day Modification ───
@@ -466,6 +499,7 @@ export function useItineraryEdit(tripData: Ref<any>) {
     replaceDayActivities,
     undo,
     canUndo,
+    isSaving,
     aiModification,
     startAiModification,
     cancelAiModification,

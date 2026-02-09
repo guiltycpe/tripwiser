@@ -1,5 +1,6 @@
 // server/api/places.ts
 import type { H3Event } from 'h3'
+import { requireAuth } from '~/server/utils/auth'
 
 interface PhotonFeature {
     properties: {
@@ -30,6 +31,8 @@ interface PlaceResult {
  * Ne nécessite PAS de clé API.
  */
 export default defineEventHandler(async (event: H3Event): Promise<PlaceResult[]> => {
+    await requireAuth(event)
+
     const query = getQuery(event)
     const text = query.input as string
     const config = useRuntimeConfig(event)

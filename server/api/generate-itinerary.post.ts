@@ -1,6 +1,8 @@
 import type { H3Event } from 'h3'
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai'
 import { validateBatch } from '~/server/utils/placesValidator'
+import { requireAuth, rateLimit } from '~/server/utils/auth'
+import { extractJSON } from '~/server/utils/jsonExtractor'
 
 interface ItineraryActivity {
     time_flexible: string;
@@ -104,32 +106,7 @@ const getBudgetRange = (budget: string) => {
     }
 }
 
-/**
- * Cleans and extracts valid JSON from LLM response
- */
-function extractJSON(text: string): string {
-    // Remove markdown code blocks
-    let cleaned = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
-    
-    // Find the first { and last } to extract JSON object
-    const firstBrace = cleaned.indexOf('{');
-    const lastBrace = cleaned.lastIndexOf('}');
-    
-    if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
-        throw new Error('No valid JSON object found in response');
-    }
-    
-    cleaned = cleaned.substring(firstBrace, lastBrace + 1);
-    
-    // Fix common JSON issues from LLMs
-    // Remove trailing commas before } or ]
-    cleaned = cleaned.replace(/,\s*([}\]])/g, '$1');
-    
-    // Fix unquoted property names (rare but possible)
-    cleaned = cleaned.replace(/(\{|,)\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":');
-    
-    return cleaned;
-}
+// extractJSON is now imported from ~/server/utils/jsonExtractor
 
 /**
  * Normalizes the itinerary data to ensure consistent types
@@ -212,6 +189,9 @@ const validatePlaceFunction = {
 };
 
 export default defineEventHandler(async (event: H3Event): Promise<GenerateItineraryResponse> => {
+    const { user } = await requireAuth(event)
+    rateLimit(user.id, { maxRequests: 5, windowMs: 60_000 })
+
     console.log('API call: generate-itinerary (Gemini + Validation)')
     const body = await readBody(event)
     const {
