@@ -292,7 +292,7 @@ async function handleRefreshImage(tripId: string) {
     // Fetch new image
     const { url } = await $fetch('/api/get-destination-image', {
       params: { 
-        destination: trip.destination.split(',')[0], 
+        destination: formatDestinationShort(trip.destination), 
         // Add random param to bypass cache if needed, but Unsplash 'random' endpoint should handle it.
         // But the browser or server might cache?
         timestamp: Date.now() 

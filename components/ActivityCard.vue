@@ -25,7 +25,7 @@
             <svg viewBox="0 0 20 20" class="h-5 w-5 text-white animate-pulse" v-html="ICON_SPARKLES" />
           </div>
         </div>
-        <p class="text-xs font-medium text-violet-600">Regenerating...</p>
+        <p class="text-xs font-medium text-violet-600">{{ t.activity.regenerating }}</p>
       </div>
     </div>
 
@@ -36,14 +36,14 @@
     >
       <button
         class="p-1.5 rounded-lg text-gray-400 hover:text-teal-600 hover:bg-teal-50 transition-colors cursor-pointer"
-        title="Déplacer vers un autre jour"
+        :title="t.activity.moveToDay"
         @click.stop="$emit('request-move')"
       >
         <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" v-html="ICON_MOVE" />
       </button>
       <button
         class="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
-        title="Supprimer"
+        :title="t.activity.delete"
         @click.stop="$emit('delete')"
       >
         <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" v-html="ICON_TRASH" />
@@ -77,7 +77,7 @@
                   @keydown.enter.stop="showTimePicker = !showTimePicker"
                 >
                   <svg viewBox="0 0 20 20" class="h-3 w-3" v-html="ICON_CLOCK" />
-                  {{ activity.time_flexible || 'Heure...' }}
+                  {{ activity.time_flexible || t.activity.time }}
                 </span>
                 <template v-if="showTimePicker">
                   <div class="fixed inset-0 z-40" @click="showTimePicker = false"></div>
@@ -188,6 +188,8 @@ import {
   ICON_ARROW_RIGHT,
   getActivityIconSvg,
 } from '~/utils/cardIcons'
+
+const { t } = useTranslations()
 
 const props = defineProps<{
   activity: any

@@ -303,12 +303,94 @@
         "edit": "Edit",
         "close": "Close",
         "back": "Back",
+        "noActivities": "No activities",
         "transport": {
             "driving": "Driving",
             "walking": "Walking",
             "cycling": "Cycling",
             "title": "Transport Mode"
         }
+    },
+    "tripDetails": {
+        "days": "Days",
+        "day": "Day",
+        "tabs": {
+            "overview": "Overview",
+            "itinerary": "Detailed Itinerary"
+        },
+        "edit": {
+            "finish": "Done",
+            "modify": "Edit",
+            "undo": "Undo",
+            "deleteTrip": "Delete trip"
+        },
+        "overview": {
+            "totalBudget": "Total Budget",
+            "persons": "pers.",
+            "perPerson": "Per person",
+            "perDay": "Per day",
+            "accommodation": "Accommodation",
+            "food": "Food",
+            "activities": "Activities",
+            "fullDetails": "Full Details",
+            "recommendedFlights": "Recommended Flights",
+            "outbound": "Outbound",
+            "return": "Return",
+            "returnFlight": "Return flight",
+            "whereToSleep": "Where to Sleep",
+            "nights": "Nights",
+            "night": "night"
+        },
+        "budget": {
+            "title": "Budget Breakdown",
+            "accommodation": "Accommodation",
+            "food": "Food & Drinks",
+            "activities": "Activities & Visits",
+            "transport": "Transport",
+            "total": "Total",
+            "perPerson": "Per person",
+            "perDay": "Per day"
+        },
+        "map": {
+            "recenter": "Recenter"
+        }
+    },
+    "tripCard": {
+        "status": {
+            "ongoing": "ONGOING",
+            "upcoming": "UPCOMING",
+            "completed": "COMPLETED"
+        },
+        "traveler": "traveler",
+        "travelers": "travelers"
+    },
+    "ai": {
+        "modifyDay": {
+            "title": "Modify this day",
+            "placeholder": "Describe how to change this day...",
+            "generating": "Generating...",
+            "apply": "Apply",
+            "discard": "Discard",
+            "suggestions": [
+                "Add more cultural visits",
+                "Make the day more relaxing",
+                "Add local restaurants",
+                "Focus on outdoor activities"
+            ]
+        },
+        "modifyActivity": {
+            "title": "AI Modify",
+            "placeholder": "How should I change this activity?",
+            "keep": "Keep",
+            "discard": "Discard"
+        }
+    },
+    "activity": {
+        "moveToDay": "Move to another day",
+        "delete": "Delete",
+        "regenerating": "Regenerating...",
+        "time": "Time...",
+        "moveTo": "Move to"
     },
     "profile": {
         "title": "My Profile",

@@ -16,7 +16,7 @@
               <Icon name="heroicons:calculator-20-solid" class="h-6 w-6" />
             </div>
             <div>
-              <h2 class="text-2xl font-black">Budget Détaillé</h2>
+              <h2 class="text-2xl font-black">{{ t.tripDetails.budget.title }}</h2>
               <p class="text-sm text-teal-100">Analyse complète des coûts</p>
             </div>
           </div>
@@ -32,11 +32,11 @@
             <p class="text-xl font-black">${{ budgetAnalysis.total }}</p>
           </div>
           <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
-            <p class="text-xs text-teal-100 mb-1">Par personne</p>
+            <p class="text-xs text-teal-100 mb-1">{{ t.tripDetails.budget.perPerson }}</p>
             <p class="text-xl font-black">${{ budgetAnalysis.perPerson }}</p>
           </div>
           <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
-            <p class="text-xs text-teal-100 mb-1">Par jour</p>
+            <p class="text-xs text-teal-100 mb-1">{{ t.tripDetails.budget.perDay }}</p>
             <p class="text-xl font-black">${{ budgetAnalysis.perDay }}</p>
           </div>
         </div>
@@ -60,7 +60,7 @@
                     <Icon name="heroicons:home-modern-20-solid" class="h-5 w-5 text-indigo-600" />
                   </div>
                   <div>
-                    <h4 class="font-bold text-gray-900">Hébergement</h4>
+                    <h4 class="font-bold text-gray-900">{{ t.tripDetails.budget.accommodation }}</h4>
                     <p class="text-xs text-gray-500">{{ budgetAnalysis.accommodation.nights }} nuits</p>
                   </div>
                 </div>
@@ -90,7 +90,7 @@
                     <Icon name="heroicons:cake-20-solid" class="h-5 w-5 text-teal-600" />
                   </div>
                   <div>
-                    <h4 class="font-bold text-gray-900">Nourriture & Boissons</h4>
+                    <h4 class="font-bold text-gray-900">{{ t.tripDetails.budget.food }}</h4>
                     <p class="text-xs text-gray-500">{{ budgetAnalysis.food.mealsCount }} repas estimés</p>
                   </div>
                 </div>
@@ -109,7 +109,7 @@
                     <Icon name="heroicons:ticket-20-solid" class="h-5 w-5 text-orange-600" />
                   </div>
                   <div>
-                    <h4 class="font-bold text-gray-900">Activités & Visites</h4>
+                    <h4 class="font-bold text-gray-900">{{ t.tripDetails.budget.activities }}</h4>
                     <p class="text-xs text-gray-500">{{ budgetAnalysis.activities.count }} activités payantes</p>
                   </div>
                 </div>
@@ -202,6 +202,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+
+const { t } = useTranslations()
 
 interface Props {
   isOpen: boolean

@@ -54,7 +54,7 @@
         </div>
         <div class="travelers">
           <Icon name="heroicons:users-20-solid" class="h-4 w-4" />
-          <span>{{ travelers }} {{ travelers > 1 ? 'voyageurs' : 'voyageur' }}</span>
+          <span>{{ travelers }} {{ travelers > 1 ? t.tripCard.travelers : t.tripCard.traveler }}</span>
         </div>
       </div>
       
@@ -70,6 +70,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+
+const { t } = useTranslations()
 
 const props = defineProps<{
   trip: any
@@ -136,10 +138,10 @@ const statusInfo = computed(() => {
 
 const statusLabel = computed(() => {
   switch (statusInfo.value) {
-    case 'ONGOING': return 'EN COURS'
-    case 'UPCOMING': return 'À VENIR'
-    case 'COMPLETED': return 'TERMINÉ'
-    default: return 'À VENIR'
+    case 'ONGOING': return t.value.tripCard.status.ongoing
+    case 'UPCOMING': return t.value.tripCard.status.upcoming
+    case 'COMPLETED': return t.value.tripCard.status.completed
+    default: return t.value.tripCard.status.upcoming
   }
 })
 
@@ -153,10 +155,7 @@ const statusClass = computed(() => {
 })
 
 // Helpers (reused logic)
-function formatDestination(dest: string) {
-  if (!dest) return 'Unknown'
-  return dest.split(',')[0].trim()
-}
+// formatDestination is auto-imported from ~/utils/formatDestination.ts
 
 function getBudgetLabel(tier: string) {
   if (!tier) return ''

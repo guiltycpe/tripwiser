@@ -3,7 +3,7 @@
   <header class="sticky top-0 z-50 glass border-b border-white/20 animate-slide-down">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
       
-      <!-- Left: Navigation Links -->
+      <!-- Left: Navigation Links (Desktop) -->
       <div class="flex-1">
         <nav class="hidden gap-8 md:flex">
           <NuxtLink to="/" class="nav-link group">
@@ -23,6 +23,15 @@
             <span class="nav-underline"></span>
           </NuxtLink>
         </nav>
+
+        <!-- Mobile Hamburger Button -->
+        <button 
+          @click="mobileMenuOpen = !mobileMenuOpen" 
+          class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+          :aria-label="mobileMenuOpen ? 'Close menu' : 'Open menu'"
+        >
+          <Icon :name="mobileMenuOpen ? 'heroicons:x-mark-20-solid' : 'heroicons:bars-3-20-solid'" class="h-6 w-6 text-gray-700" />
+        </button>
       </div>
       
       <!-- Center: Logo with subtle animation -->
@@ -85,6 +94,58 @@
         </div>
       </div>
     </div>
+
+    <!-- Mobile Menu Drawer -->
+    <Transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0 -translate-y-2"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 -translate-y-2"
+    >
+      <nav v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200/50 bg-white/95 backdrop-blur-lg px-6 py-4 space-y-1">
+        <NuxtLink to="/" class="mobile-nav-link" @click="mobileMenuOpen = false">
+          <Icon name="heroicons:home-20-solid" class="h-5 w-5 text-teal-500" />
+          {{ t.nav.home }}
+        </NuxtLink>
+        <NuxtLink to="/features" class="mobile-nav-link" @click="mobileMenuOpen = false">
+          <Icon name="heroicons:sparkles-20-solid" class="h-5 w-5 text-teal-500" />
+          {{ t.nav.features }}
+        </NuxtLink>
+        <NuxtLink to="/pricing" class="mobile-nav-link" @click="mobileMenuOpen = false">
+          <Icon name="heroicons:credit-card-20-solid" class="h-5 w-5 text-teal-500" />
+          {{ t.nav.pricing }}
+        </NuxtLink>
+        <NuxtLink to="/about" class="mobile-nav-link" @click="mobileMenuOpen = false">
+          <Icon name="heroicons:information-circle-20-solid" class="h-5 w-5 text-teal-500" />
+          {{ t.nav.about }}
+        </NuxtLink>
+        
+        <div class="border-t border-gray-200 pt-3 mt-3 space-y-1">
+          <template v-if="!user">
+            <NuxtLink to="/auth/login" class="mobile-nav-link" @click="mobileMenuOpen = false">
+              <Icon name="heroicons:arrow-right-on-rectangle-20-solid" class="h-5 w-5 text-teal-500" />
+              {{ t.nav.login }}
+            </NuxtLink>
+            <NuxtLink to="/auth/signup" class="mobile-nav-link font-semibold text-teal-600" @click="mobileMenuOpen = false">
+              <Icon name="heroicons:user-plus-20-solid" class="h-5 w-5 text-teal-500" />
+              {{ t.nav.signup }}
+            </NuxtLink>
+          </template>
+          <template v-else>
+            <NuxtLink to="/dashboard" class="mobile-nav-link" @click="mobileMenuOpen = false">
+              <Icon name="heroicons:rectangle-stack-20-solid" class="h-5 w-5 text-teal-500" />
+              {{ t.nav.dashboard }}
+            </NuxtLink>
+            <NuxtLink to="/profile" class="mobile-nav-link" @click="mobileMenuOpen = false">
+              <Icon name="heroicons:user-circle-20-solid" class="h-5 w-5 text-teal-500" />
+              {{ t.nav.profile }}
+            </NuxtLink>
+          </template>
+        </div>
+      </nav>
+    </Transition>
   </header>
 </template>
 
@@ -95,9 +156,16 @@ const user = useSupabaseUser()
 const supabase = useSupabaseClient()
 const userProfile = ref<UserProfile | null>(null)
 const isLoadingProfile = ref(false)
+const mobileMenuOpen = ref(false)
 
 // Use global translations
 const { t } = useTranslations()
+
+// Close mobile menu on route change
+const route = useRoute()
+watch(() => route.fullPath, () => {
+  mobileMenuOpen.value = false
+})
 
 // Load user profile when user is authenticated
 watch(user, async (newUser) => {
@@ -120,9 +188,11 @@ watch(user, async (newUser) => {
   }
 }, { immediate: true })
 
-// Also listen to auth state changes
+// Also listen to auth state changes — properly cleaned up
+let authSubscription: { unsubscribe: () => void } | null = null
+
 onMounted(() => {
-  supabase.auth.onAuthStateChange(async (event, session) => {
+  const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_IN' && session?.user && !userProfile.value) {
       try {
         userProfile.value = await $fetch<UserProfile>('/api/profile')
@@ -133,6 +203,11 @@ onMounted(() => {
       userProfile.value = null
     }
   })
+  authSubscription = data.subscription
+})
+
+onUnmounted(() => {
+  authSubscription?.unsubscribe()
 })
 </script>
 
@@ -171,5 +246,21 @@ onMounted(() => {
 
 .router-link-exact-active .nav-underline {
   width: 100%;
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.mobile-nav-link:hover {
+  background: #f0fdfa;
+  color: #0d9488;
 }
 </style>

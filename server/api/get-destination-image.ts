@@ -1,7 +1,10 @@
 
 import { defineEventHandler, getQuery } from 'h3'
+import { requireAuth } from '~/server/utils/auth'
 
 export default defineEventHandler(async (event) => {
+    await requireAuth(event)
+
     const query = getQuery(event)
     const destination = query.destination as string
     const config = useRuntimeConfig()
