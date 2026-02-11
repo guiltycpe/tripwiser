@@ -1,101 +1,63 @@
 <template>
-  <!-- Modern navbar with glassmorphism effect -->
-  <header class="sticky top-0 z-50 glass border-b border-white/20 animate-slide-down">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      
-      <!-- Left: Navigation Links (Desktop) -->
-      <div class="flex-1">
-        <nav class="hidden gap-8 md:flex">
-          <NuxtLink to="/" class="nav-link group">
-            <span>{{ t.nav.home }}</span>
-            <span class="nav-underline"></span>
-          </NuxtLink>
-          <NuxtLink to="/features" class="nav-link group">
-            <span>{{ t.nav.features }}</span>
-            <span class="nav-underline"></span>
-          </NuxtLink>
-          <NuxtLink to="/pricing" class="nav-link group">
-            <span>{{ t.nav.pricing }}</span>
-            <span class="nav-underline"></span>
-          </NuxtLink>
-          <NuxtLink to="/about" class="nav-link group">
-            <span>{{ t.nav.about }}</span>
-            <span class="nav-underline"></span>
-          </NuxtLink>
-        </nav>
+  <header class="sticky top-0 z-50 bg-white border-b border-slate-200">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
 
-        <!-- Mobile Hamburger Button -->
-        <button 
-          @click="mobileMenuOpen = !mobileMenuOpen" 
-          class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
-          :aria-label="mobileMenuOpen ? 'Close menu' : 'Open menu'"
-        >
-          <Icon :name="mobileMenuOpen ? 'heroicons:x-mark-20-solid' : 'heroicons:bars-3-20-solid'" class="h-6 w-6 text-gray-700" />
-        </button>
+      <!-- Left: Logo + Navigation Links (Desktop) -->
+      <div class="flex items-center gap-8">
+        <NuxtLink to="/" class="flex items-center gap-2.5">
+          <img src="~/assets/images/logo.png" alt="TripWiser Logo" class="h-8 w-8 rounded-lg object-cover">
+          <span class="text-lg font-semibold text-slate-900">TripWiser</span>
+        </NuxtLink>
+
+        <nav class="hidden gap-6 md:flex">
+          <NuxtLink to="/" class="nav-link">{{ t.nav.home }}</NuxtLink>
+          <NuxtLink to="/features" class="nav-link">{{ t.nav.features }}</NuxtLink>
+          <NuxtLink to="/pricing" class="nav-link">{{ t.nav.pricing }}</NuxtLink>
+          <NuxtLink to="/about" class="nav-link">{{ t.nav.about }}</NuxtLink>
+        </nav>
       </div>
-      
-      <!-- Center: Logo with subtle animation -->
-      <NuxtLink
-        to="/"
-        class="absolute left-1/2 top-4 z-10 -translate-x-1/2 rounded-full bg-white p-2 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-110 animate-pulse-subtle"
-      >
-        <img src="~/assets/images/logo.png" alt="TripWiser Logo" class="h-14 w-14 rounded-full object-cover">
-      </NuxtLink>
-      
+
       <!-- Right: User Controls -->
-      <div class="flex-1">
-        <div class="flex items-center justify-end gap-4">
-          <!-- Language Selector -->
-          <LanguageSelector />
-          
-          <!-- Auth Buttons - Dynamic based on auth state -->
-          <div class="flex items-center gap-4">
-            <template v-if="!user">
-              <!-- Not logged in -->
-              <NuxtLink to="/auth/login" class="btn-secondary hidden sm:block">
-                {{ t.nav.login }}
-              </NuxtLink>
-              <NuxtLink to="/auth/signup" class="btn-primary whitespace-nowrap">
-                <span>{{ t.nav.signup }}</span>
-              </NuxtLink>
-            </template>
-            <template v-else>
-              <!-- Logged in -->
-              <NuxtLink to="/dashboard" class="btn-secondary hidden sm:flex items-center gap-2">
-                <Icon name="heroicons:rectangle-stack-20-solid" class="h-4 w-4" />
-                {{ t.nav.dashboard }}
-              </NuxtLink>
-              <!-- Profile Avatar -->
-              <NuxtLink to="/profile" class="group relative">
-                <div class="h-10 w-10 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 p-0.5 shadow-md hover:shadow-lg transition-all cursor-pointer">
-                  <div class="h-full w-full rounded-full bg-white flex items-center justify-center overflow-hidden">
-                    <img 
-                      v-if="userProfile?.avatar_url" 
-                      :src="userProfile.avatar_url" 
-                      :alt="userProfile.full_name || 'User avatar'"
-                      class="h-full w-full object-cover"
-                    />
-                    <Icon 
-                      v-else 
-                      name="heroicons:user-circle-20-solid" 
-                      class="h-7 w-7 text-teal-600" 
-                    />
-                  </div>
-                </div>
-                <!-- Tooltip on hover -->
-                <div class="absolute right-0 top-12 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  <div class="bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap">
-                    {{ t.nav.profile }}
-                  </div>
-                </div>
-              </NuxtLink>
-            </template>
-          </div>
-        </div>
+      <div class="flex items-center gap-3">
+        <LanguageSelector />
+
+        <template v-if="!user">
+          <NuxtLink to="/auth/login" class="hidden sm:block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors px-3 py-2">
+            {{ t.nav.login }}
+          </NuxtLink>
+          <NuxtLink to="/auth/signup" class="btn-primary text-sm px-4 py-2">
+            {{ t.nav.signup }}
+          </NuxtLink>
+        </template>
+        <template v-else>
+          <NuxtLink to="/dashboard" class="hidden sm:flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-teal-600 transition-colors px-3 py-2 rounded-lg hover:bg-slate-50">
+            <Icon name="heroicons:squares-2x2-20-solid" class="h-4 w-4" />
+            {{ t.nav.dashboard }}
+          </NuxtLink>
+          <NuxtLink to="/profile" class="group">
+            <div class="h-9 w-9 rounded-full bg-teal-50 border border-slate-200 flex items-center justify-center overflow-hidden hover:border-teal-300 transition-colors">
+              <img
+                v-if="userProfile?.avatar_url"
+                :src="userProfile.avatar_url"
+                :alt="userProfile.full_name || 'User'"
+                class="h-full w-full object-cover"
+              />
+              <Icon v-else name="heroicons:user-20-solid" class="h-5 w-5 text-teal-600" />
+            </div>
+          </NuxtLink>
+        </template>
+
+        <!-- Mobile Hamburger -->
+        <button
+          @click="mobileMenuOpen = !mobileMenuOpen"
+          class="md:hidden p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+        >
+          <Icon :name="mobileMenuOpen ? 'heroicons:x-mark-20-solid' : 'heroicons:bars-3-20-solid'" class="h-5 w-5 text-slate-700" />
+        </button>
       </div>
     </div>
 
-    <!-- Mobile Menu Drawer -->
+    <!-- Mobile Menu -->
     <Transition
       enter-active-class="transition duration-200 ease-out"
       enter-from-class="opacity-0 -translate-y-2"
@@ -104,28 +66,28 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-2"
     >
-      <nav v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200/50 bg-white/95 backdrop-blur-lg px-6 py-4 space-y-1">
+      <nav v-if="mobileMenuOpen" class="md:hidden border-t border-slate-100 bg-white px-6 py-4 space-y-1">
         <NuxtLink to="/" class="mobile-nav-link" @click="mobileMenuOpen = false">
-          <Icon name="heroicons:home-20-solid" class="h-5 w-5 text-teal-500" />
+          <Icon name="heroicons:home-20-solid" class="h-5 w-5 text-slate-400" />
           {{ t.nav.home }}
         </NuxtLink>
         <NuxtLink to="/features" class="mobile-nav-link" @click="mobileMenuOpen = false">
-          <Icon name="heroicons:sparkles-20-solid" class="h-5 w-5 text-teal-500" />
+          <Icon name="heroicons:sparkles-20-solid" class="h-5 w-5 text-slate-400" />
           {{ t.nav.features }}
         </NuxtLink>
         <NuxtLink to="/pricing" class="mobile-nav-link" @click="mobileMenuOpen = false">
-          <Icon name="heroicons:credit-card-20-solid" class="h-5 w-5 text-teal-500" />
+          <Icon name="heroicons:credit-card-20-solid" class="h-5 w-5 text-slate-400" />
           {{ t.nav.pricing }}
         </NuxtLink>
         <NuxtLink to="/about" class="mobile-nav-link" @click="mobileMenuOpen = false">
-          <Icon name="heroicons:information-circle-20-solid" class="h-5 w-5 text-teal-500" />
+          <Icon name="heroicons:information-circle-20-solid" class="h-5 w-5 text-slate-400" />
           {{ t.nav.about }}
         </NuxtLink>
-        
-        <div class="border-t border-gray-200 pt-3 mt-3 space-y-1">
+
+        <div class="border-t border-slate-100 pt-3 mt-3 space-y-1">
           <template v-if="!user">
             <NuxtLink to="/auth/login" class="mobile-nav-link" @click="mobileMenuOpen = false">
-              <Icon name="heroicons:arrow-right-on-rectangle-20-solid" class="h-5 w-5 text-teal-500" />
+              <Icon name="heroicons:arrow-right-on-rectangle-20-solid" class="h-5 w-5 text-slate-400" />
               {{ t.nav.login }}
             </NuxtLink>
             <NuxtLink to="/auth/signup" class="mobile-nav-link font-semibold text-teal-600" @click="mobileMenuOpen = false">
@@ -135,11 +97,11 @@
           </template>
           <template v-else>
             <NuxtLink to="/dashboard" class="mobile-nav-link" @click="mobileMenuOpen = false">
-              <Icon name="heroicons:rectangle-stack-20-solid" class="h-5 w-5 text-teal-500" />
+              <Icon name="heroicons:squares-2x2-20-solid" class="h-5 w-5 text-slate-400" />
               {{ t.nav.dashboard }}
             </NuxtLink>
             <NuxtLink to="/profile" class="mobile-nav-link" @click="mobileMenuOpen = false">
-              <Icon name="heroicons:user-circle-20-solid" class="h-5 w-5 text-teal-500" />
+              <Icon name="heroicons:user-circle-20-solid" class="h-5 w-5 text-slate-400" />
               {{ t.nav.profile }}
             </NuxtLink>
           </template>
@@ -158,25 +120,20 @@ const userProfile = ref<UserProfile | null>(null)
 const isLoadingProfile = ref(false)
 const mobileMenuOpen = ref(false)
 
-// Use global translations
 const { t } = useTranslations()
 
-// Close mobile menu on route change
 const route = useRoute()
 watch(() => route.fullPath, () => {
   mobileMenuOpen.value = false
 })
 
-// Load user profile when user is authenticated
 watch(user, async (newUser) => {
   if (newUser && !isLoadingProfile.value) {
     isLoadingProfile.value = true
     try {
-      // Add a small delay to ensure session is fully ready
       await new Promise(resolve => setTimeout(resolve, 100))
       userProfile.value = await $fetch<UserProfile>('/api/profile')
     } catch (error: any) {
-      // Silently handle 401 errors during initial load
       if (error?.status !== 401 && error?.statusCode !== 401) {
         console.error('Failed to load user profile in navbar:', error)
       }
@@ -188,7 +145,6 @@ watch(user, async (newUser) => {
   }
 }, { immediate: true })
 
-// Also listen to auth state changes — properly cleaned up
 let authSubscription: { unsubscribe: () => void } | null = null
 
 onMounted(() => {
@@ -196,8 +152,8 @@ onMounted(() => {
     if (event === 'SIGNED_IN' && session?.user && !userProfile.value) {
       try {
         userProfile.value = await $fetch<UserProfile>('/api/profile')
-      } catch (error) {
-        // Silently ignore errors
+      } catch {
+        // Silently ignore
       }
     } else if (event === 'SIGNED_OUT') {
       userProfile.value = null
@@ -213,54 +169,37 @@ onUnmounted(() => {
 
 <style scoped>
 .nav-link {
-  position: relative;
-  color: #6b7280;
+  color: #64748b;
   text-decoration: none;
   font-weight: 500;
-  padding-bottom: 4px;
-  transition: color 0.3s ease;
+  font-size: 0.875rem;
+  padding: 0.25rem 0;
+  transition: color 0.15s ease;
 }
 
 .nav-link:hover {
-  color: #111827;
+  color: #0f172a;
 }
 
-.nav-underline {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(135deg, #14b8a6, #06b6d4);
-  transition: width 0.3s ease;
-}
-
-.nav-link:hover .nav-underline {
-  width: 100%;
-}
-
-.router-link-exact-active {
-  color: #14b8a6;
+.router-link-exact-active.nav-link {
+  color: #0d9488;
   font-weight: 600;
-}
-
-.router-link-exact-active .nav-underline {
-  width: 100%;
 }
 
 .mobile-nav-link {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  padding: 0.625rem 0.75rem;
   border-radius: 0.75rem;
   font-weight: 500;
-  color: #374151;
-  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  color: #475569;
+  transition: all 0.15s ease;
 }
 
 .mobile-nav-link:hover {
-  background: #f0fdfa;
-  color: #0d9488;
+  background: #f8fafc;
+  color: #0f172a;
 }
 </style>

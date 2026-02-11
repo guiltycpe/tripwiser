@@ -1,65 +1,66 @@
 <template>
-  <div class="travel-card group" @click="$emit('click')">
-    <!-- Image -->
-    <img
-      v-if="imageUrl && !imageError"
-      :src="imageUrl"
-      :alt="title"
-      class="card-background transition-transform duration-500 group-hover:scale-105"
-      @error="handleImageError"
-    />
-    <div
-      v-else
-      class="card-background"
-      :style="gradientStyle"
-    ></div>
-
-    <!-- Title overlay -->
-    <div class="title-overlay">
-      <h2>{{ title }}</h2>
+  <div
+    class="trip-list-item group"
+    @click="$emit('click')"
+  >
+    <!-- Thumbnail -->
+    <div class="thumbnail">
+      <img
+        v-if="imageUrl && !imageError"
+        :src="imageUrl"
+        :alt="title"
+        class="h-full w-full object-cover"
+        @error="handleImageError"
+      />
+      <div
+        v-else
+        class="h-full w-full"
+        :style="gradientStyle"
+      ></div>
     </div>
 
-    <!-- Delete button -->
-    <div class="actions-group">
-      <button
-        @click.stop="$emit('delete', trip.id)"
-        class="action-btn group-hover:opacity-100"
-        title="Delete"
-      >
-        <Icon name="heroicons:trash-20-solid" class="h-3.5 w-3.5" />
-      </button>
-    </div>
-
-    <!-- Info card -->
-    <div class="info-card">
-      <div class="flex items-center gap-2 mb-2 flex-wrap">
-        <span v-if="budget" class="badge">{{ budget }}</span>
-        <span v-if="style" class="badge">{{ style }}</span>
-      </div>
-
-      <div class="flex items-center gap-4 text-xs text-white/90 mb-2">
-        <div class="flex items-center gap-1.5">
-          <Icon name="heroicons:calendar-20-solid" class="h-3.5 w-3.5" />
+    <!-- Info -->
+    <div class="flex-1 min-w-0">
+      <h3 class="text-sm font-semibold text-slate-900 truncate">{{ title }}</h3>
+      <div class="flex items-center gap-3 mt-1 text-xs text-slate-500">
+        <div class="flex items-center gap-1">
+          <Icon name="heroicons:calendar-20-solid" class="h-3.5 w-3.5 text-slate-400" />
           <span>{{ dateRange }}</span>
         </div>
-        <div class="flex items-center gap-1.5">
-          <Icon name="heroicons:users-20-solid" class="h-3.5 w-3.5" />
-          <span>{{ travelers }} {{ travelers > 1 ? t.tripCard.travelers : t.tripCard.traveler }}</span>
+        <div class="flex items-center gap-1">
+          <Icon name="heroicons:users-20-solid" class="h-3.5 w-3.5 text-slate-400" />
+          <span>{{ travelers }}</span>
         </div>
       </div>
-
-      <div class="flex items-center gap-1.5">
-        <span class="status-dot" :class="statusDotClass"></span>
-        <span class="text-[10px] font-medium text-white/80 uppercase tracking-wider">{{ statusLabel }}</span>
-      </div>
     </div>
+
+    <!-- Badges -->
+    <div class="hidden sm:flex items-center gap-2">
+      <span v-if="budget" class="badge">{{ budget }}</span>
+      <span v-if="style" class="badge">{{ style }}</span>
+    </div>
+
+    <!-- Status -->
+    <div class="flex items-center gap-1.5 min-w-[90px]">
+      <span class="status-dot" :class="statusDotClass"></span>
+      <span class="text-[10px] font-medium text-slate-500 uppercase tracking-wider">{{ statusLabel }}</span>
+    </div>
+
+    <!-- Delete -->
+    <button
+      @click.stop="$emit('delete', trip.id)"
+      class="action-btn opacity-0 group-hover:opacity-100"
+      title="Delete"
+    >
+      <Icon name="heroicons:trash-20-solid" class="h-3.5 w-3.5" />
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 
-const { t } = useTranslations()
+const { t, locale } = useTranslations()
 
 const props = defineProps<{
   trip: any
@@ -191,101 +192,41 @@ function formatCompactDateRange(start: string, end?: string) {
 </script>
 
 <style scoped>
-.travel-card {
-  position: relative;
-  width: 100%;
-  height: 320px;
-  border-radius: 1rem;
-  overflow: hidden;
-  cursor: pointer;
+.trip-list-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: white;
+  border-radius: 0.75rem;
   border: 1px solid #e2e8f0;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.travel-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+.trip-list-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border-color: #cbd5e1;
 }
 
-.card-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-}
-
-.title-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 45%;
-  background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%);
-  z-index: 2;
-  padding: 20px;
-}
-
-.title-overlay h2 {
-  color: white;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-
-.actions-group {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 4;
-}
-
-.action-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0;
-  transition: all 0.15s ease;
-  border: none;
-}
-
-.action-btn:hover {
-  background: rgba(239, 68, 68, 0.8);
-}
-
-.info-card {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 16px 20px;
-  z-index: 3;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+.thumbnail {
+  width: 64px;
+  height: 64px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .badge {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: white;
-  padding: 3px 10px;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 2px 8px;
   border-radius: 6px;
   font-weight: 500;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 
 .status-dot {
@@ -295,17 +236,35 @@ function formatCompactDateRange(start: string, end?: string) {
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .travel-card {
-    height: 280px;
+.action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: transparent;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  flex-shrink: 0;
+}
+
+.action-btn:hover {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+@media (max-width: 640px) {
+  .trip-list-item {
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
   }
 
-  .title-overlay h2 {
-    font-size: 1.125rem;
-  }
-
-  .info-card {
-    padding: 12px 16px;
+  .thumbnail {
+    width: 48px;
+    height: 48px;
   }
 }
 </style>

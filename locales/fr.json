@@ -190,6 +190,29 @@
             "titleGradient": "Voyage Parfait",
             "subtitle": "Partagez vos préférences et nous créerons l'itinéraire parfait"
         },
+        "wizard": {
+            "step1": "Où",
+            "step2": "Quand",
+            "step3": "Comment",
+            "step4": "Résumé",
+            "step1Desc": "Choisissez vos destinations",
+            "step2Desc": "Sélectionnez vos dates",
+            "step3Desc": "Définissez vos préférences",
+            "step4Desc": "Vérifiez et générez",
+            "next": "Continuer",
+            "back": "Retour",
+            "generate": "Générer l'itinéraire",
+            "reviewTitle": "Récapitulatif",
+            "reviewFrom": "Départ",
+            "reviewTo": "Destination",
+            "reviewDates": "Dates",
+            "reviewTravelers": "Voyageurs",
+            "reviewBudget": "Budget",
+            "reviewStyle": "Style",
+            "reviewRoadTrip": "Road Trip",
+            "reviewYes": "Oui",
+            "reviewNo": "Non"
+        },
         "form": {
             "title": "Vos Préférences de Voyage",
             "noDestinations": "Aucune destination sélectionnée",
@@ -236,6 +259,7 @@
             "totalTrips": "Total Voyages",
             "countries": "Pays",
             "upcoming": "À venir",
+            "totalBudget": "Budget Total",
             "memberSince": "Membre depuis"
         },
         "trips": {
@@ -250,7 +274,17 @@
             "budget": "de budget",
             "viewDetails": "Voir Détails",
             "edit": "Modifier",
-            "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce voyage ?"
+            "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce voyage ?",
+            "deleteSuccess": "Voyage supprimé avec succès.",
+            "deleteError": "Impossible de supprimer le voyage.",
+            "shareError": "Impossible de générer le lien de partage.",
+            "shareCopied": "Lien de partage copié !",
+            "searchPlaceholder": "Rechercher un voyage...",
+            "noResults": "Aucun voyage ne correspond à votre recherche",
+            "duplicate": "Dupliquer",
+            "duplicateSuccess": "Voyage dupliqué avec succès !",
+            "duplicateError": "Impossible de dupliquer le voyage.",
+            "exportCalendar": "Exporter vers Calendrier"
         }
     },
     "auth": {
@@ -391,6 +425,17 @@
         "regenerating": "Régénération...",
         "time": "Heure...",
         "moveTo": "Déplacer vers"
+    },
+    "footer": {
+        "tagline": "Planification de voyage assistée par IA pour des voyages inoubliables.",
+        "product": "Produit",
+        "account": "Compte",
+        "legal": "Légal",
+        "planTrip": "Planifier un voyage",
+        "privacy": "Politique de confidentialité",
+        "terms": "Conditions d'utilisation",
+        "rights": "Tous droits réservés.",
+        "madeWith": "Fait avec soin pour les voyageurs du monde entier"
     },
     "profile": {
         "title": "Mon Profil",

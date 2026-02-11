@@ -32,8 +32,6 @@ export async function validatePlace(
 
     const query = `${type} ${placeName} ${location}`;
 
-    console.log(`[Validation] Checking "${placeName}" in "${location}"...`);
-
     try {
         const response = await fetch(PLACES_API_BASE_URL, {
             method: 'POST',
@@ -64,10 +62,8 @@ export async function validatePlace(
                 types: place.types || []
             };
 
-            console.log(`✅ Success: Found "${result.name}" (${result.place_id})`);
             return result;
         } else {
-            console.warn(`❌ Failed: No places found for "${placeName}" in "${location}"`);
             return null;
         }
     } catch (error) {

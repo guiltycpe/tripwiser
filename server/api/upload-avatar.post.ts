@@ -68,12 +68,10 @@ export default defineEventHandler(async (event) => {
             .getPublicUrl(fileName)
 
         // Update user profile with new avatar URL
-        // @ts-ignore - Supabase types not yet generated for user_profiles table
-        const { error: updateError } = await supabase
-            .from('user_profiles')
-            // @ts-ignore
-            .update({ avatar_url: publicUrl })
-            .eq('user_id', user.id)
+        const { error: updateError } = await (supabase
+            .from('user_profiles' as any)
+            .update({ avatar_url: publicUrl } as any)
+            .eq('user_id', user.id) as any)
 
         if (updateError) {
             // If profile update fails, delete the uploaded file

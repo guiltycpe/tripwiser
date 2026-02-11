@@ -17,7 +17,7 @@ export function useTranslations() {
         set: (val: Locale) => { globalLocale.value = val }
     })
 
-    const t = computed(() => translations[globalLocale.value])
+    const t = computed(() => translations[globalLocale.value] || translations.en)
 
     function setLocale(newLocale: Locale) {
         globalLocale.value = newLocale

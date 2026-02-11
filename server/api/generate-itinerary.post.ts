@@ -192,7 +192,6 @@ export default defineEventHandler(async (event: H3Event): Promise<GenerateItiner
     const { user } = await requireAuth(event)
     rateLimit(user.id, { maxRequests: 5, windowMs: 60_000 })
 
-    console.log('API call: generate-itinerary (Gemini + Validation)')
     const body = await readBody(event)
     const {
         departure,
@@ -228,19 +227,36 @@ export default defineEventHandler(async (event: H3Event): Promise<GenerateItiner
 
     // Dynamic safety limit: 4 activities/day * 2 attempts margin * duration
     const maxFunctionCalls = tripDuration * 4 * 2;
-    console.log(`Trip duration: ${tripDuration} days. Safety limit: ${maxFunctionCalls} calls.`);
 
-    // Build user preferences context
+    // Build user preferences context (sanitized to prevent prompt injection)
+    const ALLOWED_INTERESTS = ['history', 'nature', 'food', 'art', 'shopping', 'nightlife', 'sports', 'photography']
+    const ALLOWED_FOOD = ['vegetarian', 'vegan', 'halal', 'kosher', 'gluten_free', 'local_cuisine', 'street_food']
+    const ALLOWED_DIETARY = ['vegetarian', 'vegan', 'gluten_free', 'dairy_free', 'nut_allergy', 'halal', 'kosher']
+    const ALLOWED_AVOID = ['extreme_sports', 'heights', 'water_activities', 'crowded_places', 'long_walks', 'early_mornings', 'late_nights']
+    const ALLOWED_PACE = ['slow', 'moderate', 'fast']
+    const ALLOWED_ACCESSIBILITY = ['wheelchair', 'limited_mobility', 'visual_impairment', 'hearing_impairment']
+
+    function sanitizeList(input: string[] | undefined, allowed: string[]): string[] {
+        if (!Array.isArray(input)) return []
+        return input.filter(item => allowed.includes(item))
+    }
+
     let preferencesContext = ''
     if (user_preferences) {
-        const prefs = user_preferences
+        const interests = sanitizeList(user_preferences.interests, ALLOWED_INTERESTS)
+        const foodPrefs = sanitizeList(user_preferences.food_preferences, ALLOWED_FOOD)
+        const dietary = sanitizeList(user_preferences.dietary_restrictions, ALLOWED_DIETARY)
+        const avoid = sanitizeList(user_preferences.avoid, ALLOWED_AVOID)
+        const pace = ALLOWED_PACE.includes(user_preferences.preferred_pace) ? user_preferences.preferred_pace : null
+        const accessibility = sanitizeList(user_preferences.accessibility_needs, ALLOWED_ACCESSIBILITY)
+
         preferencesContext = `\n=== USER PREFERENCES & CONSTRAINTS ===
-${prefs.interests && prefs.interests.length > 0 ? `Interests: ${prefs.interests.join(', ')}` : ''}
-${prefs.food_preferences && prefs.food_preferences.length > 0 ? `Food Preferences: ${prefs.food_preferences.join(', ')}` : ''}
-${prefs.dietary_restrictions && prefs.dietary_restrictions.length > 0 ? `Dietary Restrictions: ${prefs.dietary_restrictions.join(', ')} - MUST be respected in all restaurant suggestions` : ''}
-${prefs.avoid && prefs.avoid.length > 0 ? `Avoid: ${prefs.avoid.join(', ')} - Do NOT suggest activities involving these` : ''}
-${prefs.preferred_pace ? `Pace: ${prefs.preferred_pace} - Adjust daily activity count accordingly` : ''}
-${prefs.accessibility_needs && prefs.accessibility_needs.length > 0 ? `Accessibility: ${prefs.accessibility_needs.join(', ')} - All venues must accommodate these needs` : ''}
+${interests.length > 0 ? `Interests: ${interests.join(', ')}` : ''}
+${foodPrefs.length > 0 ? `Food Preferences: ${foodPrefs.join(', ')}` : ''}
+${dietary.length > 0 ? `Dietary Restrictions: ${dietary.join(', ')} - MUST be respected in all restaurant suggestions` : ''}
+${avoid.length > 0 ? `Avoid: ${avoid.join(', ')} - Do NOT suggest activities involving these` : ''}
+${pace ? `Pace: ${pace} - Adjust daily activity count accordingly` : ''}
+${accessibility.length > 0 ? `Accessibility: ${accessibility.join(', ')} - All venues must accommodate these needs` : ''}
 
 IMPORTANT: Tailor ALL recommendations to match these preferences. Filter activities and restaurants accordingly.
 `
@@ -449,8 +465,6 @@ IMPORTANT: Tailor ALL recommendations to match these preferences. Filter activit
             const calls = result.response.functionCalls();
             if (!calls || calls.length === 0) break;
 
-            console.log(`[Gemini] Processing batch of ${calls.length} validations...`);
-
             const responses = await validateBatch(calls, 10, 100);
 
             result = await chat.sendMessage(
@@ -472,7 +486,6 @@ IMPORTANT: Tailor ALL recommendations to match these preferences. Filter activit
 
         const response = await result.response;
         const text = response.text();
-        console.log('Gemini Final Response (first 500 chars):', text.substring(0, 500));
 
         if (!text || text.trim().length === 0) {
             throw new Error('Received empty response from Gemini');
@@ -481,16 +494,9 @@ IMPORTANT: Tailor ALL recommendations to match these preferences. Filter activit
         let jsonData: GenerateItineraryResponse;
         try {
             const cleanJson = extractJSON(text);
-            console.log('Extracted JSON length:', cleanJson.length);
-            
             const rawData = JSON.parse(cleanJson);
             jsonData = normalizeItinerary(rawData);
-            
-            console.log('✅ Successfully parsed and normalized itinerary');
         } catch (e: any) {
-            console.error('JSON Parse Error:', e.message);
-            console.error('Raw text (first 1000 chars):', text.substring(0, 1000));
-            console.error('Raw text (last 500 chars):', text.substring(text.length - 500));
             throw new Error(`Failed to parse itinerary JSON: ${e.message}`);
         }
 

@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watchEffect } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import LocationInput from '~/components/LocationInput.vue'
 import type { UserProfile } from '~/types/profile.types'
+
+definePageMeta({
+  layout: 'dashboard'
+})
 
 const route = useRoute()
 const { t, locale } = useTranslations()
@@ -22,21 +26,65 @@ const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const router = useRouter()
 const userProfile = ref<UserProfile | null>(null)
+const toast = useToast()
+
+// Wizard state
+const currentStep = ref(1)
+const totalSteps = 4
+
+const wizardSteps = computed(() => [
+  { num: 1, label: t.value.plan.wizard.step1, desc: t.value.plan.wizard.step1Desc, icon: 'heroicons:map-pin-20-solid' },
+  { num: 2, label: t.value.plan.wizard.step2, desc: t.value.plan.wizard.step2Desc, icon: 'heroicons:calendar-20-solid' },
+  { num: 3, label: t.value.plan.wizard.step3, desc: t.value.plan.wizard.step3Desc, icon: 'heroicons:adjustments-horizontal-20-solid' },
+  { num: 4, label: t.value.plan.wizard.step4, desc: t.value.plan.wizard.step4Desc, icon: 'heroicons:check-circle-20-solid' }
+])
+
+const canProceed = computed(() => {
+  switch (currentStep.value) {
+    case 1: return destinations.value.length > 0
+    case 2: return !!departureDate.value && !!returnDate.value
+    case 3: return true
+    case 4: return true
+    default: return false
+  }
+})
+
+function nextStep() {
+  if (currentStep.value < totalSteps && canProceed.value) {
+    currentStep.value++
+  }
+}
+
+function prevStep() {
+  if (currentStep.value > 1) {
+    currentStep.value--
+  }
+}
+
+// Re-trigger animation on step change
+const stepKey = ref(0)
+watch(currentStep, () => {
+  stepKey.value++
+  nextTick(() => {
+    const el = document.querySelector('.wizard-step[style*="display: none"]')
+    // Re-trigger animation on visible step
+    document.querySelectorAll('.wizard-step').forEach((step) => {
+      const htmlStep = step as HTMLElement
+      if (htmlStep.style.display !== 'none') {
+        htmlStep.style.animation = 'none'
+        // Force reflow
+        void htmlStep.offsetHeight
+        htmlStep.style.animation = ''
+      }
+    })
+  })
+})
 
 onMounted(async () => {
   if (route.query.departure) {
     departure.value = route.query.departure as string
   }
 
-  // Double check auth on mount
-  const { data } = await supabase.auth.getUser()
-  if (!data?.user) {
-    console.warn('No user session on mount, redirecting to login...')
-    router.push('/auth/login')
-    return
-  }
-
-  // Load user profile and pre-fill preferences
   await loadUserProfile()
 })
 
@@ -44,8 +92,7 @@ async function loadUserProfile() {
   try {
     const profile = await $fetch<UserProfile>('/api/profile')
     userProfile.value = profile
-    
-    // Pre-fill form with user preferences
+
     if (profile.travel_preferences) {
       if (profile.travel_preferences.budget_default) {
         budget.value = profile.travel_preferences.budget_default
@@ -54,31 +101,25 @@ async function loadUserProfile() {
         travelStyle.value = profile.travel_preferences.travel_style_default
       }
     }
-  } catch (error) {
-    console.log('Could not load user profile, using defaults:', error)
+  } catch {
+    // Profile not available — use default form values
   }
 }
 
-// Improved utility to convert DD/MM/YY or YYYY-MM-DD to YYYY-MM-DD
 function parseDate(dateStr: string) {
   if (!dateStr) return null
-  
-  // If already YYYY-MM-DD
   if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr
 
   const parts = dateStr.split(/[-/]/)
   if (parts.length !== 3) return null
-  
+
   const d = parts[0] || ''
   const m = parts[1] || ''
   let y = parts[2] || ''
-  
-  // Handle case where year is first (YYYY/MM/DD)
+
   if (d.length === 4) return `${d}-${m.padStart(2, '0')}-${y.padStart(2, '0')}`
-  
-  // Normalizing to 4 digits for year (assume 21st century)
   if (y.length === 2) y = '20' + y
-  
+
   return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
 }
 
@@ -86,7 +127,7 @@ const generationStep = ref(0)
 const generationMessages = computed(() => {
   const budgetOptions = t.value.plan.form.budgetOptions as any
   const styleOptions = t.value.plan.form.styleOptions as any
-  
+
   const budgetMap: Record<string, string> = {
     'low': 'budget',
     'medium': 'moderate',
@@ -95,9 +136,9 @@ const generationMessages = computed(() => {
   const budgetKey = budgetMap[budget.value.toLowerCase()] || 'budget'
   const budgetLabel = budgetOptions[budgetKey] || budget.value
   const styleLabel = styleOptions[travelStyle.value] || travelStyle.value
-  
+
   const steps = t.value.plan.form.steps as any
-  
+
   return [
     t.value.plan.form.generating,
     steps.analyzing,
@@ -108,38 +149,51 @@ const generationMessages = computed(() => {
   ]
 })
 
+// Review helpers
+const budgetLabel = computed(() => {
+  const opts = t.value.plan.form.budgetOptions as any
+  const map: Record<string, string> = { 'low': opts.budget, 'medium': opts.moderate, 'high': opts.luxury }
+  return map[budget.value.toLowerCase()] || budget.value
+})
+
+const styleLabel = computed(() => {
+  const opts = t.value.plan.form.styleOptions as any
+  return opts[travelStyle.value] || travelStyle.value
+})
+
+const formattedDateRange = computed(() => {
+  const localeStr = locale.value === 'fr' ? 'fr-FR' : 'en-US'
+  const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }
+  const start = departureDate.value ? new Date(departureDate.value).toLocaleDateString(localeStr, opts) : '—'
+  const end = returnDate.value ? new Date(returnDate.value).toLocaleDateString(localeStr, opts) : '—'
+  return `${start} → ${end}`
+})
+
 async function generateItinerary() {
-  console.log('--- ITINERARY GENERATION v3 CHECK ---')
-  
   try {
-    // 1. FORCE AUTH CHECK
     const { data: { user: authUser }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !authUser || !authUser.id) {
-      console.error('Session check failed:', authError)
-      alert(t.value.common.error + ": Session invalid")
+      toast.add({ title: t.value.common.error, description: locale.value === 'fr' ? 'Session invalide' : 'Session invalid', color: 'error' })
       return router.push('/auth/login')
     }
 
     if (destinations.value.length === 0) {
-      alert(t.value.plan.form.noDestinations)
+      toast.add({ title: t.value.plan.form.noDestinations, color: 'warning' })
       return
     }
 
     const currentUserId = authUser.id
-    console.log('--- SESSION VALIDATED (v3) --- User:', currentUserId)
 
     isGenerating.value = true
     generationStep.value = 0
-    
+
     const stepInterval = setInterval(() => {
       if (generationStep.value < generationMessages.value.length - 2) {
         generationStep.value++
       }
     }, 1500)
 
-    // 2. AI GENERATION
-    console.log('Calling AI API...')
     const aiResponse = await $fetch('/api/generate-itinerary', {
       method: 'POST',
       body: {
@@ -162,58 +216,50 @@ async function generateItinerary() {
       }
     }) as any
 
-    // 2.5 FETCH DESTINATION IMAGE (Unsplash)
-    console.log('Fetching destination image...')
     let destinationImageUrl = null
     try {
-      // Use the first destination for the image search
       const mainDestination = destinations.value[0] || 'Travel'
       const imageResponse = await $fetch('/api/get-destination-image', {
         params: { destination: mainDestination }
       }) as any
-      
-      if (imageResponse && imageResponse.url) {
+
+      if (imageResponse?.url) {
         destinationImageUrl = imageResponse.url
       }
-    } catch (imgErr) {
-      console.error('Error fetching image:', imgErr)
-      // Continue anyway, don't block trip creation
+    } catch {
+      // Continue without image
     }
 
-    // 3. DATABASE INSERTION (using array for stability)
     const payload = {
         user_id: currentUserId,
         departure: departure.value || 'Unknown',
-        destination: destinations.value.join(', ') || 'Asia',
+        destination: destinations.value.join(', '),
         departure_date: parseDate(departureDate.value),
         return_date: parseDate(returnDate.value),
         budget: budget.value,
         travel_style: travelStyle.value,
         road_trip: takeRoadTrip.value,
         travelers: travelers.value,
-        itinerary: aiResponse, // Store full response (days, summary, transport)
+        itinerary: aiResponse,
         destination_image_url: destinationImageUrl
     }
 
-    console.log('DATABASE INSERT (v3) - Checking ID before send:', payload.user_id)
-
-    const { data: dbData, error: dbError } = await (supabase
+    const { error: dbError } = await (supabase
       .from('trips' as any)
       .insert([payload] as any)
       .select() as any)
 
     if (dbError) {
-      console.error('SUPABASE DB ERROR (v3):', dbError)
-      // Showing full message to user
-      alert(`ERREUR BASE DE DONNÉES (v3) :\nCode: ${dbError.code}\nMessage: ${dbError.message}\n\nHint: Verifiez si vous etes connecte sur un autre onglet.`)
+      toast.add({
+        title: t.value.common.error,
+        description: locale.value === 'fr' ? 'Impossible de sauvegarder le voyage.' : 'Failed to save trip.',
+        color: 'error'
+      })
       isGenerating.value = false
-      generationStep.value = generationMessages.value.length - 1
       clearInterval(stepInterval)
       return
     }
 
-    console.log('Trip saved (v3). Entry ID:', (dbData as any)?.[0]?.id)
-    
     setTimeout(() => {
       generationStep.value = generationMessages.value.length - 1
       clearInterval(stepInterval)
@@ -221,260 +267,401 @@ async function generateItinerary() {
     }, 800)
 
   } catch (err: any) {
-    console.error('GLOBAL PLAN ERROR:', err)
-    alert('DEBUG ERROR (v3): ' + (err.message || 'Unknown error'))
+    toast.add({
+      title: t.value.common.error,
+      description: err?.statusMessage || err?.message || (locale.value === 'fr' ? 'Une erreur est survenue' : 'An error occurred'),
+      color: 'error'
+    })
     isGenerating.value = false
   }
 }
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 relative overflow-hidden">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
     <!-- Generation Overlay -->
     <Transition
-      enter-active-class="transition duration-500 ease-out"
+      enter-active-class="transition duration-400 ease-out"
       enter-from-class="opacity-0"
       enter-to-class="opacity-100"
-      leave-active-class="transition duration-300 ease-in"
+      leave-active-class="transition duration-200 ease-in"
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div v-if="isGenerating" class="fixed inset-0 z-[100] flex items-center justify-center bg-white/60 backdrop-blur-xl">
+      <div v-if="isGenerating" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-50/95 backdrop-blur-sm">
         <div class="max-w-md w-full px-8 text-center">
           <div class="relative mb-8 flex justify-center">
-            <div class="absolute inset-0 animate-ping rounded-full bg-teal-400/20"></div>
-            <div class="relative rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 p-6 shadow-2xl">
-              <Icon name="heroicons:sparkles-20-solid" class="h-12 w-12 text-white animate-pulse" />
+            <div class="relative rounded-2xl bg-teal-600 p-5 shadow-lg">
+              <Icon name="heroicons:sparkles-20-solid" class="h-10 w-10 text-white animate-pulse" />
             </div>
           </div>
-          
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">
+
+          <h2 class="text-2xl font-semibold text-slate-900 mb-2">
             {{ locale === 'fr' ? 'Génération en cours' : 'Generating Trip' }}
           </h2>
-          <p class="text-gray-600 mb-8 h-6 italic">
+          <p class="text-slate-500 mb-8 h-6 text-sm">
             {{ generationMessages[generationStep] }}
           </p>
-          
-          <!-- Progress Bar -->
-          <div class="w-full bg-gray-200 rounded-full h-3 mb-4 overflow-hidden shadow-inner">
-            <div 
-              class="bg-gradient-to-r from-teal-500 to-cyan-500 h-full transition-all duration-700 ease-out"
+
+          <div class="w-full bg-slate-200 rounded-full h-2 mb-4 overflow-hidden">
+            <div
+              class="bg-teal-500 h-full transition-all duration-700 ease-out rounded-full"
               :style="{ width: ((generationStep + 1) / generationMessages.length) * 100 + '%' }"
             ></div>
           </div>
-          
-          <p class="text-xs text-gray-400 font-medium tracking-widest uppercase">
-            {{ Math.round(((generationStep + 1) / generationMessages.length) * 100) }}% {{ locale === 'fr' ? 'terminé' : 'complete' }}
+
+          <p class="text-xs text-slate-400 font-medium tracking-widest uppercase">
+            {{ Math.round(((generationStep + 1) / generationMessages.length) * 100) }}%
           </p>
         </div>
       </div>
     </Transition>
 
-    <!-- Hero Section -->
-    <section class="section relative z-10">
-      <div class="mx-auto max-w-4xl text-center animate-fade-in">
-        <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 md:text-6xl">
-          {{ t.plan.hero.title }}
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">
-            {{ t.plan.hero.titleGradient || 'Adventure' }}
-          </span>
-        </h1>
-        <p class="mt-4 text-xl text-gray-600">
-          {{ t.plan.hero.subtitle }}
-        </p>
-      </div>
-    </section>
+    <!-- Header -->
+    <div class="mb-8 animate-fade-in">
+      <h1 class="text-2xl font-semibold text-slate-900">
+        {{ t.plan.hero.title }} <span class="text-teal-600">{{ t.plan.hero.titleGradient }}</span>
+      </h1>
+      <p class="mt-1 text-sm text-slate-500">{{ t.plan.hero.subtitle }}</p>
+    </div>
 
-    <!-- Form Section -->
-    <section class="px-4 pb-16 sm:px-6 lg:px-8 relative z-10">
-      <div class="mx-auto max-w-3xl">
-        <div class="glass rounded-2xl p-8 shadow-xl animate-slide-up">
-          <form @submit.prevent="generateItinerary" class="space-y-6">
-            <!-- Departure & Destination -->
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label for="departure" class="block text-sm font-semibold text-gray-900 mb-2">
-                  <Icon name="heroicons:map-pin-20-solid" class="inline h-5 w-5 text-teal-500 mr-1" />
-                  {{ t.plan.form.departure }}
-                </label>
-                <div class="relative">
-                  <LocationInput
-                    v-model="departure"
-                    id="departure"
-                    :placeholder="t.plan.form.departurePlaceholder"
-                    inputClass="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label for="destination" class="block text-sm font-semibold text-gray-900 mb-2">
-                  <Icon name="heroicons:map-20-solid" class="inline h-5 w-5 text-cyan-500 mr-1" />
-                  {{ t.plan.form.destination }}
-                </label>
-                <div class="space-y-3">
-                  <div class="relative">
-                    <LocationInput
-                      v-model="currentDestination"
-                      id="destination"
-                      :placeholder="t.plan.form.destinationPlaceholder"
-                      @place_changed="(place) => {
-                        if (place && place.description) {
-                           if (!destinations.includes(place.description)) {
-                              destinations.push(place.description)
-                           }
-                           currentDestination = ''
-                        }
-                      }"
-                      inputClass="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all duration-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
-                    />
-                  </div>
-                  
-                  <!-- Selected Destinations Tags -->
-                  <div class="flex flex-wrap gap-2 min-h-[32px]">
-                    <TransitionGroup 
-                      enter-active-class="transition duration-300 ease-out"
-                      enter-from-class="opacity-0 scale-90"
-                      enter-to-class="opacity-100 scale-100"
-                      leave-active-class="transition duration-200 ease-in"
-                      leave-from-class="opacity-100 scale-100"
-                      leave-to-class="opacity-0 scale-90"
-                    >
-                      <div 
-                        v-for="(dest, index) in destinations" 
-                        :key="dest"
-                        class="group flex items-center gap-1.5 rounded-lg bg-cyan-50 px-3 py-1.5 text-sm font-medium text-cyan-700 border border-cyan-100 shadow-sm transition-all hover:bg-cyan-100 hover:border-cyan-200"
-                      >
-                         <span>{{ dest }}</span>
-                         <button 
-                            type="button" 
-                            @click="destinations.splice(index, 1)"
-                            class="ml-1 rounded-full p-0.5 text-cyan-400 hover:bg-cyan-200 hover:text-cyan-700 focus:outline-none"
-                         >
-                           <Icon name="heroicons:x-mark-20-solid" class="h-4 w-4" />
-                         </button>
-                      </div>
-                    </TransitionGroup>
-                    <span v-if="destinations.length === 0" class="text-xs text-gray-400 italic py-2">
-                       {{ t.plan.form.noDestinations }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Dates & Travelers -->
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label class="block text-sm font-semibold text-gray-900 mb-2">
-                  <Icon name="heroicons:calendar-20-solid" class="inline h-5 w-5 text-orange-500 mr-1" />
-                  {{ t.plan.form.departureDate }} / {{ t.plan.form.returnDate }}
-                </label>
-                <div class="flex items-center gap-2">
-                  <AppDatePicker
-                    v-model="departureDate"
-                    :min-date="new Date()"
-                    :placeholder="t.plan.form.departureDate"
-                  />
-                  <Icon name="heroicons:arrow-right-20-solid" class="h-4 w-4 text-gray-400 flex-shrink-0" />
-                  <AppDatePicker
-                    v-model="returnDate"
-                    :min-date="departureDate"
-                    :placeholder="t.plan.form.returnDate"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-sm font-semibold text-gray-900 mb-2">
-                  <Icon name="heroicons:users-20-solid" class="inline h-5 w-5 text-purple-500 mr-1" />
-                  {{ t.plan.form.travelers }}
-                </label>
-                <div class="flex items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-4 py-3 transition-all duration-300 hover:border-teal-500/50">
-                   <button 
-                    type="button"
-                    @click="travelers > 1 ? travelers-- : null"
-                    class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-teal-100 hover:text-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                    :disabled="travelers <= 1"
-                  >
-                    <Icon name="heroicons:minus-20-solid" class="h-5 w-5" />
-                  </button>
-                  
-                  <span class="text-lg font-bold text-gray-900 min-w-[2ch] text-center">{{ travelers }}</span>
-                  
-                  <button 
-                    type="button"
-                    @click="travelers < 20 ? travelers++ : null"
-                    class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-teal-100 hover:text-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                    :disabled="travelers >= 20"
-                  >
-                    <Icon name="heroicons:plus-20-solid" class="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Budget -->
-            <div>
-              <label for="budget" class="block text-sm font-semibold text-gray-900 mb-2">
-                <Icon name="heroicons:currency-euro-20-solid" class="inline h-5 w-5 text-green-500 mr-1" />
-                {{ t.plan.form.budget }}
-              </label>
-              <select 
-                v-model="budget" 
-                id="budget" 
-                class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 font-semibold shadow-sm hover:border-teal-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all cursor-pointer appearance-none"
-                style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%236b7280%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
-              >
-                <option value="Low">{{ t.plan.form.budgetOptions.budget }}</option>
-                <option value="Medium">{{ t.plan.form.budgetOptions.moderate }}</option>
-                <option value="High">{{ t.plan.form.budgetOptions.luxury }}</option>
-              </select>
-            </div>
-
-            <!-- Road Trip Toggle -->
-            <div class="card flex items-center justify-between p-4">
-              <div class="flex items-center gap-3">
-                <Icon name="heroicons:truck-20-solid" class="h-6 w-6 text-teal-500" />
-                <span class="text-sm font-semibold text-gray-900">{{ t.plan.form.roadTrip }}</span>
-              </div>
-              <label for="roadtrip-toggle" class="relative inline-flex cursor-pointer items-center">
-                <input type="checkbox" v-model="takeRoadTrip" id="roadtrip-toggle" class="peer sr-only">
-                <div class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-teal-500 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300"></div>
-              </label>
-            </div>
-
-            <!-- Travel Style -->
-            <div>
-              <label for="travel-style" class="block text-sm font-semibold text-gray-900 mb-2">
-                <Icon name="heroicons:star-20-solid" class="inline h-5 w-5 text-yellow-500 mr-1" />
-                {{ t.plan.form.travelStyle }}
-              </label>
-              <select 
-                v-model="travelStyle" 
-                id="travel-style" 
-                class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-900 font-semibold shadow-sm hover:border-teal-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all cursor-pointer appearance-none"
-                style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%236b7280%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
-              >
-                <option value="adventure">{{ t.plan.form.styleOptions.adventure }}</option>
-                <option value="relaxation">{{ t.plan.form.styleOptions.relaxation }}</option>
-                <option value="culture">{{ t.plan.form.styleOptions.culture }}</option>
-                <option value="food">{{ t.plan.form.styleOptions.food }}</option>
-                <option value="nature">{{ t.plan.form.styleOptions.nature }}</option>
-              </select>
-            </div>
-
-            <!-- Submit Button -->
-            <button 
-              type="submit" 
-              class="w-full py-4 text-lg font-bold text-white bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl hover:from-teal-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2"
+    <!-- Progress Steps -->
+    <div class="mb-8">
+      <div class="flex items-center gap-2">
+        <template v-for="(step, idx) in wizardSteps" :key="step.num">
+          <button
+            @click="step.num < currentStep ? currentStep = step.num : null"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+            :class="[
+              currentStep === step.num
+                ? 'bg-teal-50 text-teal-700 border border-teal-200'
+                : step.num < currentStep
+                  ? 'text-teal-600 cursor-pointer hover:bg-slate-50'
+                  : 'text-slate-400'
+            ]"
+          >
+            <div
+              class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0"
+              :class="[
+                step.num < currentStep
+                  ? 'bg-teal-500 text-white'
+                  : currentStep === step.num
+                    ? 'bg-teal-600 text-white'
+                    : 'bg-slate-200 text-slate-500'
+              ]"
             >
-              <Icon name="heroicons:sparkles-20-solid" class="h-6 w-6" />
-              {{ t.plan.form.generateButton }}
-            </button>
-          </form>
+              <Icon v-if="step.num < currentStep" name="heroicons:check-20-solid" class="h-3.5 w-3.5" />
+              <span v-else>{{ step.num }}</span>
+            </div>
+            <span class="hidden sm:inline">{{ step.label }}</span>
+          </button>
+          <div v-if="idx < wizardSteps.length - 1" class="flex-1 h-px bg-slate-200 mx-1"></div>
+        </template>
+      </div>
+    </div>
+
+    <!-- Wizard Card -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-8 shadow-sm animate-fade-in overflow-hidden">
+      <!-- Step 1: Where -->
+      <div v-show="currentStep === 1" class="wizard-step space-y-6">
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">
+            {{ t.plan.form.departure }}
+          </label>
+          <LocationInput
+            v-model="departure"
+            :placeholder="t.plan.form.departurePlaceholder"
+            inputClass="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 text-sm transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 hover:border-slate-300"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">
+            {{ t.plan.form.destination }}
+          </label>
+          <LocationInput
+            v-model="currentDestination"
+            :placeholder="t.plan.form.destinationPlaceholder"
+            @place_changed="(place: any) => {
+              if (place && place.description) {
+                if (!destinations.includes(place.description)) {
+                  destinations.push(place.description)
+                }
+                currentDestination = ''
+              }
+            }"
+            inputClass="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 text-sm transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 hover:border-slate-300"
+          />
+
+          <!-- Selected destinations -->
+          <div class="flex flex-wrap gap-2 mt-3 min-h-[32px]">
+            <TransitionGroup
+              enter-active-class="transition duration-200 ease-out"
+              enter-from-class="opacity-0 scale-90"
+              enter-to-class="opacity-100 scale-100"
+              leave-active-class="transition duration-150 ease-in"
+              leave-from-class="opacity-100 scale-100"
+              leave-to-class="opacity-0 scale-90"
+            >
+              <div
+                v-for="(dest, index) in destinations"
+                :key="dest"
+                class="flex items-center gap-1.5 rounded-lg bg-teal-50 px-3 py-1.5 text-sm font-medium text-teal-700 border border-teal-100 transition-all hover:bg-teal-100"
+              >
+                <span>{{ dest }}</span>
+                <button
+                  type="button"
+                  @click="destinations.splice(index, 1)"
+                  class="rounded-full p-0.5 text-teal-400 hover:text-teal-700 focus:outline-none cursor-pointer"
+                >
+                  <Icon name="heroicons:x-mark-20-solid" class="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </TransitionGroup>
+            <span v-if="destinations.length === 0" class="text-xs text-slate-400 py-2">
+              {{ t.plan.form.noDestinations }}
+            </span>
+          </div>
         </div>
       </div>
-    </section>
+
+      <!-- Step 2: When -->
+      <div v-show="currentStep === 2" class="wizard-step space-y-6">
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">
+            {{ t.plan.form.departureDate }}
+          </label>
+          <AppDatePicker
+            v-model="departureDate"
+            :min-date="new Date()"
+            :placeholder="t.plan.form.departureDate"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">
+            {{ t.plan.form.returnDate }}
+          </label>
+          <AppDatePicker
+            v-model="returnDate"
+            :min-date="departureDate"
+            :placeholder="t.plan.form.returnDate"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">
+            {{ t.plan.form.travelers }}
+          </label>
+          <div class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white px-4 py-3 w-fit">
+            <button
+              type="button"
+              @click="travelers > 1 ? travelers-- : null"
+              class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-teal-50 hover:text-teal-600 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              :disabled="travelers <= 1"
+            >
+              <Icon name="heroicons:minus-20-solid" class="h-4 w-4" />
+            </button>
+            <span class="text-lg font-semibold text-slate-900 min-w-[2ch] text-center">{{ travelers }}</span>
+            <button
+              type="button"
+              @click="travelers < 20 ? travelers++ : null"
+              class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-teal-50 hover:text-teal-600 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              :disabled="travelers >= 20"
+            >
+              <Icon name="heroicons:plus-20-solid" class="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: How -->
+      <div v-show="currentStep === 3" class="wizard-step space-y-6">
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">
+            {{ t.plan.form.budget }}
+          </label>
+          <div class="grid grid-cols-3 gap-3">
+            <button
+              v-for="opt in [
+                { value: 'Low', label: t.plan.form.budgetOptions.budget, icon: 'heroicons:banknotes-20-solid' },
+                { value: 'Medium', label: t.plan.form.budgetOptions.moderate, icon: 'heroicons:credit-card-20-solid' },
+                { value: 'High', label: t.plan.form.budgetOptions.luxury, icon: 'heroicons:sparkles-20-solid' }
+              ]"
+              :key="opt.value"
+              type="button"
+              @click="budget = opt.value"
+              class="flex flex-col items-center gap-2 p-4 rounded-xl border text-sm font-medium transition-all cursor-pointer"
+              :class="budget === opt.value
+                ? 'border-teal-500 bg-teal-50 text-teal-700'
+                : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'"
+            >
+              <Icon :name="opt.icon" class="h-5 w-5" />
+              <span class="text-center text-xs">{{ opt.label }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">
+            {{ t.plan.form.travelStyle }}
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <button
+              v-for="opt in [
+                { value: 'adventure', label: t.plan.form.styleOptions.adventure, icon: 'heroicons:fire-20-solid' },
+                { value: 'relaxation', label: t.plan.form.styleOptions.relaxation, icon: 'heroicons:sun-20-solid' },
+                { value: 'culture', label: t.plan.form.styleOptions.culture, icon: 'heroicons:building-library-20-solid' },
+                { value: 'food', label: t.plan.form.styleOptions.food, icon: 'heroicons:cake-20-solid' },
+                { value: 'nature', label: t.plan.form.styleOptions.nature, icon: 'heroicons:globe-americas-20-solid' }
+              ]"
+              :key="opt.value"
+              type="button"
+              @click="travelStyle = opt.value"
+              class="flex items-center gap-2 p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer"
+              :class="travelStyle === opt.value
+                ? 'border-teal-500 bg-teal-50 text-teal-700'
+                : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'"
+            >
+              <Icon :name="opt.icon" class="h-4 w-4" />
+              <span>{{ opt.label }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between rounded-xl border border-slate-200 p-4">
+          <div class="flex items-center gap-3">
+            <Icon name="heroicons:truck-20-solid" class="h-5 w-5 text-teal-500" />
+            <span class="text-sm font-medium text-slate-900">{{ t.plan.form.roadTrip }}</span>
+          </div>
+          <label for="roadtrip-toggle" class="relative inline-flex cursor-pointer items-center">
+            <input type="checkbox" v-model="takeRoadTrip" id="roadtrip-toggle" class="peer sr-only">
+            <div class="peer h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-teal-500 peer-checked:after:translate-x-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/20"></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Step 4: Review -->
+      <div v-show="currentStep === 4" class="wizard-step space-y-6">
+        <h3 class="text-lg font-semibold text-slate-900">{{ t.plan.wizard.reviewTitle }}</h3>
+
+        <div class="space-y-4">
+          <!-- From -->
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
+            <Icon name="heroicons:map-pin-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+            <div>
+              <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewFrom }}</p>
+              <p class="text-sm font-medium text-slate-900 mt-0.5">{{ departure || '—' }}</p>
+            </div>
+          </div>
+
+          <!-- To -->
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
+            <Icon name="heroicons:map-20-solid" class="h-5 w-5 text-teal-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewTo }}</p>
+              <div class="flex flex-wrap gap-1.5 mt-1">
+                <span
+                  v-for="dest in destinations"
+                  :key="dest"
+                  class="inline-flex px-2.5 py-1 rounded-lg bg-teal-50 text-teal-700 text-xs font-medium border border-teal-100"
+                >{{ dest }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dates + Travelers -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
+              <Icon name="heroicons:calendar-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewDates }}</p>
+                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ formattedDateRange }}</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
+              <Icon name="heroicons:users-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewTravelers }}</p>
+                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ travelers }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Budget + Style + Road Trip -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
+              <Icon name="heroicons:banknotes-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewBudget }}</p>
+                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ budgetLabel }}</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
+              <Icon name="heroicons:star-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewStyle }}</p>
+                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ styleLabel }}</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
+              <Icon name="heroicons:truck-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewRoadTrip }}</p>
+                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ takeRoadTrip ? t.plan.wizard.reviewYes : t.plan.wizard.reviewNo }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
+        <button
+          v-if="currentStep > 1"
+          @click="prevStep"
+          class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-600 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
+        >
+          <Icon name="heroicons:arrow-left-20-solid" class="h-4 w-4" />
+          {{ t.plan.wizard.back }}
+        </button>
+        <div v-else></div>
+
+        <button
+          v-if="currentStep < totalSteps"
+          @click="nextStep"
+          :disabled="!canProceed"
+          class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-teal-600 text-white text-sm font-medium hover:bg-teal-500 transition-colors shadow-sm cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          {{ t.plan.wizard.next }}
+          <Icon name="heroicons:arrow-right-20-solid" class="h-4 w-4" />
+        </button>
+        <button
+          v-else
+          @click="generateItinerary"
+          class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-teal-600 text-white text-sm font-medium hover:bg-teal-500 transition-colors shadow-sm cursor-pointer"
+        >
+          <Icon name="heroicons:sparkles-20-solid" class="h-4 w-4" />
+          {{ t.plan.wizard.generate }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.wizard-step {
+  animation: wizardFadeIn 0.2s ease-out;
+}
+
+@keyframes wizardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

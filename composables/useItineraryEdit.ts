@@ -2,7 +2,7 @@
  * useItineraryEdit — State management for itinerary editing
  * 
  * FEATURES:
- * - Full undo history back to original generated state (no cap)
+ * - Undo history capped at 50 entries to prevent memory leaks
  * - Saves initial snapshot on first edit for complete rollback
  * - Auto-sort activities by time after time_flexible changes
  * - Move activity to another day (time-sorted insertion)
@@ -122,9 +122,13 @@ export function useItineraryEdit(tripData: Ref<any>, tripId?: Ref<string | null>
     return data.itinerary_sections[sIdx]?.daily_plans[dIdx]?.activities ?? null
   }
 
-  // ─── Undo (internal push — NO cap, full history) ───
+  const MAX_UNDO_ENTRIES = 50
+
   function pushUndo(entry: Omit<UndoEntry, 'timestamp'>) {
     undoStack.value.push({ ...entry, timestamp: Date.now() })
+    if (undoStack.value.length > MAX_UNDO_ENTRIES) {
+      undoStack.value = undoStack.value.slice(-MAX_UNDO_ENTRIES)
+    }
     triggerRef(undoStack)
   }
 

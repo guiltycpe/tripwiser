@@ -15,23 +15,21 @@ export default defineEventHandler(async (event: H3Event) => {
   }
 
   // Verify the trip belongs to this user
-  // @ts-ignore — Supabase types not generated for this table
-  const { data: trip, error: fetchError } = await supabase
-    .from('trips')
+  const { data: trip, error: fetchError } = await (supabase
+    .from('trips' as any)
     .select('id, user_id')
     .eq('id', tripId)
     .eq('user_id', user.id)
-    .single()
+    .single() as any)
 
   if (fetchError || !trip) {
     throw createError({ statusCode: 404, statusMessage: 'Trip not found or access denied' })
   }
 
-  // @ts-ignore
-  const { error: updateError } = await supabase
-    .from('trips')
-    .update({ itinerary })
-    .eq('id', tripId)
+  const { error: updateError } = await (supabase
+    .from('trips' as any)
+    .update({ itinerary } as any)
+    .eq('id', tripId) as any)
 
   if (updateError) {
     throw createError({ statusCode: 500, statusMessage: 'Failed to save itinerary' })

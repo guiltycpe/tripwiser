@@ -24,17 +24,15 @@ export default defineEventHandler(async (event) => {
         if (error) {
             // If profile doesn't exist, create one
             if (error.code === 'PGRST116') {
-                // @ts-ignore - Supabase types not yet generated for user_profiles table
-                const { data: newProfile, error: insertError } = await supabase
-                    .from('user_profiles')
-                    // @ts-ignore
+                const { data: newProfile, error: insertError } = await (supabase
+                    .from('user_profiles' as any)
                     .insert({
                         user_id: user.id,
                         full_name: user.user_metadata?.full_name || '',
                         preferred_languages: ['en']
-                    })
+                    } as any)
                     .select()
-                    .single()
+                    .single() as any)
 
                 if (insertError) {
                     throw createError({

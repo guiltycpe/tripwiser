@@ -1,20 +1,20 @@
 <template>
   <div class="space-y-8">
-    <div class="card border-2 border-gray-100">
-      <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-        <Icon name="heroicons:cog-6-tooth-20-solid" class="h-6 w-6 text-teal-600" />
+    <div class="bg-white rounded-2xl border border-slate-200 p-6">
+      <h3 class="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
+        <Icon name="heroicons:cog-6-tooth-20-solid" class="h-5 w-5 text-teal-600" />
         {{ t.profile.preferences.title }}
       </h3>
       
       <div class="space-y-6">
         <!-- Default Budget -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
+          <label class="block text-sm font-medium text-slate-700 mb-2">
             {{ t.profile.preferences.defaultBudget }}
           </label>
           <select 
             v-model="localPreferences.budget_default"
-            class="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white text-gray-900 font-semibold shadow-sm hover:border-teal-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all cursor-pointer appearance-none"
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm font-medium hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer appearance-none"
             style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%236b7280%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
           >
             <option value="Low">{{ t.plan.form.budgetOptions.budget }}</option>
@@ -25,12 +25,12 @@
 
         <!-- Default Travel Style -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
+          <label class="block text-sm font-medium text-slate-700 mb-2">
             {{ t.profile.preferences.defaultStyle }}
           </label>
           <select 
             v-model="localPreferences.travel_style_default"
-            class="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white text-gray-900 font-semibold shadow-sm hover:border-teal-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all cursor-pointer appearance-none"
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm font-medium hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer appearance-none"
             style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%236b7280%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
           >
             <option value="adventure">{{ t.plan.form.styleOptions.adventure }}</option>
@@ -44,7 +44,7 @@
 
         <!-- Preferred Pace -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
+          <label class="block text-sm font-medium text-slate-700 mb-2">
             {{ t.profile.preferences.pace }}
           </label>
           <div class="grid grid-cols-3 gap-3">
@@ -53,10 +53,10 @@
               :key="pace"
               @click="localPreferences.preferred_pace = pace"
               :class="[
-                'px-4 py-3 rounded-xl font-medium transition-all border-2 cursor-pointer',
+                'px-4 py-2.5 rounded-xl text-sm font-medium transition-all border cursor-pointer',
                 localPreferences.preferred_pace === pace
-                  ? 'bg-teal-500 text-white border-teal-600 shadow-md'
-                  : 'bg-white text-gray-700 border-gray-200 hover:border-teal-300 hover:bg-teal-50'
+                  ? 'bg-teal-600 text-white border-teal-600'
+                  : 'bg-white text-slate-700 border-slate-200 hover:border-teal-300 hover:bg-teal-50'
               ]"
             >
               {{ (t.profile.preferences.paceOptions as any)[pace] }}
@@ -66,7 +66,7 @@
 
         <!-- Interests -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
+          <label class="block text-sm font-medium text-slate-700 mb-2">
             {{ t.profile.preferences.interests }}
           </label>
           <div class="flex flex-wrap gap-2">
@@ -75,10 +75,10 @@
               :key="interest"
               @click="toggleArrayItem(localPreferences.interests, interest)"
               :class="[
-                'px-4 py-2 rounded-full text-sm font-medium transition-all border-2 cursor-pointer',
+                'px-4 py-2 rounded-full text-sm font-medium transition-all border cursor-pointer',
                 localPreferences.interests?.includes(interest)
-                  ? 'bg-teal-500 text-white border-teal-600 shadow-sm'
-                  : 'bg-white text-gray-700 border-gray-200 hover:border-teal-300 hover:bg-teal-50'
+                  ? 'bg-teal-600 text-white border-teal-600'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-teal-300 hover:bg-teal-50'
               ]"
             >
               {{ (t.profile.preferences.interestOptions as any)[interest] }}
@@ -88,7 +88,7 @@
 
         <!-- Food Preferences -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
+          <label class="block text-sm font-medium text-slate-700 mb-2">
             {{ t.profile.preferences.foodPreferences }}
           </label>
           <div class="flex flex-wrap gap-2">
@@ -97,10 +97,10 @@
               :key="pref"
               @click="toggleArrayItem(localPreferences.food_preferences, pref)"
               :class="[
-                'px-4 py-2 rounded-full text-sm font-medium transition-all border-2 cursor-pointer',
+                'px-4 py-2 rounded-full text-sm font-medium transition-all border cursor-pointer',
                 localPreferences.food_preferences?.includes(pref)
-                  ? 'bg-blue-500 text-white border-blue-600 shadow-sm'
-                  : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                  ? 'bg-indigo-600 text-white border-indigo-600'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50'
               ]"
             >
               {{ (t.profile.preferences.foodOptions as any)[pref] }}
@@ -110,7 +110,7 @@
 
         <!-- Things to Avoid -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
+          <label class="block text-sm font-medium text-slate-700 mb-2">
             {{ t.profile.preferences.avoid }}
           </label>
           <div class="flex flex-wrap gap-2">
@@ -119,10 +119,10 @@
               :key="item"
               @click="toggleArrayItem(localPreferences.avoid, item)"
               :class="[
-                'px-4 py-2 rounded-full text-sm font-medium transition-all border-2 cursor-pointer',
+                'px-4 py-2 rounded-full text-sm font-medium transition-all border cursor-pointer',
                 localPreferences.avoid?.includes(item)
-                  ? 'bg-red-500 text-white border-red-600 shadow-sm'
-                  : 'bg-white text-gray-700 border-gray-200 hover:border-red-300 hover:bg-red-50'
+                  ? 'bg-rose-600 text-white border-rose-600'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-rose-300 hover:bg-rose-50'
               ]"
             >
               {{ (t.profile.preferences.avoidOptions as any)[item] }}

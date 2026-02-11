@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/i18n',
     '@nuxtjs/supabase',
+    '@vueuse/nuxt',
   ],
   icon: {
     clientBundle: {
@@ -41,12 +42,13 @@ export default defineNuxtConfig({
     cookieOptions: {
       maxAge: 60 * 60 * 8, // 8 hours
       sameSite: 'lax',
-      secure: false // Set to true in production with HTTPS
+      secure: process.env.NODE_ENV === 'production'
     }
   },
   runtimeConfig: {
     // Private keys (server-only)
     geoapifyApiKey: process.env.NUXT_GEOAPIFY_API_KEY,
+    mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
     unsplashAccessKey: process.env.UNSPLASH_ACCESS_KEY,
     // Public keys (exposed to client)
     public: {

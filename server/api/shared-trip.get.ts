@@ -1,15 +1,14 @@
 import type { H3Event } from 'h3'
-import { createClient } from '@supabase/supabase-js'
+import { serverSupabaseServiceRole } from '#supabase/server'
 
 /**
  * GET /api/shared-trip?token=xxx
- * 
+ *
  * Public endpoint — returns trip data for a shared token.
  * No auth required.
- * 
- * Uses a dedicated anon client with the public key (no service role needed).
- * Relies on a RLS policy that allows SELECT on trips when share_token matches.
- * See: database/migrations/002_add_share_token.sql
+ *
+ * Uses service role client to bypass RLS, then filters by exact token match.
+ * This prevents enumeration of all shared trips (see migration 003).
  */
 export default defineEventHandler(async (event: H3Event) => {
   const query = getQuery(event)
@@ -19,16 +18,7 @@ export default defineEventHandler(async (event: H3Event) => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid share token' })
   }
 
-  // Create a standalone anon client (not tied to any user session)
-  // This works because we have a RLS policy: "allow select where share_token is not null"
-  const supabaseUrl = process.env.NUXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NUXT_PUBLIC_SUPABASE_KEY
-
-  if (!supabaseUrl || !supabaseKey) {
-    throw createError({ statusCode: 500, statusMessage: 'Supabase configuration missing' })
-  }
-
-  const supabase = createClient(supabaseUrl, supabaseKey)
+  const supabase = serverSupabaseServiceRole(event)
 
   const { data: trip, error } = await supabase
     .from('trips')

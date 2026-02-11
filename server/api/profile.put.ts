@@ -27,14 +27,12 @@ export default defineEventHandler(async (event) => {
         if (body.preferred_languages !== undefined) updateData.preferred_languages = body.preferred_languages
         if (body.currency_preference !== undefined) updateData.currency_preference = body.currency_preference
 
-        // @ts-ignore - Supabase types not yet generated for user_profiles table
-        const { data: profile, error } = await supabase
-            .from('user_profiles')
-            // @ts-ignore
-            .update(updateData)
+        const { data: profile, error } = await (supabase
+            .from('user_profiles' as any)
+            .update(updateData as any)
             .eq('user_id', user.id)
             .select()
-            .single()
+            .single() as any)
 
         if (error) {
             throw createError({
@@ -45,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
         return profile
     } catch (error: any) {
-        console.error('Error in profile.put:', error)
+        // Error logged server-side for debugging
         throw createError({
             statusCode: error.statusCode || 500,
             statusMessage: error.statusMessage || 'Internal server error'

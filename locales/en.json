@@ -190,6 +190,29 @@
             "titleGradient": "Perfect Trip",
             "subtitle": "Tell us about your travel preferences and we'll create the perfect itinerary"
         },
+        "wizard": {
+            "step1": "Where",
+            "step2": "When",
+            "step3": "How",
+            "step4": "Review",
+            "step1Desc": "Choose your destinations",
+            "step2Desc": "Pick your travel dates",
+            "step3Desc": "Set your preferences",
+            "step4Desc": "Review and generate",
+            "next": "Continue",
+            "back": "Back",
+            "generate": "Generate Itinerary",
+            "reviewTitle": "Trip Summary",
+            "reviewFrom": "From",
+            "reviewTo": "To",
+            "reviewDates": "Dates",
+            "reviewTravelers": "Travelers",
+            "reviewBudget": "Budget",
+            "reviewStyle": "Style",
+            "reviewRoadTrip": "Road Trip",
+            "reviewYes": "Yes",
+            "reviewNo": "No"
+        },
         "form": {
             "title": "Your Travel Preferences",
             "noDestinations": "No destinations selected",
@@ -236,6 +259,7 @@
             "totalTrips": "Total Trips",
             "countries": "Countries",
             "upcoming": "Upcoming",
+            "totalBudget": "Total Budget",
             "memberSince": "Member Since"
         },
         "trips": {
@@ -250,7 +274,17 @@
             "budget": "budget",
             "viewDetails": "View Details",
             "edit": "Edit",
-            "deleteConfirm": "Are you sure you want to delete this trip?"
+            "deleteConfirm": "Are you sure you want to delete this trip?",
+            "deleteSuccess": "Trip deleted successfully.",
+            "deleteError": "Failed to delete trip.",
+            "shareCopied": "Share link copied to clipboard!",
+            "shareError": "Failed to generate share link.",
+            "searchPlaceholder": "Search trips...",
+            "noResults": "No trips match your search",
+            "duplicate": "Duplicate",
+            "duplicateSuccess": "Trip duplicated successfully!",
+            "duplicateError": "Failed to duplicate trip.",
+            "exportCalendar": "Export to Calendar"
         }
     },
     "auth": {
@@ -391,6 +425,17 @@
         "regenerating": "Regenerating...",
         "time": "Time...",
         "moveTo": "Move to"
+    },
+    "footer": {
+        "tagline": "AI-powered travel planning that makes every trip unforgettable.",
+        "product": "Product",
+        "account": "Account",
+        "legal": "Legal",
+        "planTrip": "Plan a Trip",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "rights": "All rights reserved.",
+        "madeWith": "Made with care for travelers worldwide"
     },
     "profile": {
         "title": "My Profile",

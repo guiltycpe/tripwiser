@@ -1,7 +1,12 @@
-
 import { defineEventHandler, getQuery } from 'h3'
 import { requireAuth } from '~/server/utils/auth'
 
+/**
+ * GET /api/get-destination-image?destination=...
+ *
+ * Returns a high-quality Unsplash photo URL for the destination.
+ * Falls back to Mapbox static image if Unsplash fails.
+ */
 export default defineEventHandler(async (event) => {
     await requireAuth(event)
 
@@ -16,38 +21,53 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    // Use the env variable directly or from runtime config if set up there
-    const accessKey = process.env.UNSPLASH_ACCESS_KEY || config.unsplashAccessKey
+    // Try Unsplash first
+    const unsplashKey = process.env.UNSPLASH_ACCESS_KEY || config.unsplashAccessKey
+    if (unsplashKey) {
+        try {
+            const searchUrl = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(destination + ' travel landscape')}&per_page=1&orientation=landscape`
+            const res = await fetch(searchUrl, {
+                headers: {
+                    'Authorization': `Client-ID ${unsplashKey}`,
+                    'Accept-Version': 'v1'
+                }
+            })
 
-    if (!accessKey) {
-        console.error('UNSPLASH_ACCESS_KEY is missing')
-        // Return null or a default/error to handle gracefully on client
-        return { url: null, error: 'Configuration error' }
+            if (res.ok) {
+                const data = await res.json()
+                const photo = data.results?.[0]
+                if (photo?.urls?.regular) {
+                    return {
+                        url: photo.urls.regular,
+                        alt: photo.alt_description || destination
+                    }
+                }
+            }
+        } catch {
+            // Fall through to Mapbox
+        }
     }
 
-    try {
-        // Try cityscape first
-        let searchUrl = `https://api.unsplash.com/photos/random?query=${encodeURIComponent(destination + ' cityscape')}&client_id=${accessKey}&orientation=landscape`
+    // Fallback: Mapbox static image
+    const mapboxToken = process.env.MAPBOX_ACCESS_TOKEN || config.mapboxAccessToken
+    if (mapboxToken) {
+        try {
+            const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(destination)}.json?access_token=${mapboxToken}&limit=1`
+            const geocodeRes = await fetch(geocodeUrl)
 
-        let response = await fetch(searchUrl)
-
-        if (!response.ok && response.status === 404) {
-            // Fallback to landmark
-            searchUrl = `https://api.unsplash.com/photos/random?query=${encodeURIComponent(destination + ' landmark')}&client_id=${accessKey}&orientation=landscape`
-            response = await fetch(searchUrl)
+            if (geocodeRes.ok) {
+                const geocodeData = await geocodeRes.json()
+                const feature = geocodeData.features?.[0]
+                if (feature?.center) {
+                    const [lng, lat] = feature.center
+                    const url = `https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/static/${lng},${lat},10,0/800x400@2x?access_token=${mapboxToken}`
+                    return { url, alt: destination }
+                }
+            }
+        } catch {
+            // Fall through to null
         }
-
-        if (!response.ok) {
-            console.error(`Unsplash API error: ${response.status} ${response.statusText}`)
-            return { url: null }
-        }
-
-        const data = await response.json()
-        // Return the regular url (good quality but not raw)
-        return { url: data.urls?.regular, alt: data.alt_description }
-
-    } catch (error) {
-        console.error('Error fetching image from Unsplash:', error)
-        return { url: null, error: 'Failed to fetch image' }
     }
+
+    return { url: null }
 })

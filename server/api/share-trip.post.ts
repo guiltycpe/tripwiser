@@ -20,12 +20,12 @@ export default defineEventHandler(async (event: H3Event) => {
   }
 
   // Verify ownership
-  const { data: trip, error: fetchErr } = await supabase
-    .from('trips')
+  const { data: trip, error: fetchErr } = await (supabase
+    .from('trips' as any)
     .select('id, share_token')
     .eq('id', tripId)
     .eq('user_id', user.id)
-    .single() as { data: { id: string; share_token: string | null } | null; error: any }
+    .single() as any) as { data: { id: string; share_token: string | null } | null; error: any }
 
   if (fetchErr || !trip) {
     throw createError({ statusCode: 404, statusMessage: 'Trip not found' })
@@ -40,9 +40,9 @@ export default defineEventHandler(async (event: H3Event) => {
   const shareToken = crypto.randomBytes(16).toString('hex')
 
   const { error: updateErr } = await (supabase
-    .from('trips') as any)
-    .update({ share_token: shareToken })
-    .eq('id', tripId)
+    .from('trips' as any)
+    .update({ share_token: shareToken } as any)
+    .eq('id', tripId) as any)
 
   if (updateErr) {
     throw createError({ statusCode: 500, statusMessage: 'Failed to create share link' })

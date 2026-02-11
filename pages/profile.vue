@@ -1,191 +1,189 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50">
-    <main class="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-      <!-- Header -->
-      <div class="mb-8 flex items-center justify-between">
-        <div>
-          <h1 class="text-4xl font-bold mb-2">
-            <span class="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">{{ t.profile.title }}</span>
-          </h1>
-          <p class="text-gray-600 text-lg">{{ t.profile.subtitle }}</p>
-        </div>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <!-- Header -->
+    <div class="mb-8 animate-fade-in">
+      <h1 class="text-2xl font-semibold text-slate-900">{{ t.profile.title }}</h1>
+      <p class="mt-1 text-sm text-slate-500">{{ t.profile.subtitle }}</p>
+    </div>
+
+    <!-- Loading -->
+    <div v-if="loading" class="flex justify-center py-12">
+      <Icon name="heroicons:arrow-path-20-solid" class="h-8 w-8 animate-spin text-slate-400" />
+    </div>
+
+    <!-- Content -->
+    <div v-else class="space-y-6 animate-fade-in">
+      <!-- Tabs -->
+      <div class="flex bg-slate-100 p-1 rounded-xl w-fit overflow-x-auto">
         <button
-          @click="handleLogout"
-          class="px-4 py-2 rounded-xl border-2 border-red-200 bg-white text-red-600 font-medium hover:bg-red-50 hover:border-red-300 transition-all flex items-center gap-2 cursor-pointer"
+          v-for="tab in tabs"
+          :key="tab.id"
+          @click="activeTab = tab.id"
+          class="px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer"
+          :class="activeTab === tab.id ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'"
         >
-          <Icon name="heroicons:arrow-right-on-rectangle-20-solid" class="h-5 w-5" />
-          {{ t.nav.logout }}
+          <span class="flex items-center gap-2">
+            <Icon :name="tab.icon" class="h-4 w-4" />
+            {{ tab.label }}
+          </span>
         </button>
       </div>
 
-      <!-- Loading State -->
-      <div v-if="loading" class="flex justify-center py-12">
-        <Icon name="heroicons:arrow-path-20-solid" class="h-12 w-12 animate-spin text-teal-500" />
-      </div>
+      <!-- Tab 1: Personal -->
+      <div v-show="activeTab === 'personal'" class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col md:flex-row gap-8">
+          <!-- Avatar -->
+          <div class="flex-shrink-0">
+            <ProfileAvatar
+              :avatar-url="profile?.avatar_url"
+              :full-name="profile?.full_name"
+              @update="handleAvatarUpdate"
+            />
+          </div>
 
-      <!-- Profile Content -->
-      <div v-else class="space-y-8">
-        <!-- Personal Info Card -->
-        <div class="card border-2 border-gray-100">
-          <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <Icon name="heroicons:user-20-solid" class="h-6 w-6 text-teal-600" />
-            Informations Personnelles
-          </h3>
-          <div class="flex flex-col md:flex-row gap-8">
-            <!-- Avatar -->
-            <div class="flex-shrink-0">
-              <ProfileAvatar 
-                :avatar-url="profile?.avatar_url"
-                :full-name="profile?.full_name"
-                @update="handleAvatarUpdate"
+          <!-- Form -->
+          <div class="flex-1 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">{{ t.profile.form.fullName }}</label>
+              <input
+                v-model="formData.full_name"
+                type="text"
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all hover:border-slate-300"
+                :placeholder="t.profile.form.fullNamePlaceholder"
               />
             </div>
 
-            <!-- Basic Info Form -->
-            <div class="flex-1 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1.5">{{ t.profile.form.bio }}</label>
+              <textarea
+                v-model="formData.bio"
+                rows="3"
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all resize-none hover:border-slate-300"
+                :placeholder="t.profile.form.bioPlaceholder"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  {{ t.profile.form.fullName }}
-                </label>
-                <input
-                  v-model="formData.full_name"
-                  type="text"
-                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all shadow-sm"
-                  :placeholder="t.profile.form.fullNamePlaceholder"
-                />
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">{{ t.profile.form.language }}</label>
+                <select
+                  v-model="formData.preferred_languages![0]"
+                  class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm font-medium focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all cursor-pointer appearance-none hover:border-slate-300"
+                  style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%2394a3b8%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
+                >
+                  <option value="en">English</option>
+                  <option value="fr">Français</option>
+                </select>
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                  {{ t.profile.form.bio }}
-                </label>
-                <textarea
-                  v-model="formData.bio"
-                  rows="4"
-                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all resize-none shadow-sm"
-                  :placeholder="t.profile.form.bioPlaceholder"
-                />
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    {{ t.profile.form.language }}
-                  </label>
-                  <select
-                    v-model="formData.preferred_languages![0]"
-                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white text-gray-900 font-semibold shadow-sm hover:border-teal-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all cursor-pointer appearance-none"
-                    style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%236b7280%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
-                  >
-                    <option value="en">English</option>
-                    <option value="fr">Français</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    {{ t.profile.form.currency }}
-                  </label>
-                  <select
-                    v-model="formData.currency_preference"
-                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white text-gray-900 font-semibold shadow-sm hover:border-teal-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all cursor-pointer appearance-none"
-                    style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%236b7280%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
-                  >
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
-                    <option value="CAD">CAD ($)</option>
-                    <option value="AUD">AUD ($)</option>
-                  </select>
-                </div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">{{ t.profile.form.currency }}</label>
+                <select
+                  v-model="formData.currency_preference"
+                  class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm font-medium focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all cursor-pointer appearance-none hover:border-slate-300"
+                  style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%2394a3b8%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27 clip-rule=%27evenodd%27/%3e%3c/svg%3e'); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25rem; padding-right: 2.5rem;"
+                >
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="GBP">GBP (£)</option>
+                  <option value="CAD">CAD ($)</option>
+                  <option value="AUD">AUD ($)</option>
+                </select>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Travel Preferences -->
-        <PreferencesForm 
+      <!-- Tab 2: Preferences -->
+      <div v-show="activeTab === 'preferences'">
+        <PreferencesForm
           :preferences="formData.travel_preferences || {}"
           @update="handlePreferencesUpdate"
         />
+      </div>
 
-        <!-- Dietary Restrictions -->
-        <div class="card border-2 border-gray-100">
-          <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Icon name="heroicons:heart-20-solid" class="h-6 w-6 text-amber-600" />
-            {{ t.profile.dietary.title }}
-          </h3>
-          <div class="flex flex-wrap gap-2">
-            <button
-              v-for="restriction in availableDietaryRestrictions"
-              :key="restriction"
-              @click="toggleDietaryRestriction(restriction)"
-              :class="[
-                'px-4 py-2 rounded-full text-sm font-medium transition-all border-2 cursor-pointer',
-                formData.dietary_restrictions?.includes(restriction)
-                  ? 'bg-amber-500 text-white border-amber-600 shadow-sm'
-                  : 'bg-white text-gray-700 border-gray-200 hover:border-amber-300 hover:bg-amber-50'
-              ]"
-            >
-              {{ (t.profile.dietary.options as any)[restriction] }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Travel Statistics -->
-        <TravelStats 
-          :trips="trips"
-          :created-at="user?.created_at || new Date().toISOString()"
-        />
-
-        <!-- Action Buttons -->
-        <div class="flex justify-center gap-4 mt-8">
+      <!-- Tab 3: Dietary -->
+      <div v-show="activeTab === 'dietary'" class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+          <Icon name="heroicons:heart-20-solid" class="h-5 w-5 text-amber-500" />
+          {{ t.profile.dietary.title }}
+        </h3>
+        <div class="flex flex-wrap gap-2">
           <button
-            @click="router.push('/dashboard')"
-            class="px-8 py-3.5 rounded-2xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-all cursor-pointer min-w-[140px]"
+            v-for="restriction in availableDietaryRestrictions"
+            :key="restriction"
+            @click="toggleDietaryRestriction(restriction)"
+            :class="[
+              'px-4 py-2 rounded-xl text-sm font-medium transition-all border cursor-pointer',
+              formData.dietary_restrictions?.includes(restriction)
+                ? 'bg-amber-50 text-amber-700 border-amber-200'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+            ]"
           >
-            {{ t.common.cancel }}
-          </button>
-          <button
-            @click="saveProfile"
-            :disabled="saving"
-            class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all flex items-center gap-2 cursor-pointer min-w-[180px] justify-center"
-          >
-            <Icon 
-              v-if="saving"
-              name="heroicons:arrow-path-20-solid" 
-              class="h-5 w-5 animate-spin"
-            />
-            <Icon 
-              v-else
-              name="heroicons:check-20-solid" 
-              class="h-5 w-5"
-            />
-            {{ saving ? t.profile.saving : t.profile.save }}
+            {{ (t.profile.dietary.options as any)[restriction] }}
           </button>
         </div>
       </div>
-    </main>
+
+      <!-- Tab 4: Stats -->
+      <div v-show="activeTab === 'stats'">
+        <TravelStats
+          :trips="trips"
+          :created-at="user?.created_at || new Date().toISOString()"
+        />
+      </div>
+
+      <!-- Save Button -->
+      <div class="flex justify-end pt-4">
+        <button
+          @click="saveProfile"
+          :disabled="saving"
+          class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-teal-600 text-white text-sm font-medium hover:bg-teal-500 transition-colors shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <Icon
+            v-if="saving"
+            name="heroicons:arrow-path-20-solid"
+            class="h-4 w-4 animate-spin"
+          />
+          <Icon
+            v-else
+            name="heroicons:check-20-solid"
+            class="h-4 w-4"
+          />
+          {{ saving ? t.profile.saving : t.profile.save }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import type { UserProfile, UpdateProfilePayload } from '~/types/profile.types'
 
 definePageMeta({
-  middleware: 'auth'
+  layout: 'dashboard'
 })
 
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const router = useRouter()
-const { t } = useTranslations()
+const { t, locale } = useTranslations()
+const toast = useToast()
 
 const loading = ref(true)
 const saving = ref(false)
 const profile = ref<UserProfile | null>(null)
 const trips = ref<any[]>([])
+const activeTab = ref('personal')
+
+const tabs = computed(() => [
+  { id: 'personal', label: locale.value === 'fr' ? 'Personnel' : 'Personal', icon: 'heroicons:user-20-solid' },
+  { id: 'preferences', label: locale.value === 'fr' ? 'Préférences' : 'Preferences', icon: 'heroicons:adjustments-horizontal-20-solid' },
+  { id: 'dietary', label: locale.value === 'fr' ? 'Alimentaire' : 'Dietary', icon: 'heroicons:heart-20-solid' },
+  { id: 'stats', label: locale.value === 'fr' ? 'Statistiques' : 'Stats', icon: 'heroicons:chart-bar-20-solid' }
+])
 
 const formData = ref<UpdateProfilePayload>({
   full_name: '',
@@ -207,13 +205,11 @@ const formData = ref<UpdateProfilePayload>({
 const availableDietaryRestrictions = ['vegetarian', 'vegan', 'gluten_free', 'dairy_free', 'nut_allergy', 'halal', 'kosher']
 
 onMounted(async () => {
-  // Verify user is authenticated
   if (!user.value) {
-    console.error('No user found in profile page')
     router.push('/auth/login')
     return
   }
-  
+
   await loadProfile()
   await loadTrips()
 })
@@ -222,10 +218,9 @@ async function loadProfile() {
   try {
     loading.value = true
     const data = await $fetch<UserProfile>('/api/profile')
-    
+
     profile.value = data
-    
-    // Populate form
+
     formData.value = {
       full_name: data.full_name || '',
       bio: data.bio || '',
@@ -235,24 +230,24 @@ async function loadProfile() {
       currency_preference: data.currency_preference || 'USD'
     }
   } catch (error: any) {
-    console.error('Error loading profile:', error)
-    
-    // If unauthorized, redirect to login
     if (error?.status === 401 || error?.statusCode === 401) {
-      alert('Session expirée. Veuillez vous reconnecter.')
+      toast.add({
+        title: t.value.common.error,
+        description: locale.value === 'fr' ? 'Session expirée. Veuillez vous reconnecter.' : 'Session expired. Please log in again.',
+        color: 'error'
+      })
       await supabase.auth.signOut()
       router.push('/auth/login')
     } else {
-      alert('Erreur lors du chargement du profil. Veuillez réessayer.')
+      toast.add({
+        title: t.value.common.error,
+        description: locale.value === 'fr' ? 'Erreur lors du chargement du profil.' : 'Failed to load profile.',
+        color: 'error'
+      })
     }
   } finally {
     loading.value = false
   }
-}
-
-async function handleLogout() {
-  await supabase.auth.signOut()
-  router.push('/')
 }
 
 async function loadTrips() {
@@ -273,20 +268,22 @@ async function loadTrips() {
 async function saveProfile() {
   try {
     saving.value = true
-    
+
     await $fetch('/api/profile', {
       method: 'PUT',
       body: formData.value
     })
 
-    // Show success message
-    alert(t.value.profile.saveSuccess)
-    
-    // Optionally redirect back to dashboard
-    // router.push('/dashboard')
-  } catch (error) {
-    console.error('Error saving profile:', error)
-    alert(t.value.profile.saveError)
+    toast.add({
+      title: t.value.profile.saveSuccess,
+      color: 'success'
+    })
+  } catch {
+    toast.add({
+      title: t.value.common.error,
+      description: t.value.profile.saveError,
+      color: 'error'
+    })
   } finally {
     saving.value = false
   }
@@ -306,7 +303,7 @@ function toggleDietaryRestriction(restriction: string) {
   if (!formData.value.dietary_restrictions) {
     formData.value.dietary_restrictions = []
   }
-  
+
   const index = formData.value.dietary_restrictions.indexOf(restriction)
   if (index > -1) {
     formData.value.dietary_restrictions.splice(index, 1)

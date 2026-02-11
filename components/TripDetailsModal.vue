@@ -46,19 +46,38 @@
                 </button>
 
                 <!-- Export PDF button -->
-                <button 
-                  @click="exportPdf" 
+                <button
+                  @click="exportPdf"
                   class="p-2.5 rounded-xl hover:bg-teal-50 text-gray-400 hover:text-teal-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-teal-200"
-                  :title="t.common.save"
+                  title="PDF"
                 >
                   <Icon name="heroicons:arrow-down-tray-20-solid" class="h-5 w-5" />
                 </button>
 
+                <!-- Export Calendar button -->
+                <button
+                  @click="exportCalendar"
+                  class="p-2.5 rounded-xl hover:bg-violet-50 text-gray-400 hover:text-violet-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-violet-200"
+                  :title="t.dashboard.trips.exportCalendar"
+                >
+                  <Icon name="heroicons:calendar-days-20-solid" class="h-5 w-5" />
+                </button>
+
+                <!-- Duplicate button -->
+                <button
+                  @click="duplicateTrip"
+                  class="p-2.5 rounded-xl hover:bg-emerald-50 text-gray-400 hover:text-emerald-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-emerald-200"
+                  :title="t.dashboard.trips.duplicate"
+                >
+                  <Icon v-if="!duplicateLoading" name="heroicons:document-duplicate-20-solid" class="h-5 w-5" />
+                  <Icon v-else name="heroicons:arrow-path-20-solid" class="h-5 w-5 animate-spin" />
+                </button>
+
                 <!-- Delete button -->
-                <button 
-                  @click="$emit('delete', props.trip.id)" 
+                <button
+                  @click="$emit('delete', props.trip.id)"
                   class="p-2.5 rounded-xl hover:bg-red-50 text-gray-400 hover:text-red-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-red-200"
-                  title="Delete trip"
+                  :title="t.tripDetails.edit.deleteTrip"
                 >
                   <Icon name="heroicons:trash-20-solid" class="h-5 w-5" />
                 </button>
@@ -306,9 +325,10 @@ const props = defineProps({
   }
 })
 
-defineEmits(['close', 'delete'])
+const emit = defineEmits(['close', 'delete', 'duplicate'])
 
-const { t } = useTranslations()
+const { t, locale } = useTranslations()
+const toast = useToast()
 
 const activeTab = ref('overview')
 const budgetPanelOpen = ref(false)
@@ -539,23 +559,52 @@ watch(activeTab, (tab) => {
 
 function getBudgetLabel(tier: string) {
   if (!tier) return ''
-  const t = tier.toLowerCase()
-  const map: Record<string, string> = {
-    'low': 'Budget Friendly',
-    'budget': 'Budget Friendly',
-    'medium': 'Balanced Comfort',
-    'moderate': 'Balanced Comfort',
-    'balanced': 'Balanced Comfort',
-    'high': 'Luxury Experience',
-    'luxury': 'Luxury Experience'
+  const key = tier.toLowerCase()
+  const budgetOptions = t.value.plan?.form?.budgetOptions
+  if (budgetOptions) {
+    const map: Record<string, string> = {
+      'low': budgetOptions.budget,
+      'budget': budgetOptions.budget,
+      'medium': budgetOptions.moderate,
+      'moderate': budgetOptions.moderate,
+      'balanced': budgetOptions.moderate,
+      'high': budgetOptions.luxury,
+      'luxury': budgetOptions.luxury
+    }
+    return map[key] || tier
   }
-  return map[t] || tier
+  return tier
 }
 
 // Utilities
 function formatDate(dateStr: string) {
   if (!dateStr) return ''
-  return new Date(dateStr).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+  const localeStr = locale.value === 'fr' ? 'fr-FR' : 'en-US'
+  return new Date(dateStr).toLocaleDateString(localeStr, { day: 'numeric', month: 'short' })
+}
+
+// ─── Duplicate Trip ───
+const duplicateLoading = ref(false)
+const supabase = useSupabaseClient()
+
+async function duplicateTrip() {
+  if (!props.trip) return
+  duplicateLoading.value = true
+  try {
+    const { id, created_at, share_token, ...tripData } = props.trip
+    const { error } = await (supabase
+      .from('trips' as any)
+      .insert([{ ...tripData, share_token: null, destination_image_url: tripData.destination_image_url || null }] as any) as any)
+
+    if (error) throw error
+
+    toast.add({ title: t.value.dashboard.trips.duplicateSuccess, color: 'success' })
+    emit('duplicate')
+  } catch {
+    toast.add({ title: t.value.common.error, description: t.value.dashboard.trips.duplicateError, color: 'error' })
+  } finally {
+    duplicateLoading.value = false
+  }
 }
 
 // ─── Share Trip ───
@@ -571,9 +620,9 @@ async function shareTripLink() {
     })
     const shareUrl = `${window.location.origin}/shared/${shareToken}`
     await navigator.clipboard.writeText(shareUrl)
-    alert('Share link copied to clipboard!')
-  } catch (err) {
-    console.error('Share failed:', err)
+    toast.add({ title: t.value.dashboard.trips.shareCopied, color: 'success' })
+  } catch {
+    toast.add({ title: t.value.common.error, description: t.value.dashboard.trips.shareError, color: 'error' })
   } finally {
     shareLoading.value = false
   }
@@ -603,14 +652,65 @@ async function exportPdf() {
         win.print()
       }
     }
-  } catch (err) {
-    console.error('Export failed:', err)
+  } catch {
+    toast.add({ title: t.value.common.error, description: locale.value === 'fr' ? 'Échec de l\'export.' : 'Export failed.', color: 'error' })
   }
 }
 
 
 
-// getActivityIcon removed — ActivityCard now resolves icons from utils/cardIcons.ts
+// ─── Export Calendar (ICS) ───
+function exportCalendar() {
+  if (!tripData.value?.itinerary_sections || !props.trip) return
+
+  const lines: string[] = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//TripWiser//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+  ]
+
+  const startDate = new Date(props.trip.departure_date)
+
+  tripData.value.itinerary_sections.forEach((section: any) => {
+    section.daily_plans.forEach((day: any) => {
+      const dayDate = new Date(startDate)
+      dayDate.setDate(startDate.getDate() + (day.day - 1))
+      const dateStr = dayDate.toISOString().replace(/[-:]/g, '').split('T')[0]
+
+      day.activities.forEach((act: any) => {
+        const time = act.time_flexible || act.time || '09:00'
+        const [hours, minutes] = time.split(':').map(Number)
+        const startDt = new Date(dayDate)
+        startDt.setHours(hours || 9, minutes || 0, 0)
+        const endDt = new Date(startDt)
+        endDt.setHours(startDt.getHours() + 1)
+
+        const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+
+        lines.push('BEGIN:VEVENT')
+        lines.push(`DTSTART:${fmt(startDt)}`)
+        lines.push(`DTEND:${fmt(endDt)}`)
+        lines.push(`SUMMARY:${(act.description || 'Activity').replace(/[,;\\]/g, ' ')}`)
+        if (act.address) lines.push(`LOCATION:${act.address.replace(/[,;\\]/g, ' ')}`)
+        lines.push(`DESCRIPTION:${(act.tips || '').replace(/[,;\\]/g, ' ').replace(/\n/g, '\\n')}`)
+        lines.push(`UID:${dateStr}-${Math.random().toString(36).slice(2, 8)}@tripwiser`)
+        lines.push('END:VEVENT')
+      })
+    })
+  })
+
+  lines.push('END:VCALENDAR')
+
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${tripData.value.trip_summary?.destination || 'trip'}.ics`
+  a.click()
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <style scoped>
