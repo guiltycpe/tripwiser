@@ -8,7 +8,15 @@
         "signup": "S'inscrire",
         "dashboard": "Tableau de bord",
         "profile": "Profil",
-        "logout": "Déconnexion"
+        "logout": "Déconnexion",
+        "newTrip": "Nouveau voyage",
+        "collapse": "Réduire",
+        "expand": "Agrandir",
+        "lightMode": "Mode clair",
+        "darkMode": "Mode sombre",
+        "light": "Clair",
+        "dark": "Sombre",
+        "viewProfile": "Voir le profil"
     },
     "home": {
         "hero": {

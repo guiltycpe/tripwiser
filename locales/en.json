@@ -8,7 +8,15 @@
         "signup": "Sign Up",
         "dashboard": "Dashboard",
         "profile": "Profile",
-        "logout": "Logout"
+        "logout": "Logout",
+        "newTrip": "New Trip",
+        "collapse": "Collapse",
+        "expand": "Expand",
+        "lightMode": "Light mode",
+        "darkMode": "Dark mode",
+        "light": "Light",
+        "dark": "Dark",
+        "viewProfile": "View profile"
     },
     "home": {
         "hero": {

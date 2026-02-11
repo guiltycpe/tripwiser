@@ -3,20 +3,11 @@
     <!-- Main Content -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <!-- Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 animate-fade-in">
-        <div>
-          <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">
-            {{ t.dashboard.welcome }}, {{ userName }}
-          </h1>
-          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ t.dashboard.subtitle }}</p>
-        </div>
-        <button
-          @click="router.push('/plan')"
-          class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-600 text-white text-sm font-medium hover:bg-teal-500 transition-colors shadow-sm cursor-pointer"
-        >
-          <Icon name="heroicons:plus-20-solid" class="h-4 w-4" />
-          {{ t.dashboard.newTrip }}
-        </button>
+      <div class="mb-8 animate-fade-in">
+        <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+          {{ t.dashboard.welcome }}, {{ userName }}
+        </h1>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ t.dashboard.subtitle }}</p>
       </div>
 
       <!-- Stats Cards -->
