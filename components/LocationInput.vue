@@ -94,13 +94,13 @@ function closePredictions() {
       leave-from-class="transform scale-100 opacity-100"
       leave-to-class="transform scale-95 opacity-0"
     >
-      <div v-if="predictions.length > 0" class="absolute left-0 right-0 top-full z-[100] mt-1 overflow-hidden rounded-xl border border-gray-200 bg-white/95 shadow-2xl backdrop-blur-md">
+      <div v-if="predictions.length > 0" class="absolute left-0 right-0 top-full z-[100] mt-1 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-slate-900/95 shadow-2xl backdrop-blur-md">
         <ul class="max-h-64 overflow-y-auto py-1">
           <li
               v-for="place in predictions"
               :key="place.place_id"
               @click="selectPlace(place)"
-              class="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-purple-50 hover:text-purple-700"
+              class="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 transition-colors hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300"
           >
             <Icon name="heroicons:map-pin-20-solid" class="h-4 w-4 text-gray-400 group-hover:text-purple-500" />
             <span class="flex-1 font-medium">{{ place.description }}</span>

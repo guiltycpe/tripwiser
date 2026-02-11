@@ -5,14 +5,14 @@ const { t } = useTranslations()
 </script>
 
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen bg-white dark:bg-slate-900">
     <!-- Hero -->
-    <section class="section bg-slate-50 text-center">
+    <section class="section bg-slate-50 dark:bg-slate-800 text-center">
       <div class="mx-auto max-w-4xl animate-fade-in">
-        <h1 class="text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">
+        <h1 class="text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 md:text-5xl">
           {{ t.features.hero.title }} <span class="text-teal-600">{{ t.features.hero.titleGradient }}</span>
         </h1>
-        <p class="mt-6 text-lg leading-8 text-slate-600">
+        <p class="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
           {{ t.features.hero.subtitle }}
         </p>
       </div>
@@ -35,7 +35,7 @@ const { t } = useTranslations()
     <!-- CTA -->
     <section class="section section-alt text-center">
       <div class="mx-auto max-w-3xl">
-        <h2 class="text-3xl font-semibold text-slate-900">{{ t.features.cta.title }}</h2>
+        <h2 class="text-3xl font-semibold text-slate-900 dark:text-slate-100">{{ t.features.cta.title }}</h2>
         <div class="mt-8 flex flex-wrap justify-center gap-4">
           <NuxtLink to="/plan" class="btn-primary px-6 py-3 text-sm">{{ t.features.cta.startPlanning }}</NuxtLink>
           <NuxtLink to="/pricing" class="btn-secondary px-6 py-3 text-sm">{{ t.features.cta.viewPricing }}</NuxtLink>

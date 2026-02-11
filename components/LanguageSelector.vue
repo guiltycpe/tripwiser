@@ -3,12 +3,12 @@
     <!-- Current Language Button -->
     <button 
       @click="isOpen = !isOpen"
-      class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/80 border border-gray-200 hover:bg-white hover:border-teal-300 transition-all duration-300 shadow-sm cursor-pointer"
+      class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-600 hover:bg-white dark:hover:bg-slate-700 hover:border-teal-300 dark:hover:border-teal-500 transition-all duration-300 shadow-sm cursor-pointer"
     >
-      <span class="text-sm font-medium text-gray-700">{{ currentLanguage.shortName }}</span>
-      <Icon 
-        name="heroicons:chevron-down-20-solid" 
-        class="h-4 w-4 text-gray-500 transition-transform duration-200"
+      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ currentLanguage.shortName }}</span>
+      <Icon
+        name="heroicons:chevron-down-20-solid"
+        class="h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-200"
         :class="{ 'rotate-180': isOpen }"
       />
     </button>
@@ -24,20 +24,20 @@
     >
       <div 
         v-if="isOpen"
-        class="absolute right-0 mt-2 w-48 rounded-xl bg-white shadow-xl border border-gray-100 overflow-hidden z-50"
+        class="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-slate-800 shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden z-50"
       >
         <div class="py-1">
           <button
             v-for="lang in languages"
             :key="lang.code"
             @click="selectLanguage(lang.code)"
-            class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors cursor-pointer"
-            :class="{ 'bg-teal-50': locale === lang.code }"
+            class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+            :class="{ 'bg-teal-50 dark:bg-teal-900/30': locale === lang.code }"
           >
             <span class="text-xl">{{ lang.flag }}</span>
             <div class="flex-1">
-              <p class="text-sm font-medium text-gray-900">{{ lang.name }}</p>
-              <p class="text-xs text-gray-500">{{ lang.nativeName }}</p>
+              <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ lang.name }}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ lang.nativeName }}</p>
             </div>
             <Icon 
               v-if="locale === lang.code"
@@ -48,8 +48,8 @@
         </div>
         
         <!-- More languages coming soon -->
-        <div class="border-t border-gray-100 px-4 py-3 bg-gray-50">
-          <p class="text-xs text-gray-500 flex items-center gap-1">
+        <div class="border-t border-gray-100 dark:border-gray-700 px-4 py-3 bg-gray-50 dark:bg-slate-800">
+          <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
             <Icon name="heroicons:globe-alt-20-solid" class="h-4 w-4" />
             {{ locale === 'fr' ? 'Plus de langues bientôt...' : 'More languages coming soon...' }}
           </p>

@@ -16,6 +16,12 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     '@vueuse/nuxt',
   ],
+  colorMode: {
+    classSuffix: '',
+    preference: 'system',
+    fallback: 'light',
+    storageKey: 'tripwiser-color-mode',
+  },
   icon: {
     clientBundle: {
       scan: true,

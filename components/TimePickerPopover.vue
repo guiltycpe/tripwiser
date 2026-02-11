@@ -6,10 +6,10 @@
     Selected values highlighted in teal. Emits confirm with "HH:MM" string.
     Zero external dependencies — pure Tailwind + native scroll.
   -->
-  <div class="bg-white rounded-2xl shadow-2xl border border-gray-200 p-4 w-56" @click.stop>
+  <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 w-56" @click.stop>
     <!-- Current Selection Display -->
     <div class="text-center mb-3">
-      <div class="text-3xl font-black text-gray-900 tabular-nums tracking-tight">
+      <div class="text-3xl font-black text-gray-900 dark:text-gray-100 tabular-nums tracking-tight">
         {{ pad(hour) }}<span class="text-teal-500 mx-0.5">:</span>{{ pad(minute) }}
       </div>
     </div>
@@ -17,7 +17,7 @@
     <!-- Scroll Columns -->
     <div class="flex gap-2 mb-3">
       <!-- Hours -->
-      <div ref="hourScrollRef" class="flex-1 h-36 overflow-y-auto rounded-xl bg-gray-50 scroll-smooth">
+      <div ref="hourScrollRef" class="flex-1 h-36 overflow-y-auto rounded-xl bg-gray-50 dark:bg-slate-800 scroll-smooth">
         <div class="p-1 space-y-0.5">
           <button
             v-for="h in 24"
@@ -26,7 +26,7 @@
             class="w-full py-1.5 text-sm font-semibold rounded-lg transition-colors duration-100 cursor-pointer"
             :class="hour === h - 1
               ? 'bg-teal-500 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100'"
+              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700'"
           >
             {{ pad(h - 1) }}h
           </button>
@@ -34,7 +34,7 @@
       </div>
 
       <!-- Minutes (5-min increments) -->
-      <div ref="minuteScrollRef" class="flex-1 h-36 overflow-y-auto rounded-xl bg-gray-50 scroll-smooth">
+      <div ref="minuteScrollRef" class="flex-1 h-36 overflow-y-auto rounded-xl bg-gray-50 dark:bg-slate-800 scroll-smooth">
         <div class="p-1 space-y-0.5">
           <button
             v-for="m in minuteOptions"
@@ -43,7 +43,7 @@
             class="w-full py-1.5 text-sm font-semibold rounded-lg transition-colors duration-100 cursor-pointer"
             :class="minute === m
               ? 'bg-teal-500 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100'"
+              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700'"
           >
             {{ pad(m) }}
           </button>
@@ -55,7 +55,7 @@
     <div class="flex gap-2">
       <button
         @click="$emit('close')"
-        class="flex-1 py-2 text-xs font-bold text-gray-500 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer"
+        class="flex-1 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
       >
         Annuler
       </button>
@@ -150,7 +150,7 @@ div::-webkit-scrollbar-track {
   background: transparent;
 }
 div::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--color-border, #d1d5db);
   border-radius: 2px;
 }
 </style>

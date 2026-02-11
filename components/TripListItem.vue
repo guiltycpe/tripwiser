@@ -21,14 +21,14 @@
 
     <!-- Info -->
     <div class="flex-1 min-w-0">
-      <h3 class="text-sm font-semibold text-slate-900 truncate">{{ title }}</h3>
-      <div class="flex items-center gap-3 mt-1 text-xs text-slate-500">
+      <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">{{ title }}</h3>
+      <div class="flex items-center gap-3 mt-1 text-xs text-slate-500 dark:text-slate-400">
         <div class="flex items-center gap-1">
-          <Icon name="heroicons:calendar-20-solid" class="h-3.5 w-3.5 text-slate-400" />
+          <Icon name="heroicons:calendar-20-solid" class="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
           <span>{{ dateRange }}</span>
         </div>
         <div class="flex items-center gap-1">
-          <Icon name="heroicons:users-20-solid" class="h-3.5 w-3.5 text-slate-400" />
+          <Icon name="heroicons:users-20-solid" class="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
           <span>{{ travelers }}</span>
         </div>
       </div>
@@ -43,7 +43,7 @@
     <!-- Status -->
     <div class="flex items-center gap-1.5 min-w-[90px]">
       <span class="status-dot" :class="statusDotClass"></span>
-      <span class="text-[10px] font-medium text-slate-500 uppercase tracking-wider">{{ statusLabel }}</span>
+      <span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{ statusLabel }}</span>
     </div>
 
     <!-- Delete -->
@@ -197,16 +197,16 @@ function formatCompactDateRange(start: string, end?: string) {
   align-items: center;
   gap: 1rem;
   padding: 0.75rem 1rem;
-  background: white;
+  background: var(--color-surface, white);
   border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border, #e2e8f0);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .trip-list-item:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-color: #cbd5e1;
+  border-color: var(--color-text-muted, #cbd5e1);
 }
 
 .thumbnail {
@@ -218,8 +218,8 @@ function formatCompactDateRange(start: string, end?: string) {
 }
 
 .badge {
-  background: #f1f5f9;
-  color: #475569;
+  background: var(--color-surface-elevated, #f1f5f9);
+  color: var(--color-text-secondary, #475569);
   padding: 2px 8px;
   border-radius: 6px;
   font-weight: 500;
@@ -241,7 +241,7 @@ function formatCompactDateRange(start: string, end?: string) {
   height: 28px;
   border-radius: 8px;
   background: transparent;
-  color: #94a3b8;
+  color: var(--color-text-muted, #94a3b8);
   display: flex;
   align-items: center;
   justify-content: center;

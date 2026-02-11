@@ -7,7 +7,7 @@
     leave-from-class="translate-x-0"
     leave-to-class="translate-x-full"
   >
-    <div v-if="isOpen" class="fixed inset-y-0 right-0 z-[70] w-full md:w-[600px] lg:w-[700px] bg-white shadow-2xl flex flex-col">
+    <div v-if="isOpen" class="fixed inset-y-0 right-0 z-[70] w-full md:w-[600px] lg:w-[700px] bg-white dark:bg-slate-900 shadow-2xl flex flex-col">
       <!-- Header -->
       <div class="bg-gradient-to-r from-teal-600 to-cyan-600 p-6 text-white">
         <div class="flex items-center justify-between mb-4">
@@ -45,77 +45,77 @@
       <!-- Content -->
       <div class="flex-1 overflow-y-auto">
         <!-- Category Breakdown -->
-        <div class="p-6 border-b border-gray-100 bg-gray-50">
-          <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+          <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4 flex items-center gap-2">
             <Icon name="heroicons:chart-pie-20-solid" class="h-4 w-4 text-teal-600" />
             Répartition par Catégorie
           </h3>
           
           <div class="space-y-4">
             <!-- Hébergement -->
-            <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+            <div class="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div class="flex justify-between items-start mb-3">
                 <div class="flex items-center gap-3">
-                  <div class="p-2 bg-indigo-100 rounded-lg">
+                  <div class="p-2 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg">
                     <Icon name="heroicons:home-modern-20-solid" class="h-5 w-5 text-indigo-600" />
                   </div>
                   <div>
-                    <h4 class="font-bold text-gray-900">{{ t.tripDetails.budget.accommodation }}</h4>
-                    <p class="text-xs text-gray-500">{{ budgetAnalysis.accommodation.nights }} nuits</p>
+                    <h4 class="font-bold text-gray-900 dark:text-gray-100">{{ t.tripDetails.budget.accommodation }}</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ budgetAnalysis.accommodation.nights }} nuits</p>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-2xl font-black text-gray-900">${{ budgetAnalysis.accommodation.total }}</p>
-                  <p class="text-xs text-gray-500">${{ budgetAnalysis.accommodation.perNight }}/nuit</p>
+                  <p class="text-2xl font-black text-gray-900 dark:text-gray-100">${{ budgetAnalysis.accommodation.total }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">${{ budgetAnalysis.accommodation.perNight }}/nuit</p>
                 </div>
               </div>
               
               <!-- Accommodation Details -->
-              <div class="space-y-2 mt-4 pt-4 border-t border-gray-100">
+              <div class="space-y-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                 <div v-for="(base, idx) in budgetAnalysis.accommodation.bases" :key="idx" class="flex justify-between items-center text-sm">
                   <div>
-                    <p class="font-medium text-gray-700">{{ base.neighborhood }}</p>
-                    <p class="text-xs text-gray-500">{{ base.nights }} nuits</p>
+                    <p class="font-medium text-gray-700 dark:text-gray-300">{{ base.neighborhood }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ base.nights }} nuits</p>
                   </div>
-                  <p class="font-bold text-gray-900">${{ base.total }}</p>
+                  <p class="font-bold text-gray-900 dark:text-gray-100">${{ base.total }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Nourriture -->
-            <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+            <div class="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div class="flex justify-between items-start mb-3">
                 <div class="flex items-center gap-3">
-                  <div class="p-2 bg-teal-100 rounded-lg">
+                  <div class="p-2 bg-teal-100 dark:bg-teal-900/40 rounded-lg">
                     <Icon name="heroicons:cake-20-solid" class="h-5 w-5 text-teal-600" />
                   </div>
                   <div>
-                    <h4 class="font-bold text-gray-900">{{ t.tripDetails.budget.food }}</h4>
-                    <p class="text-xs text-gray-500">{{ budgetAnalysis.food.mealsCount }} repas estimés</p>
+                    <h4 class="font-bold text-gray-900 dark:text-gray-100">{{ t.tripDetails.budget.food }}</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ budgetAnalysis.food.mealsCount }} repas estimés</p>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-2xl font-black text-gray-900">${{ budgetAnalysis.food.total }}</p>
-                  <p class="text-xs text-gray-500">${{ budgetAnalysis.food.perDay }}/jour</p>
+                  <p class="text-2xl font-black text-gray-900 dark:text-gray-100">${{ budgetAnalysis.food.total }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">${{ budgetAnalysis.food.perDay }}/jour</p>
                 </div>
               </div>
             </div>
 
             <!-- Activités -->
-            <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+            <div class="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div class="flex justify-between items-start mb-3">
                 <div class="flex items-center gap-3">
-                  <div class="p-2 bg-orange-100 rounded-lg">
+                  <div class="p-2 bg-orange-100 dark:bg-orange-900/40 rounded-lg">
                     <Icon name="heroicons:ticket-20-solid" class="h-5 w-5 text-orange-600" />
                   </div>
                   <div>
-                    <h4 class="font-bold text-gray-900">{{ t.tripDetails.budget.activities }}</h4>
-                    <p class="text-xs text-gray-500">{{ budgetAnalysis.activities.count }} activités payantes</p>
+                    <h4 class="font-bold text-gray-900 dark:text-gray-100">{{ t.tripDetails.budget.activities }}</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ budgetAnalysis.activities.count }} activités payantes</p>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-2xl font-black text-gray-900">${{ budgetAnalysis.activities.total }}</p>
-                  <p class="text-xs text-gray-500">${{ budgetAnalysis.activities.average }}/activité</p>
+                  <p class="text-2xl font-black text-gray-900 dark:text-gray-100">${{ budgetAnalysis.activities.total }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">${{ budgetAnalysis.activities.average }}/activité</p>
                 </div>
               </div>
             </div>
@@ -124,7 +124,7 @@
 
         <!-- Daily Breakdown -->
         <div class="p-6">
-          <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+          <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4 flex items-center gap-2">
             <Icon name="heroicons:calendar-days-20-solid" class="h-4 w-4 text-teal-600" />
             Détail par Jour
           </h3>
@@ -133,34 +133,34 @@
             <div 
               v-for="day in budgetAnalysis.dailyBreakdown" 
               :key="day.day"
-              class="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:border-teal-200 transition-colors"
+              class="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-700 hover:border-teal-200 transition-colors"
             >
               <div class="flex justify-between items-start mb-3">
                 <div>
                   <div class="flex items-center gap-2 mb-1">
                     <span class="h-2 w-2 rounded-full bg-teal-500"></span>
-                    <h4 class="font-bold text-gray-900">Jour {{ day.day }}</h4>
+                    <h4 class="font-bold text-gray-900 dark:text-gray-100">Jour {{ day.day }}</h4>
                   </div>
-                  <p class="text-xs text-gray-500">{{ day.date }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ day.date }}</p>
                 </div>
                 <div class="text-right">
-                  <p class="text-xl font-black text-gray-900">${{ day.total }}</p>
-                  <p class="text-xs text-gray-500">{{ day.activitiesCount }} activités</p>
+                  <p class="text-xl font-black text-gray-900 dark:text-gray-100">${{ day.total }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ day.activitiesCount }} activités</p>
                 </div>
               </div>
 
               <!-- Activities List -->
-              <div class="space-y-2 pl-4 border-l-2 border-gray-100">
+              <div class="space-y-2 pl-4 border-l-2 border-gray-100 dark:border-gray-700">
                 <div 
                   v-for="(activity, aIdx) in day.activities" 
                   :key="aIdx"
                   class="flex justify-between items-start text-sm"
                 >
                   <div class="flex-1">
-                    <p class="font-medium text-gray-700 line-clamp-1">{{ activity.name }}</p>
-                    <p class="text-xs text-gray-500">{{ activity.type }}</p>
+                    <p class="font-medium text-gray-700 dark:text-gray-300 line-clamp-1">{{ activity.name }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ activity.type }}</p>
                   </div>
-                  <p class="font-bold text-gray-900 ml-3">${{ activity.cost }}</p>
+                  <p class="font-bold text-gray-900 dark:text-gray-100 ml-3">${{ activity.cost }}</p>
                 </div>
               </div>
             </div>
@@ -168,19 +168,19 @@
         </div>
 
         <!-- Budget Tips -->
-        <div class="p-6 bg-gradient-to-br from-amber-50 to-orange-50 border-t border-amber-100">
+        <div class="p-6 bg-gradient-to-br from-amber-50 dark:from-amber-900/30 to-orange-50 dark:to-orange-900/30 border-t border-amber-100 dark:border-amber-800">
           <div class="flex items-center gap-2 mb-3">
             <Icon name="heroicons:light-bulb-20-solid" class="h-5 w-5 text-amber-600" />
-            <h3 class="text-sm font-bold text-gray-900">Conseils Budget</h3>
+            <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100">Conseils Budget</h3>
           </div>
           
-          <div class="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-amber-100 mb-4">
-            <p class="text-sm font-bold text-amber-900 mb-2">Budget recommandé avec marge (20%)</p>
-            <p class="text-3xl font-black text-amber-700">${{ Math.round(budgetAnalysis.total * 1.2) }}</p>
-            <p class="text-xs text-gray-600 mt-1">+${{ Math.round(budgetAnalysis.total * 0.2) }} de sécurité</p>
+          <div class="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-lg p-4 border border-amber-100 dark:border-amber-800 mb-4">
+            <p class="text-sm font-bold text-amber-900 dark:text-amber-200 mb-2">Budget recommandé avec marge (20%)</p>
+            <p class="text-3xl font-black text-amber-700 dark:text-amber-300">${{ Math.round(budgetAnalysis.total * 1.2) }}</p>
+            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">+${{ Math.round(budgetAnalysis.total * 0.2) }} de sécurité</p>
           </div>
 
-          <ul class="space-y-2 text-xs text-gray-700">
+          <ul class="space-y-2 text-xs text-gray-700 dark:text-gray-300">
             <li class="flex items-start gap-2">
               <Icon name="heroicons:check-circle-20-solid" class="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
               <span>Ces coûts sont calculés à partir des activités réelles de votre itinéraire</span>
@@ -307,7 +307,7 @@ const budgetAnalysis = computed(() => {
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--color-surface-alt, #f1f1f1);
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {

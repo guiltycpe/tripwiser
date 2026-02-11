@@ -5,10 +5,10 @@
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 animate-fade-in">
         <div>
-          <h1 class="text-2xl font-semibold text-slate-900">
+          <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">
             {{ t.dashboard.welcome }}, {{ userName }}
           </h1>
-          <p class="mt-1 text-sm text-slate-500">{{ t.dashboard.subtitle }}</p>
+          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ t.dashboard.subtitle }}</p>
         </div>
         <button
           @click="router.push('/plan')"
@@ -21,49 +21,49 @@
 
       <!-- Stats Cards -->
       <div class="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-fade-in">
-        <div class="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.dashboard.stats.totalTrips }}</p>
-              <p class="mt-1 text-2xl font-semibold text-slate-900">{{ trips.length }}</p>
+              <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.dashboard.stats.totalTrips }}</p>
+              <p class="mt-1 text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ trips.length }}</p>
             </div>
-            <div class="rounded-lg bg-teal-50 p-2.5">
+            <div class="rounded-lg bg-teal-50 dark:bg-teal-900/30 p-2.5">
               <Icon name="heroicons:map-20-solid" class="h-5 w-5 text-teal-600" />
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.dashboard.stats.countries }}</p>
-              <p class="mt-1 text-2xl font-semibold text-slate-900">{{ countriesCount }}</p>
+              <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.dashboard.stats.countries }}</p>
+              <p class="mt-1 text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ countriesCount }}</p>
             </div>
-            <div class="rounded-lg bg-indigo-50 p-2.5">
+            <div class="rounded-lg bg-indigo-50 dark:bg-indigo-900/30 p-2.5">
               <Icon name="heroicons:globe-americas-20-solid" class="h-5 w-5 text-indigo-600" />
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.dashboard.stats.upcoming }}</p>
-              <p class="mt-1 text-2xl font-semibold text-slate-900">{{ upcomingTrips }}</p>
+              <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.dashboard.stats.upcoming }}</p>
+              <p class="mt-1 text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ upcomingTrips }}</p>
             </div>
-            <div class="rounded-lg bg-amber-50 p-2.5">
+            <div class="rounded-lg bg-amber-50 dark:bg-amber-900/30 p-2.5">
               <Icon name="heroicons:calendar-20-solid" class="h-5 w-5 text-amber-600" />
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.dashboard.stats.totalBudget }}</p>
-              <p class="mt-1 text-2xl font-semibold text-slate-900">{{ totalBudget }}</p>
+              <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.dashboard.stats.totalBudget }}</p>
+              <p class="mt-1 text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ totalBudget }}</p>
             </div>
-            <div class="rounded-lg bg-emerald-50 p-2.5">
+            <div class="rounded-lg bg-emerald-50 dark:bg-emerald-900/30 p-2.5">
               <Icon name="heroicons:currency-dollar-20-solid" class="h-5 w-5 text-emerald-600" />
             </div>
           </div>
@@ -73,40 +73,40 @@
       <!-- Trips Section -->
       <div class="animate-fade-in">
         <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <h2 class="text-lg font-semibold text-slate-900">{{ t.dashboard.trips.title }}</h2>
+          <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ t.dashboard.trips.title }}</h2>
           <div class="flex items-center gap-3">
             <!-- Search -->
             <div class="relative">
-              <Icon name="heroicons:magnifying-glass-20-solid" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              <Icon name="heroicons:magnifying-glass-20-solid" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500 pointer-events-none" />
               <input
                 v-model="searchQuery"
                 type="text"
                 :placeholder="t.dashboard.trips.searchPlaceholder"
-                class="pl-9 pr-3 py-2 rounded-lg border border-slate-200 bg-white text-slate-900 text-sm shadow-sm hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all w-44 sm:w-52"
+                class="pl-9 pr-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm shadow-sm hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all w-44 sm:w-52 dark:placeholder-slate-500"
               />
             </div>
             <!-- Filter -->
             <select
               v-model="filterStatus"
-              class="appearance-none cursor-pointer pl-3 pr-8 py-2 rounded-lg border border-slate-200 bg-white text-slate-900 text-sm font-medium shadow-sm hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+              class="appearance-none cursor-pointer pl-3 pr-8 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm font-medium shadow-sm hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
             >
               <option value="all">{{ t.dashboard.trips.all }}</option>
               <option value="upcoming">{{ t.dashboard.trips.upcoming }}</option>
               <option value="past">{{ t.dashboard.trips.past }}</option>
             </select>
             <!-- View Toggle -->
-            <div class="flex bg-slate-100 rounded-lg p-0.5">
+            <div class="flex bg-slate-100 dark:bg-slate-700 rounded-lg p-0.5">
               <button
                 @click="viewMode = 'grid'"
                 class="p-1.5 rounded-md transition-colors cursor-pointer"
-                :class="viewMode === 'grid' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+                :class="viewMode === 'grid' ? 'bg-white dark:bg-slate-900 shadow-sm text-slate-900 dark:text-slate-100' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'"
               >
                 <Icon name="heroicons:squares-2x2-20-solid" class="h-4 w-4" />
               </button>
               <button
                 @click="viewMode = 'list'"
                 class="p-1.5 rounded-md transition-colors cursor-pointer"
-                :class="viewMode === 'list' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+                :class="viewMode === 'list' ? 'bg-white dark:bg-slate-900 shadow-sm text-slate-900 dark:text-slate-100' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'"
               >
                 <Icon name="heroicons:bars-3-bottom-left-20-solid" class="h-4 w-4" />
               </button>
@@ -117,7 +117,7 @@
         <!-- Loading Skeletons -->
         <div v-if="loading" class="space-y-4">
           <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <div v-for="i in 3" :key="i" class="rounded-2xl bg-white border border-slate-200 overflow-hidden">
+            <div v-for="i in 3" :key="i" class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden">
               <div class="h-40 skeleton-shimmer"></div>
               <div class="p-4 space-y-3">
                 <div class="h-5 skeleton-shimmer rounded w-3/4"></div>
@@ -132,12 +132,12 @@
         </div>
 
         <!-- Empty State -->
-        <div v-else-if="filteredTrips.length === 0" class="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-          <div class="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
-            <Icon name="heroicons:map-20-solid" class="h-8 w-8 text-slate-400" />
+        <div v-else-if="filteredTrips.length === 0" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+          <div class="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
+            <Icon name="heroicons:map-20-solid" class="h-8 w-8 text-slate-400 dark:text-slate-500" />
           </div>
-          <h3 class="mb-2 text-lg font-semibold text-slate-900">{{ t.dashboard.trips.empty }}</h3>
-          <p class="mb-6 text-sm text-slate-500">{{ t.dashboard.trips.emptySubtitle }}</p>
+          <h3 class="mb-2 text-lg font-semibold text-slate-900 dark:text-slate-100">{{ t.dashboard.trips.empty }}</h3>
+          <p class="mb-6 text-sm text-slate-500 dark:text-slate-400">{{ t.dashboard.trips.emptySubtitle }}</p>
           <button
             @click="router.push('/plan')"
             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-600 text-white text-sm font-medium hover:bg-teal-500 transition-colors shadow-sm cursor-pointer"
@@ -182,17 +182,17 @@
     >
       <div v-if="deleteConfirmId" class="fixed inset-0 z-[70] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40" @click="deleteConfirmId = null"></div>
-        <div class="relative bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border border-slate-200">
+        <div class="relative bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 max-w-md w-full border border-slate-200 dark:border-slate-700">
           <div class="flex flex-col items-center text-center">
-            <div class="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center mb-4">
+            <div class="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center mb-4">
               <Icon name="heroicons:exclamation-triangle-20-solid" class="h-6 w-6 text-rose-600" />
             </div>
-            <h3 class="text-lg font-semibold text-slate-900 mb-2">{{ t.common.delete }}</h3>
-            <p class="text-sm text-slate-500 mb-6">{{ t.dashboard.trips.deleteConfirm }}</p>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">{{ t.common.delete }}</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">{{ t.dashboard.trips.deleteConfirm }}</p>
             <div class="flex gap-3 w-full">
               <button
                 @click="deleteConfirmId = null"
-                class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition-colors cursor-pointer"
+                class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer"
               >
                 {{ t.common.cancel }}
               </button>

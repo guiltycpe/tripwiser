@@ -1,45 +1,45 @@
 <template>
   <div class="card">
-    <h3 class="text-xl font-bold text-gray-900 mb-6">{{ t.profile.stats.title }}</h3>
+    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">{{ t.profile.stats.title }}</h3>
     
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <!-- Total Trips -->
-      <div class="text-center p-4 rounded-xl bg-gradient-to-br from-teal-50 to-cyan-50">
+      <div class="text-center p-4 rounded-xl bg-gradient-to-br from-teal-50 dark:from-teal-900/30 to-cyan-50 dark:to-cyan-900/30">
         <Icon name="heroicons:map-20-solid" class="h-8 w-8 text-teal-600 mx-auto mb-2" />
-        <p class="text-3xl font-bold text-gray-900">{{ stats.totalTrips }}</p>
-        <p class="text-sm text-gray-600">{{ t.profile.stats.totalTrips }}</p>
+        <p class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ stats.totalTrips }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">{{ t.profile.stats.totalTrips }}</p>
       </div>
 
       <!-- Countries Visited -->
-      <div class="text-center p-4 rounded-xl bg-gradient-to-br from-cyan-50 to-blue-50">
+      <div class="text-center p-4 rounded-xl bg-gradient-to-br from-cyan-50 dark:from-cyan-900/30 to-blue-50 dark:to-blue-900/30">
         <Icon name="heroicons:globe-americas-20-solid" class="h-8 w-8 text-cyan-600 mx-auto mb-2" />
-        <p class="text-3xl font-bold text-gray-900">{{ stats.countriesVisited }}</p>
-        <p class="text-sm text-gray-600">{{ t.profile.stats.countries }}</p>
+        <p class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ stats.countriesVisited }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">{{ t.profile.stats.countries }}</p>
       </div>
 
       <!-- Days Traveled -->
-      <div class="text-center p-4 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50">
+      <div class="text-center p-4 rounded-xl bg-gradient-to-br from-orange-50 dark:from-orange-900/30 to-amber-50 dark:to-amber-900/30">
         <Icon name="heroicons:calendar-20-solid" class="h-8 w-8 text-orange-600 mx-auto mb-2" />
-        <p class="text-3xl font-bold text-gray-900">{{ stats.daysTraveled }}</p>
-        <p class="text-sm text-gray-600">{{ t.profile.stats.days }}</p>
+        <p class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ stats.daysTraveled }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">{{ t.profile.stats.days }}</p>
       </div>
 
       <!-- Member Since -->
-      <div class="text-center p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50">
+      <div class="text-center p-4 rounded-xl bg-gradient-to-br from-purple-50 dark:from-purple-900/30 to-pink-50 dark:to-pink-900/30">
         <Icon name="heroicons:user-20-solid" class="h-8 w-8 text-purple-600 mx-auto mb-2" />
-        <p class="text-lg font-bold text-gray-900">{{ memberSince }}</p>
-        <p class="text-sm text-gray-600">{{ t.profile.stats.member }}</p>
+        <p class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ memberSince }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">{{ t.profile.stats.member }}</p>
       </div>
     </div>
 
     <!-- Favorite Destinations -->
     <div v-if="stats.favoriteDestinations.length > 0" class="mt-6">
-      <h4 class="text-sm font-semibold text-gray-700 mb-3">{{ t.profile.stats.favorites }}</h4>
+      <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">{{ t.profile.stats.favorites }}</h4>
       <div class="flex flex-wrap gap-2">
         <span
           v-for="dest in stats.favoriteDestinations.slice(0, 5)"
           :key="dest"
-          class="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-medium"
+          class="px-3 py-1 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 text-sm font-medium"
         >
           {{ dest }}
         </span>

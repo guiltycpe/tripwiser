@@ -288,7 +288,7 @@ async function generateItinerary() {
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div v-if="isGenerating" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-50/95 backdrop-blur-sm">
+      <div v-if="isGenerating" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-sm">
         <div class="max-w-md w-full px-8 text-center">
           <div class="relative mb-8 flex justify-center">
             <div class="relative rounded-2xl bg-teal-600 p-5 shadow-lg">
@@ -296,14 +296,14 @@ async function generateItinerary() {
             </div>
           </div>
 
-          <h2 class="text-2xl font-semibold text-slate-900 mb-2">
+          <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
             {{ locale === 'fr' ? 'Génération en cours' : 'Generating Trip' }}
           </h2>
-          <p class="text-slate-500 mb-8 h-6 text-sm">
+          <p class="text-slate-500 dark:text-slate-400 mb-8 h-6 text-sm">
             {{ generationMessages[generationStep] }}
           </p>
 
-          <div class="w-full bg-slate-200 rounded-full h-2 mb-4 overflow-hidden">
+          <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-4 overflow-hidden">
             <div
               class="bg-teal-500 h-full transition-all duration-700 ease-out rounded-full"
               :style="{ width: ((generationStep + 1) / generationMessages.length) * 100 + '%' }"
@@ -319,10 +319,10 @@ async function generateItinerary() {
 
     <!-- Header -->
     <div class="mb-8 animate-fade-in">
-      <h1 class="text-2xl font-semibold text-slate-900">
+      <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">
         {{ t.plan.hero.title }} <span class="text-teal-600">{{ t.plan.hero.titleGradient }}</span>
       </h1>
-      <p class="mt-1 text-sm text-slate-500">{{ t.plan.hero.subtitle }}</p>
+      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ t.plan.hero.subtitle }}</p>
     </div>
 
     <!-- Progress Steps -->
@@ -334,10 +334,10 @@ async function generateItinerary() {
             class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all"
             :class="[
               currentStep === step.num
-                ? 'bg-teal-50 text-teal-700 border border-teal-200'
+                ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-700'
                 : step.num < currentStep
-                  ? 'text-teal-600 cursor-pointer hover:bg-slate-50'
-                  : 'text-slate-400'
+                  ? 'text-teal-600 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800'
+                  : 'text-slate-400 dark:text-slate-500'
             ]"
           >
             <div
@@ -347,7 +347,7 @@ async function generateItinerary() {
                   ? 'bg-teal-500 text-white'
                   : currentStep === step.num
                     ? 'bg-teal-600 text-white'
-                    : 'bg-slate-200 text-slate-500'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
               ]"
             >
               <Icon v-if="step.num < currentStep" name="heroicons:check-20-solid" class="h-3.5 w-3.5" />
@@ -355,28 +355,28 @@ async function generateItinerary() {
             </div>
             <span class="hidden sm:inline">{{ step.label }}</span>
           </button>
-          <div v-if="idx < wizardSteps.length - 1" class="flex-1 h-px bg-slate-200 mx-1"></div>
+          <div v-if="idx < wizardSteps.length - 1" class="flex-1 h-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
         </template>
       </div>
     </div>
 
     <!-- Wizard Card -->
-    <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-8 shadow-sm animate-fade-in overflow-hidden">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 sm:p-8 shadow-sm dark:shadow-slate-900/50 animate-fade-in overflow-hidden">
       <!-- Step 1: Where -->
       <div v-show="currentStep === 1" class="wizard-step space-y-6">
         <div>
-          <label class="block text-sm font-semibold text-slate-900 mb-2">
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
             {{ t.plan.form.departure }}
           </label>
           <LocationInput
             v-model="departure"
             :placeholder="t.plan.form.departurePlaceholder"
-            inputClass="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 text-sm transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 hover:border-slate-300"
+            inputClass="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-slate-100 text-sm transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 hover:border-slate-300 dark:hover:border-slate-600"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-semibold text-slate-900 mb-2">
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
             {{ t.plan.form.destination }}
           </label>
           <LocationInput
@@ -390,7 +390,7 @@ async function generateItinerary() {
                 currentDestination = ''
               }
             }"
-            inputClass="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 text-sm transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 hover:border-slate-300"
+            inputClass="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-slate-100 text-sm transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 hover:border-slate-300 dark:hover:border-slate-600"
           />
 
           <!-- Selected destinations -->
@@ -428,7 +428,7 @@ async function generateItinerary() {
       <!-- Step 2: When -->
       <div v-show="currentStep === 2" class="wizard-step space-y-6">
         <div>
-          <label class="block text-sm font-semibold text-slate-900 mb-2">
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
             {{ t.plan.form.departureDate }}
           </label>
           <AppDatePicker
@@ -439,7 +439,7 @@ async function generateItinerary() {
         </div>
 
         <div>
-          <label class="block text-sm font-semibold text-slate-900 mb-2">
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
             {{ t.plan.form.returnDate }}
           </label>
           <AppDatePicker
@@ -450,23 +450,23 @@ async function generateItinerary() {
         </div>
 
         <div>
-          <label class="block text-sm font-semibold text-slate-900 mb-2">
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
             {{ t.plan.form.travelers }}
           </label>
-          <div class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white px-4 py-3 w-fit">
+          <div class="flex items-center gap-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 w-fit">
             <button
               type="button"
               @click="travelers > 1 ? travelers-- : null"
-              class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-teal-50 hover:text-teal-600 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 transition-colors hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 dark:hover:text-teal-400 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
               :disabled="travelers <= 1"
             >
               <Icon name="heroicons:minus-20-solid" class="h-4 w-4" />
             </button>
-            <span class="text-lg font-semibold text-slate-900 min-w-[2ch] text-center">{{ travelers }}</span>
+            <span class="text-lg font-semibold text-slate-900 dark:text-slate-100 min-w-[2ch] text-center">{{ travelers }}</span>
             <button
               type="button"
               @click="travelers < 20 ? travelers++ : null"
-              class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-teal-50 hover:text-teal-600 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 transition-colors hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 dark:hover:text-teal-400 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
               :disabled="travelers >= 20"
             >
               <Icon name="heroicons:plus-20-solid" class="h-4 w-4" />
@@ -478,7 +478,7 @@ async function generateItinerary() {
       <!-- Step 3: How -->
       <div v-show="currentStep === 3" class="wizard-step space-y-6">
         <div>
-          <label class="block text-sm font-semibold text-slate-900 mb-2">
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
             {{ t.plan.form.budget }}
           </label>
           <div class="grid grid-cols-3 gap-3">
@@ -493,8 +493,8 @@ async function generateItinerary() {
               @click="budget = opt.value"
               class="flex flex-col items-center gap-2 p-4 rounded-xl border text-sm font-medium transition-all cursor-pointer"
               :class="budget === opt.value
-                ? 'border-teal-500 bg-teal-50 text-teal-700'
-                : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'"
+                ? 'border-teal-500 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400'
+                : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800'"
             >
               <Icon :name="opt.icon" class="h-5 w-5" />
               <span class="text-center text-xs">{{ opt.label }}</span>
@@ -503,7 +503,7 @@ async function generateItinerary() {
         </div>
 
         <div>
-          <label class="block text-sm font-semibold text-slate-900 mb-2">
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
             {{ t.plan.form.travelStyle }}
           </label>
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -520,8 +520,8 @@ async function generateItinerary() {
               @click="travelStyle = opt.value"
               class="flex items-center gap-2 p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer"
               :class="travelStyle === opt.value
-                ? 'border-teal-500 bg-teal-50 text-teal-700'
-                : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'"
+                ? 'border-teal-500 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400'
+                : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800'"
             >
               <Icon :name="opt.icon" class="h-4 w-4" />
               <span>{{ opt.label }}</span>
@@ -529,37 +529,37 @@ async function generateItinerary() {
           </div>
         </div>
 
-        <div class="flex items-center justify-between rounded-xl border border-slate-200 p-4">
+        <div class="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-700 p-4">
           <div class="flex items-center gap-3">
             <Icon name="heroicons:truck-20-solid" class="h-5 w-5 text-teal-500" />
-            <span class="text-sm font-medium text-slate-900">{{ t.plan.form.roadTrip }}</span>
+            <span class="text-sm font-medium text-slate-900 dark:text-slate-100">{{ t.plan.form.roadTrip }}</span>
           </div>
           <label for="roadtrip-toggle" class="relative inline-flex cursor-pointer items-center">
             <input type="checkbox" v-model="takeRoadTrip" id="roadtrip-toggle" class="peer sr-only">
-            <div class="peer h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-teal-500 peer-checked:after:translate-x-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/20"></div>
+            <div class="peer h-6 w-11 rounded-full bg-slate-200 dark:bg-slate-600 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-teal-500 peer-checked:after:translate-x-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/20"></div>
           </label>
         </div>
       </div>
 
       <!-- Step 4: Review -->
       <div v-show="currentStep === 4" class="wizard-step space-y-6">
-        <h3 class="text-lg font-semibold text-slate-900">{{ t.plan.wizard.reviewTitle }}</h3>
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ t.plan.wizard.reviewTitle }}</h3>
 
         <div class="space-y-4">
           <!-- From -->
-          <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
-            <Icon name="heroicons:map-pin-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+            <Icon name="heroicons:map-pin-20-solid" class="h-5 w-5 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
             <div>
-              <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewFrom }}</p>
-              <p class="text-sm font-medium text-slate-900 mt-0.5">{{ departure || '—' }}</p>
+              <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.plan.wizard.reviewFrom }}</p>
+              <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5">{{ departure || '—' }}</p>
             </div>
           </div>
 
           <!-- To -->
-          <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
             <Icon name="heroicons:map-20-solid" class="h-5 w-5 text-teal-500 mt-0.5 flex-shrink-0" />
             <div>
-              <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewTo }}</p>
+              <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.plan.wizard.reviewTo }}</p>
               <div class="flex flex-wrap gap-1.5 mt-1">
                 <span
                   v-for="dest in destinations"
@@ -572,43 +572,43 @@ async function generateItinerary() {
 
           <!-- Dates + Travelers -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
-              <Icon name="heroicons:calendar-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+              <Icon name="heroicons:calendar-20-solid" class="h-5 w-5 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
               <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewDates }}</p>
-                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ formattedDateRange }}</p>
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.plan.wizard.reviewDates }}</p>
+                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5">{{ formattedDateRange }}</p>
               </div>
             </div>
-            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
-              <Icon name="heroicons:users-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+              <Icon name="heroicons:users-20-solid" class="h-5 w-5 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
               <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewTravelers }}</p>
-                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ travelers }}</p>
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.plan.wizard.reviewTravelers }}</p>
+                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5">{{ travelers }}</p>
               </div>
             </div>
           </div>
 
           <!-- Budget + Style + Road Trip -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
-              <Icon name="heroicons:banknotes-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+              <Icon name="heroicons:banknotes-20-solid" class="h-5 w-5 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
               <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewBudget }}</p>
-                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ budgetLabel }}</p>
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.plan.wizard.reviewBudget }}</p>
+                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5">{{ budgetLabel }}</p>
               </div>
             </div>
-            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
-              <Icon name="heroicons:star-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+              <Icon name="heroicons:star-20-solid" class="h-5 w-5 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
               <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewStyle }}</p>
-                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ styleLabel }}</p>
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.plan.wizard.reviewStyle }}</p>
+                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5">{{ styleLabel }}</p>
               </div>
             </div>
-            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50">
-              <Icon name="heroicons:truck-20-solid" class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800">
+              <Icon name="heroicons:truck-20-solid" class="h-5 w-5 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
               <div>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ t.plan.wizard.reviewRoadTrip }}</p>
-                <p class="text-sm font-medium text-slate-900 mt-0.5">{{ takeRoadTrip ? t.plan.wizard.reviewYes : t.plan.wizard.reviewNo }}</p>
+                <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{{ t.plan.wizard.reviewRoadTrip }}</p>
+                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mt-0.5">{{ takeRoadTrip ? t.plan.wizard.reviewYes : t.plan.wizard.reviewNo }}</p>
               </div>
             </div>
           </div>
@@ -616,11 +616,11 @@ async function generateItinerary() {
       </div>
 
       <!-- Navigation -->
-      <div class="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
+      <div class="flex items-center justify-between mt-8 pt-6 border-t border-slate-100 dark:border-slate-700">
         <button
           v-if="currentStep > 1"
           @click="prevStep"
-          class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-600 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
+          class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
         >
           <Icon name="heroicons:arrow-left-20-solid" class="h-4 w-4" />
           {{ t.plan.wizard.back }}

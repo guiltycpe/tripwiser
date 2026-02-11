@@ -133,10 +133,10 @@ const closePopover = () => {
     <button
       type="button"
       @click="togglePopover"
-      class="flex w-full items-center justify-between gap-3 rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-left text-sm text-gray-900 transition-all duration-300 hover:border-teal-300 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-      :class="{ 'text-gray-400': !modelValue }"
+      class="flex w-full items-center justify-between gap-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 px-4 py-3 text-left text-sm text-gray-900 dark:text-gray-100 transition-all duration-300 hover:border-teal-300 dark:hover:border-teal-600 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+      :class="{ 'text-gray-400 dark:text-gray-500': !modelValue }"
     >
-      <span v-if="modelValue" class="text-gray-900 font-medium">{{ displayValue }}</span>
+      <span v-if="modelValue" class="text-gray-900 dark:text-gray-100 font-medium">{{ displayValue }}</span>
       <span v-else>{{ placeholder || 'Select date' }}</span>
       <UIcon name="i-heroicons-calendar-20-solid" class="h-5 w-5 text-teal-500" />
     </button>
@@ -153,21 +153,21 @@ const closePopover = () => {
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 translate-y-2"
     >
-      <div v-if="isOpen" class="absolute z-50 mt-2 w-72 rounded-xl bg-white p-4 shadow-xl border border-gray-100">
+      <div v-if="isOpen" class="absolute z-50 mt-2 w-72 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-xl border border-gray-100 dark:border-gray-700">
         <!-- Header -->
         <div class="flex items-center justify-between mb-4">
-          <button @click="prevMonth" type="button" class="p-1 hover:bg-gray-100 rounded-lg text-gray-600">
+          <button @click="prevMonth" type="button" class="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-gray-600 dark:text-gray-400">
             <UIcon name="i-heroicons-chevron-left-20-solid" class="h-5 w-5" />
           </button>
-          <span class="font-bold text-gray-900 capitalize">{{ monthName }}</span>
-          <button @click="nextMonth" type="button" class="p-1 hover:bg-gray-100 rounded-lg text-gray-600">
+          <span class="font-bold text-gray-900 dark:text-gray-100 capitalize">{{ monthName }}</span>
+          <button @click="nextMonth" type="button" class="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-gray-600 dark:text-gray-400">
             <UIcon name="i-heroicons-chevron-right-20-solid" class="h-5 w-5" />
           </button>
         </div>
 
         <!-- Grid -->
         <div class="grid grid-cols-7 gap-1 mb-2">
-          <div v-for="day in weekDays" :key="day" class="text-center text-xs font-semibold text-gray-400 py-1">
+          <div v-for="day in weekDays" :key="day" class="text-center text-xs font-semibold text-gray-400 dark:text-gray-500 py-1">
             {{ day }}
           </div>
         </div>
@@ -181,7 +181,7 @@ const closePopover = () => {
                 :disabled="isDisabled(day)"
                 class="w-8 h-8 flex items-center justify-center rounded-lg text-sm transition-colors"
                 :class="[
-                  isSelected(day) ? 'bg-teal-500 text-white shadow-md' : 'text-gray-700 hover:bg-teal-50',
+                  isSelected(day) ? 'bg-teal-500 text-white shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-teal-50 dark:hover:bg-teal-900/30',
                   isToday(day) && !isSelected(day) ? 'text-teal-600 font-bold bg-teal-50/50 ring-1 ring-teal-200' : '',
                   isDisabled(day) ? 'opacity-30 cursor-not-allowed hover:bg-transparent' : 'cursor-pointer'
                 ]"

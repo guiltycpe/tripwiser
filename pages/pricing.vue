@@ -16,33 +16,33 @@ const getPricing = (monthlyPrice: number) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen bg-white dark:bg-slate-900">
     <!-- Hero -->
-    <section class="section bg-slate-50 text-center">
+    <section class="section bg-slate-50 dark:bg-slate-800 text-center">
       <div class="mx-auto max-w-4xl animate-fade-in">
-        <h1 class="text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">
+        <h1 class="text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 md:text-5xl">
           {{ t.pricing.hero.title }} <span class="text-teal-600">{{ t.pricing.hero.titleGradient }}</span>
         </h1>
-        <p class="mt-6 text-lg leading-8 text-slate-600">
+        <p class="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
           {{ t.pricing.hero.subtitle }}
         </p>
 
         <!-- Billing Toggle -->
-        <div class="mt-10 inline-flex rounded-xl bg-white border border-slate-200 p-1">
+        <div class="mt-10 inline-flex rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-1">
           <button
             @click="billingPeriod = 'monthly'"
             class="rounded-lg px-5 py-2 text-sm font-medium transition-all cursor-pointer"
-            :class="billingPeriod === 'monthly' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+            :class="billingPeriod === 'monthly' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'"
           >
             {{ t.pricing.hero.monthly }}
           </button>
           <button
             @click="billingPeriod = 'yearly'"
             class="rounded-lg px-5 py-2 text-sm font-medium transition-all cursor-pointer"
-            :class="billingPeriod === 'yearly' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+            :class="billingPeriod === 'yearly' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'"
           >
             {{ t.pricing.hero.yearly }}
-            <span class="ml-1.5 rounded-full bg-teal-50 px-2 py-0.5 text-xs text-teal-700 font-medium">{{ t.pricing.hero.save }}</span>
+            <span class="ml-1.5 rounded-full bg-teal-50 dark:bg-teal-900/30 px-2 py-0.5 text-xs text-teal-700 font-medium">{{ t.pricing.hero.save }}</span>
           </button>
         </div>
       </div>
@@ -62,15 +62,15 @@ const getPricing = (monthlyPrice: number) => {
     <!-- FAQ -->
     <section class="section">
       <div class="mx-auto max-w-3xl text-center">
-        <h2 class="text-2xl font-semibold text-slate-900 mb-8">{{ t.pricing.faq.title }}</h2>
+        <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-8">{{ t.pricing.faq.title }}</h2>
         <div class="space-y-4">
-          <div class="bg-white rounded-xl border border-slate-200 p-6 text-left">
-            <h3 class="font-semibold text-slate-900">{{ t.pricing.faq.q1 }}</h3>
-            <p class="mt-2 text-sm text-slate-600">{{ t.pricing.faq.a1 }}</p>
+          <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6 text-left">
+            <h3 class="font-semibold text-slate-900 dark:text-slate-100">{{ t.pricing.faq.q1 }}</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ t.pricing.faq.a1 }}</p>
           </div>
-          <div class="bg-white rounded-xl border border-slate-200 p-6 text-left">
-            <h3 class="font-semibold text-slate-900">{{ t.pricing.faq.q2 }}</h3>
-            <p class="mt-2 text-sm text-slate-600">{{ t.pricing.faq.a2 }}</p>
+          <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6 text-left">
+            <h3 class="font-semibold text-slate-900 dark:text-slate-100">{{ t.pricing.faq.q2 }}</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ t.pricing.faq.a2 }}</p>
           </div>
         </div>
       </div>

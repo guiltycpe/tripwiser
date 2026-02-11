@@ -19,12 +19,12 @@
       <div class="fixed inset-0 z-40" @click="$emit('close')"></div>
 
       <!-- Panel -->
-      <div class="relative z-50 w-52 bg-white rounded-2xl shadow-2xl border border-gray-200/80 overflow-hidden">
+      <div class="relative z-50 w-52 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-200/80 dark:border-gray-700/80 overflow-hidden">
         <!-- Header -->
-        <div class="px-3.5 py-2.5 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 flex items-center justify-between">
-          <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">{{ t.activity.moveTo }}</p>
+        <div class="px-3.5 py-2.5 bg-gradient-to-r from-gray-50 dark:from-slate-800 to-white dark:to-slate-900 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+          <p class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t.activity.moveTo }}</p>
           <button
-            class="p-0.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
+            class="p-0.5 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
             @click="$emit('close')"
           >
             <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" fill="currentColor">
@@ -41,8 +41,8 @@
               class="w-full px-3.5 py-2 flex items-center gap-2.5 text-left transition-all duration-150"
               :class="
                 day.sectionIdx === currentSectionIdx && day.dayIdx === currentDayIdx
-                  ? 'opacity-40 cursor-default bg-gray-50'
-                  : 'hover:bg-teal-50 cursor-pointer group/day'
+                  ? 'opacity-40 cursor-default bg-gray-50 dark:bg-slate-800'
+                  : 'hover:bg-teal-50 dark:hover:bg-teal-900/30 cursor-pointer group/day'
               "
               @click="selectDay(day)"
             >
@@ -51,8 +51,8 @@
                 class="flex-shrink-0 h-6 w-6 rounded-lg flex items-center justify-center text-[11px] font-bold transition-colors duration-150"
                 :class="
                   day.sectionIdx === currentSectionIdx && day.dayIdx === currentDayIdx
-                    ? 'bg-gray-100 text-gray-400'
-                    : 'bg-gray-100 text-gray-600 group-hover/day:bg-teal-500 group-hover/day:text-white'
+                    ? 'bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500'
+                    : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-400 group-hover/day:bg-teal-500 group-hover/day:text-white'
                 "
               >
                 {{ day.dayNumber }}
@@ -63,8 +63,8 @@
                 class="flex-1 text-[13px] font-medium truncate transition-colors duration-150"
                 :class="
                   day.sectionIdx === currentSectionIdx && day.dayIdx === currentDayIdx
-                    ? 'text-gray-400'
-                    : 'text-gray-700 group-hover/day:text-teal-700'
+                    ? 'text-gray-400 dark:text-gray-500'
+                    : 'text-gray-700 dark:text-gray-300 group-hover/day:text-teal-700 dark:group-hover/day:text-teal-400'
                 "
               >
                 {{ day.title }}
@@ -131,10 +131,10 @@ function selectDay(day: DayOption) {
   background: transparent;
 }
 .max-h-48::-webkit-scrollbar-thumb {
-  background: #e5e7eb;
+  background: var(--color-border, #e5e7eb);
   border-radius: 2px;
 }
 .max-h-48::-webkit-scrollbar-thumb:hover {
-  background: #d1d5db;
+  background: var(--color-text-muted, #d1d5db);
 }
 </style>

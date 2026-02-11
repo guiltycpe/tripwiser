@@ -23,12 +23,12 @@
       </div>
       
       <!-- Title -->
-      <h3 class="mb-3 text-xl font-bold text-gray-900">
+      <h3 class="mb-3 text-xl font-bold text-gray-900 dark:text-gray-100">
         {{ title }}
       </h3>
       
       <!-- Description -->
-      <p class="text-gray-600 leading-relaxed">
+      <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
         {{ description }}
       </p>
     </div>
@@ -51,26 +51,26 @@ const props = withDefaults(defineProps<Props>(), {
 
 const colorMap = {
   teal: {
-    bg: 'bg-white',
-    iconBg: 'bg-teal-50',
+    bg: 'bg-white dark:bg-slate-900',
+    iconBg: 'bg-teal-50 dark:bg-teal-900/30',
     iconColor: 'text-teal-600',
     gradient: 'bg-gradient-to-br from-teal-500 to-cyan-500'
   },
   purple: {
-    bg: 'bg-white',
-    iconBg: 'bg-purple-50',
+    bg: 'bg-white dark:bg-slate-900',
+    iconBg: 'bg-purple-50 dark:bg-purple-900/30',
     iconColor: 'text-purple-600',
     gradient: 'bg-gradient-to-br from-purple-500 to-pink-500'
   },
   orange: {
-    bg: 'bg-white',
-    iconBg: 'bg-orange-50',
+    bg: 'bg-white dark:bg-slate-900',
+    iconBg: 'bg-orange-50 dark:bg-orange-900/30',
     iconColor: 'text-orange-600',
     gradient: 'bg-gradient-to-br from-orange-500 to-pink-500'
   },
   cyan: {
-    bg: 'bg-white',
-    iconBg: 'bg-cyan-50',
+    bg: 'bg-white dark:bg-slate-900',
+    iconBg: 'bg-cyan-50 dark:bg-cyan-900/30',
     iconColor: 'text-cyan-600',
     gradient: 'bg-gradient-to-br from-cyan-500 to-blue-500'
   }

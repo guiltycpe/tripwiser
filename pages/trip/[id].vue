@@ -11,10 +11,10 @@
     <!-- Error -->
     <div v-else-if="!trip || !tripData" class="flex-1 flex items-center justify-center">
       <div class="text-center">
-        <div class="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
+        <div class="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
           <Icon name="heroicons:exclamation-triangle-20-solid" class="h-7 w-7 text-slate-400" />
         </div>
-        <h3 class="text-lg font-semibold text-slate-900 mb-1">{{ locale === 'fr' ? 'Voyage introuvable' : 'Trip not found' }}</h3>
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">{{ locale === 'fr' ? 'Voyage introuvable' : 'Trip not found' }}</h3>
         <button @click="router.push('/dashboard')" class="mt-4 px-4 py-2 text-sm font-medium text-teal-600 hover:text-teal-700 cursor-pointer">
           {{ locale === 'fr' ? 'Retour au tableau de bord' : 'Back to dashboard' }}
         </button>
@@ -24,13 +24,13 @@
     <!-- Content -->
     <template v-else>
       <!-- Header -->
-      <div class="bg-white border-b border-slate-200 px-4 sm:px-6 py-5">
+      <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-4 sm:px-6 py-5">
         <div class="max-w-7xl mx-auto">
           <!-- Top row: back + actions -->
           <div class="flex items-center justify-between mb-4">
             <button
               @click="router.push('/dashboard')"
-              class="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
+              class="flex items-center gap-1.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors cursor-pointer"
             >
               <Icon name="heroicons:arrow-left-20-solid" class="h-4 w-4" />
               {{ locale === 'fr' ? 'Tableau de bord' : 'Dashboard' }}
@@ -39,7 +39,7 @@
             <div class="flex items-center gap-2">
               <button
                 @click="shareTripLink"
-                class="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer"
+                class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
                 title="Share"
               >
                 <Icon v-if="!shareLoading" name="heroicons:share-20-solid" class="h-4.5 w-4.5" />
@@ -47,21 +47,21 @@
               </button>
               <button
                 @click="exportPdf"
-                class="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-teal-600 transition-colors cursor-pointer"
+                class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors cursor-pointer"
                 title="PDF"
               >
                 <Icon name="heroicons:arrow-down-tray-20-solid" class="h-4.5 w-4.5" />
               </button>
               <button
                 @click="exportCalendar"
-                class="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-violet-600 transition-colors cursor-pointer"
+                class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors cursor-pointer"
                 :title="t.dashboard.trips.exportCalendar"
               >
                 <Icon name="heroicons:calendar-days-20-solid" class="h-4.5 w-4.5" />
               </button>
               <button
                 @click="duplicateTrip"
-                class="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer"
+                class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
                 :title="t.dashboard.trips.duplicate"
               >
                 <Icon v-if="!duplicateLoading" name="heroicons:document-duplicate-20-solid" class="h-4.5 w-4.5" />
@@ -69,7 +69,7 @@
               </button>
               <button
                 @click="confirmDelete"
-                class="p-2 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                class="p-2 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer"
                 :title="t.tripDetails.edit.deleteTrip"
               >
                 <Icon name="heroicons:trash-20-solid" class="h-4.5 w-4.5" />
@@ -80,14 +80,14 @@
           <!-- Trip info -->
           <div class="mb-4">
             <div class="flex items-center gap-3 mb-1">
-              <h1 class="text-2xl font-semibold text-slate-900">
+              <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">
                 {{ formatDestination(tripData.trip_summary.destination) }}
               </h1>
-              <span class="text-xs px-2.5 py-1 rounded-lg bg-teal-50 text-teal-700 font-medium border border-teal-100">
+              <span class="text-xs px-2.5 py-1 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 font-medium border border-teal-100 dark:border-teal-800">
                 {{ getBudgetLabel(tripData.trip_summary.budget_tier) }}
               </span>
             </div>
-            <p class="text-sm text-slate-500 flex items-center gap-2">
+            <p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
               <Icon name="heroicons:calendar-20-solid" class="h-4 w-4 text-slate-400" />
               {{ formatDate(trip.departure_date) }} - {{ formatDate(trip.return_date) }}
               <span class="text-slate-300">·</span>
@@ -100,11 +100,11 @@
 
           <!-- Tabs + Edit Toggle -->
           <div class="flex items-center gap-4">
-            <div class="flex bg-slate-100 p-1 rounded-xl">
+            <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
               <button
                 @click="activeTab = 'overview'"
                 class="px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer"
-                :class="activeTab === 'overview' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'"
+                :class="activeTab === 'overview' ? 'bg-white dark:bg-slate-900 shadow-sm dark:shadow-slate-900/50 text-slate-900 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'"
               >
                 <span class="flex items-center gap-2">
                   <Icon name="heroicons:squares-2x2-20-solid" class="h-4 w-4" />
@@ -114,7 +114,7 @@
               <button
                 @click="activeTab = 'itinerary'"
                 class="px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer"
-                :class="activeTab === 'itinerary' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'"
+                :class="activeTab === 'itinerary' ? 'bg-white dark:bg-slate-900 shadow-sm dark:shadow-slate-900/50 text-slate-900 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'"
               >
                 <span class="flex items-center gap-2">
                   <Icon name="heroicons:map-20-solid" class="h-4 w-4" />
@@ -137,7 +137,7 @@
                 class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer"
                 :class="editMode
                   ? 'bg-teal-600 text-white hover:bg-teal-700'
-                  : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700'"
               >
                 <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor" v-html="editMode ? ICON_CHECK : ICON_PENCIL" />
                 {{ editMode ? t.tripDetails.edit.finish : t.tripDetails.edit.modify }}
@@ -161,7 +161,7 @@
         <!-- ITINERARY TAB -->
         <div v-show="activeTab === 'itinerary'" class="flex w-full h-full flex-col md:flex-row">
           <!-- Map -->
-          <div class="w-full md:w-1/2 h-[300px] md:h-full relative border-b md:border-b-0 md:border-r border-slate-200 bg-slate-50">
+          <div class="w-full md:w-1/2 h-[300px] md:h-full relative border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
             <MapViewer
               :activities="mapActivities"
               :active="activeTab === 'itinerary'"
@@ -169,13 +169,13 @@
           </div>
 
           <!-- Timeline -->
-          <div ref="timelineRef" class="w-full md:w-1/2 h-full overflow-y-auto bg-white p-6 md:p-8 relative">
+          <div ref="timelineRef" class="w-full md:w-1/2 h-full overflow-y-auto bg-white dark:bg-slate-900 p-6 md:p-8 relative">
             <div class="space-y-10">
               <div v-for="(section, sIdx) in (tripData.itinerary_sections as any[])" :key="sIdx" class="relative">
                 <!-- Section Header -->
-                <div class="mb-6 pb-3 border-b border-slate-100">
-                  <h3 class="text-xl font-semibold text-slate-900 mb-1.5">{{ section.section_title }}</h3>
-                  <div class="flex items-center gap-4 text-sm text-slate-500">
+                <div class="mb-6 pb-3 border-b border-slate-100 dark:border-slate-700">
+                  <h3 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-1.5">{{ section.section_title }}</h3>
+                  <div class="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
                     <span class="flex items-center gap-1.5">
                       <Icon name="heroicons:map-pin-20-solid" class="h-3.5 w-3.5 text-teal-500" />
                       {{ section.geographic_focus }}
@@ -188,19 +188,19 @@
                 </div>
 
                 <!-- Days -->
-                <div class="space-y-8 pl-6 border-l-2 border-slate-200 ml-3">
+                <div class="space-y-8 pl-6 border-l-2 border-slate-200 dark:border-slate-700 ml-3">
                   <div v-for="(day, dIdx) in (section.daily_plans as any[])" :key="day.day" class="relative">
                     <!-- Day Dot -->
-                    <div class="absolute -left-[25px] top-0.5 h-4 w-4 rounded-full border-[3px] border-white bg-teal-500 shadow-sm"></div>
+                    <div class="absolute -left-[25px] top-0.5 h-4 w-4 rounded-full border-[3px] border-white dark:border-slate-900 bg-teal-500 shadow-sm"></div>
 
                     <div class="mb-4">
                       <div class="flex items-baseline gap-2 mb-1.5">
-                        <span class="font-semibold text-slate-900">{{ t.tripDetails.day }} {{ day.day }} :</span>
+                        <span class="font-semibold text-slate-900 dark:text-slate-100">{{ t.tripDetails.day }} {{ day.day }} :</span>
                         <InlineEditField
                           :model-value="day.title"
                           :readonly="!editMode"
-                          display-class="font-semibold text-slate-900"
-                          input-class="font-semibold text-slate-900 w-full"
+                          display-class="font-semibold text-slate-900 dark:text-slate-100"
+                          input-class="font-semibold text-slate-900 dark:text-slate-100 w-full"
                           placeholder="Day title..."
                           @save="(v: string | number, prev: string | number) => handleSaveDayTitle(sIdx, dIdx, String(v), String(prev))"
                         />
@@ -265,7 +265,7 @@
 
                       <div
                         v-if="editMode && day.activities.length === 0"
-                        class="py-6 border-2 border-dashed rounded-xl text-center text-sm font-medium border-slate-200 text-slate-400"
+                        class="py-6 border-2 border-dashed rounded-xl text-center text-sm font-medium border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500"
                       >
                         {{ locale === 'fr' ? 'Aucune activité' : 'No activities' }}
                       </div>
@@ -316,17 +316,17 @@
       >
         <div v-if="showDeleteConfirm" class="fixed inset-0 z-[70] flex items-center justify-center p-4">
           <div class="absolute inset-0 bg-slate-900/40" @click="showDeleteConfirm = false"></div>
-          <div class="relative bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border border-slate-200">
+          <div class="relative bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 max-w-md w-full border border-slate-200 dark:border-slate-700">
             <div class="flex flex-col items-center text-center">
               <div class="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center mb-4">
                 <Icon name="heroicons:exclamation-triangle-20-solid" class="h-6 w-6 text-rose-600" />
               </div>
-              <h3 class="text-lg font-semibold text-slate-900 mb-2">{{ t.common.delete }}</h3>
-              <p class="text-sm text-slate-500 mb-6">{{ t.dashboard.trips.deleteConfirm }}</p>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">{{ t.common.delete }}</h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">{{ t.dashboard.trips.deleteConfirm }}</p>
               <div class="flex gap-3 w-full">
                 <button
                   @click="showDeleteConfirm = false"
-                  class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition-colors cursor-pointer"
+                  class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                 >
                   {{ t.common.cancel }}
                 </button>
@@ -710,10 +710,10 @@ function exportCalendar() {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
+  background: var(--color-border);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #cbd5e1;
+  background: var(--color-border-hover);
 }
 </style>

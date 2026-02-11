@@ -12,24 +12,24 @@
       <div class="absolute inset-0 bg-gray-900/60" @click="$emit('close')"></div>
       
         <!-- Main Container -->
-        <div class="relative w-full max-w-7xl h-[90vh] overflow-hidden rounded-3xl bg-gradient-to-br from-gray-50 to-white shadow-2xl flex flex-col border border-gray-200/60">
+        <div class="relative w-full max-w-7xl h-[90vh] overflow-hidden rounded-3xl bg-gradient-to-br from-gray-50 dark:from-slate-800 to-white dark:to-slate-900 shadow-2xl flex flex-col border border-gray-200/60 dark:border-gray-700/60">
           
           <!-- Header (Always Visible) -->
-          <div class="bg-white p-8 border-b border-gray-200/50 z-20">
+          <div class="bg-white dark:bg-slate-900 p-8 border-b border-gray-200/50 dark:border-gray-700/50 z-20">
             <div class="flex items-start justify-between mb-6">
               <div class="flex-1">
                  <div class="flex items-center gap-3 mb-2">
-                   <h2 class="text-4xl font-black text-gray-900 tracking-tight bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text">
+                   <h2 class="text-4xl font-black text-gray-900 dark:text-gray-100 tracking-tight bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text">
                      {{ formatDestination(tripData.trip_summary.destination) }}
                    </h2>
                    <span class="text-xs px-3 py-1.5 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white uppercase tracking-widest font-bold shadow-lg shadow-teal-500/30">
                      {{ getBudgetLabel(tripData.trip_summary.budget_tier) }}
                    </span>
                  </div>
-                 <p class="text-sm font-semibold text-gray-500 flex items-center gap-2.5">
+                 <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 flex items-center gap-2.5">
                    <Icon name="heroicons:calendar-20-solid" class="h-4 w-4 text-teal-500" />
                    {{ formatDate(props.trip.departure_date) }} - {{ formatDate(props.trip.return_date) }}
-                   <span class="text-gray-300">•</span>
+                   <span class="text-gray-300 dark:text-gray-600">•</span>
                    <span class="text-teal-600">{{ tripData.trip_summary.duration_days }} {{ t.tripDetails.days }}</span>
                  </p>
               </div>
@@ -38,7 +38,7 @@
                 <!-- Share button -->
                 <button 
                   @click="shareTripLink" 
-                  class="p-2.5 rounded-xl hover:bg-indigo-50 text-gray-400 hover:text-indigo-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-indigo-200"
+                  class="p-2.5 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-gray-400 dark:text-gray-400 hover:text-indigo-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-indigo-200"
                   title="Share"
                 >
                   <Icon v-if="!shareLoading" name="heroicons:share-20-solid" class="h-5 w-5" />
@@ -48,7 +48,7 @@
                 <!-- Export PDF button -->
                 <button
                   @click="exportPdf"
-                  class="p-2.5 rounded-xl hover:bg-teal-50 text-gray-400 hover:text-teal-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-teal-200"
+                  class="p-2.5 rounded-xl hover:bg-teal-50 dark:hover:bg-teal-900/30 text-gray-400 dark:text-gray-400 hover:text-teal-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-teal-200"
                   title="PDF"
                 >
                   <Icon name="heroicons:arrow-down-tray-20-solid" class="h-5 w-5" />
@@ -57,7 +57,7 @@
                 <!-- Export Calendar button -->
                 <button
                   @click="exportCalendar"
-                  class="p-2.5 rounded-xl hover:bg-violet-50 text-gray-400 hover:text-violet-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-violet-200"
+                  class="p-2.5 rounded-xl hover:bg-violet-50 dark:hover:bg-violet-900/30 text-gray-400 dark:text-gray-400 hover:text-violet-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-violet-200"
                   :title="t.dashboard.trips.exportCalendar"
                 >
                   <Icon name="heroicons:calendar-days-20-solid" class="h-5 w-5" />
@@ -66,7 +66,7 @@
                 <!-- Duplicate button -->
                 <button
                   @click="duplicateTrip"
-                  class="p-2.5 rounded-xl hover:bg-emerald-50 text-gray-400 hover:text-emerald-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-emerald-200"
+                  class="p-2.5 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-gray-400 hover:text-emerald-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-emerald-200 dark:hover:border-emerald-800"
                   :title="t.dashboard.trips.duplicate"
                 >
                   <Icon v-if="!duplicateLoading" name="heroicons:document-duplicate-20-solid" class="h-5 w-5" />
@@ -76,13 +76,13 @@
                 <!-- Delete button -->
                 <button
                   @click="$emit('delete', props.trip.id)"
-                  class="p-2.5 rounded-xl hover:bg-red-50 text-gray-400 hover:text-red-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-red-200"
+                  class="p-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 text-gray-400 hover:text-red-600 transition-all duration-300 group cursor-pointer border border-transparent hover:border-red-200 dark:hover:border-red-800"
                   :title="t.tripDetails.edit.deleteTrip"
                 >
                   <Icon name="heroicons:trash-20-solid" class="h-5 w-5" />
                 </button>
 
-                <button @click="$emit('close')" class="p-2.5 rounded-xl hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-all duration-300 cursor-pointer border border-gray-200 hover:border-gray-300">
+                <button @click="$emit('close')" class="p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-300 cursor-pointer border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600">
                   <Icon name="heroicons:x-mark-20-solid" class="h-6 w-6" />
                 </button>
               </div>
@@ -90,11 +90,11 @@
 
             <!-- Tabs + Edit Toggle -->
             <div class="flex items-center gap-4">
-              <div class="flex bg-gray-100 p-1.5 rounded-2xl w-fit shadow-inner">
+              <div class="flex bg-gray-100 dark:bg-slate-800 p-1.5 rounded-2xl w-fit shadow-inner">
                <button 
                  @click="activeTab = 'overview'"
                  class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer origin-center"
-                 :class="activeTab === 'overview' ? 'bg-white shadow-lg text-teal-600 scale-105' : 'text-gray-500 hover:text-gray-700'"
+                 :class="activeTab === 'overview' ? 'bg-white dark:bg-slate-900 shadow-lg text-teal-600 scale-105' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'"
                >
                  <span class="flex items-center gap-2">
                    <Icon name="heroicons:squares-2x2-20-solid" class="h-4 w-4" />
@@ -104,7 +104,7 @@
                <button 
                  @click="activeTab = 'itinerary'"
                  class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer origin-center"
-                 :class="activeTab === 'itinerary' ? 'bg-white shadow-lg text-teal-600 scale-105' : 'text-gray-500 hover:text-gray-700'"
+                 :class="activeTab === 'itinerary' ? 'bg-white dark:bg-slate-900 shadow-lg text-teal-600 scale-105' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'"
                >
                  <span class="flex items-center gap-2">
                    <Icon name="heroicons:map-20-solid" class="h-4 w-4" />
@@ -128,7 +128,7 @@
                   class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-[background,color,box-shadow] duration-200 cursor-pointer"
                   :class="editMode
                     ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30 hover:bg-teal-600'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-sm'"
+                    : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 border border-gray-200 dark:border-gray-700 shadow-sm'"
                 >
                   <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor" v-html="editMode ? ICON_CHECK : ICON_PENCIL" />
                   {{ editMode ? t.tripDetails.edit.finish : t.tripDetails.edit.modify }}
@@ -153,7 +153,7 @@
             <div v-show="activeTab === 'itinerary'" class="flex w-full h-full flex-col md:flex-row animate-fade-in">
                
                <!-- Left: Map (Desktop) / Top (Mobile) -->
-               <div class="w-full md:w-1/2 h-[300px] md:h-full relative border-b md:border-b-0 md:border-r border-gray-200 bg-gradient-to-br from-gray-100 to-gray-50">
+               <div class="w-full md:w-1/2 h-[300px] md:h-full relative border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-100 dark:from-slate-800 to-gray-50 dark:to-slate-900">
                   <MapViewer 
                     :activities="mapActivities"
                     :active="activeTab === 'itinerary'"
@@ -161,15 +161,15 @@
                </div>
 
                <!-- Right: Timeline -->
-               <div ref="timelineRef" class="w-full md:w-1/2 h-full overflow-y-auto bg-white p-8 relative">
+               <div ref="timelineRef" class="w-full md:w-1/2 h-full overflow-y-auto bg-white dark:bg-slate-900 p-8 relative">
                   
                   <div class="space-y-12">
                      
                      <div v-for="(section, sIdx) in (tripData.itinerary_sections as any[])" :key="sIdx" class="relative">
                         <!-- Section Header -->
-                        <div class="mb-8 pb-4 border-b-2 border-gray-100">
+                        <div class="mb-8 pb-4 border-b-2 border-gray-100 dark:border-gray-700">
                            <h3 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-600 mb-2">{{ section.section_title }}</h3>
-                           <div class="flex items-center gap-4 text-sm text-gray-600 font-semibold">
+                           <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 font-semibold">
                               <span class="flex items-center gap-1.5">
                                  <Icon name="heroicons:map-pin-20-solid" class="h-4 w-4 text-teal-500" /> 
                                  {{ section.geographic_focus }}
@@ -190,7 +190,7 @@
                                <div class="mb-5">
                                   <!-- Day Title — editable in edit mode -->
                                   <div class="flex items-baseline gap-2 mb-2">
-                                    <span class="font-black text-gray-900 text-xl">{{ t.tripDetails.day }} {{ day.day }} :</span>
+                                    <span class="font-black text-gray-900 dark:text-gray-100 text-xl">{{ t.tripDetails.day }} {{ day.day }} :</span>
                                     <InlineEditField
                                       :model-value="day.title"
                                       :readonly="!editMode"
@@ -263,7 +263,7 @@
                                   <!-- Empty day hint -->
                                   <div
                                     v-if="editMode && day.activities.length === 0"
-                                    class="py-6 border-2 border-dashed rounded-xl text-center text-sm font-medium border-gray-200 text-gray-400"
+                                    class="py-6 border-2 border-dashed rounded-xl text-center text-sm font-medium border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500"
                                   >
                                     Aucune activité
                                   </div>
@@ -722,10 +722,10 @@ function exportCalendar() {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #e5e7eb;
+  background: var(--color-border, #e5e7eb);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #d1d5db;
+  background: var(--color-text-muted, #d1d5db);
 }
 </style>

@@ -9,16 +9,16 @@
     NOT editable: description, notes (view-only always)
   -->
   <div
-    class="group/card relative rounded-2xl border bg-white"
+    class="group/card relative rounded-2xl border bg-white dark:bg-slate-900"
     :class="[
       isActive
           ? 'border-blue-200 ring-2 ring-blue-500/10 shadow-lg z-10'
-          : 'border-gray-100 shadow-sm hover:border-gray-200 hover:shadow-lg',
+          : 'border-gray-100 dark:border-gray-700 shadow-sm hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-lg',
       'transition-[border-color,box-shadow] duration-200',
     ]"
   >
     <!-- AI Loading Overlay -->
-    <div v-if="aiLoading" class="absolute inset-0 z-20 bg-white/80 rounded-2xl flex items-center justify-center">
+    <div v-if="aiLoading" class="absolute inset-0 z-20 bg-white/80 dark:bg-slate-900/80 rounded-2xl flex items-center justify-center">
       <div class="flex flex-col items-center gap-3">
         <div class="relative">
           <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
@@ -32,17 +32,17 @@
     <!-- Hover Action Bar — Move + Delete, edit mode only -->
     <div
       v-if="editMode"
-      class="absolute -top-3 right-3 z-30 flex items-center gap-0.5 rounded-xl bg-white border border-gray-200 shadow-lg px-1 py-1 opacity-0 translate-y-1 pointer-events-none group-hover/card:opacity-100 group-hover/card:translate-y-0 group-hover/card:pointer-events-auto transition-[opacity,transform] duration-150"
+      class="absolute -top-3 right-3 z-30 flex items-center gap-0.5 rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 shadow-lg px-1 py-1 opacity-0 translate-y-1 pointer-events-none group-hover/card:opacity-100 group-hover/card:translate-y-0 group-hover/card:pointer-events-auto transition-[opacity,transform] duration-150"
     >
       <button
-        class="p-1.5 rounded-lg text-gray-400 hover:text-teal-600 hover:bg-teal-50 transition-colors cursor-pointer"
+        class="p-1.5 rounded-lg text-gray-400 dark:text-gray-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors cursor-pointer"
         :title="t.activity.moveToDay"
         @click.stop="$emit('request-move')"
       >
         <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" v-html="ICON_MOVE" />
       </button>
       <button
-        class="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+        class="p-1.5 rounded-lg text-gray-400 dark:text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors cursor-pointer"
         :title="t.activity.delete"
         @click.stop="$emit('delete')"
       >
@@ -56,7 +56,7 @@
         <!-- Drag Handle / Activity Icon -->
         <div class="flex-shrink-0">
           <div
-            class="h-11 w-11 rounded-xl flex items-center justify-center transition-colors duration-200 bg-gray-50 text-gray-400 border border-gray-100 group-hover/card:bg-gradient-to-br group-hover/card:from-teal-500 group-hover/card:to-cyan-500 group-hover/card:text-white group-hover/card:border-transparent group-hover/card:shadow-md"
+            class="h-11 w-11 rounded-xl flex items-center justify-center transition-colors duration-200 bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-400 border border-gray-100 dark:border-gray-700 group-hover/card:bg-gradient-to-br group-hover/card:from-teal-500 group-hover/card:to-cyan-500 group-hover/card:text-white group-hover/card:border-transparent group-hover/card:shadow-md"
           >
             <svg viewBox="0 0 20 20" class="h-5 w-5" v-html="activityIconSvg" />
           </div>
@@ -70,7 +70,7 @@
             <div class="relative">
               <template v-if="editMode">
                 <span
-                  class="text-xs font-semibold text-gray-400 uppercase tracking-wider cursor-pointer select-none rounded-md hover:bg-gray-100/80 hover:ring-1 hover:ring-gray-200 px-1.5 py-0.5 -mx-1.5 -my-0.5 transition-colors duration-200 flex items-center gap-1"
+                  class="text-xs font-semibold text-gray-400 dark:text-gray-400 uppercase tracking-wider cursor-pointer select-none rounded-md hover:bg-gray-100/80 dark:hover:bg-slate-700/80 hover:ring-1 hover:ring-gray-200 dark:hover:ring-gray-600 px-1.5 py-0.5 -mx-1.5 -my-0.5 transition-colors duration-200 flex items-center gap-1"
                   role="button"
                   tabindex="0"
                   @click.stop="showTimePicker = !showTimePicker"
@@ -89,7 +89,7 @@
                   />
                 </template>
               </template>
-              <span v-else class="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1">
+              <span v-else class="text-xs font-semibold text-gray-400 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1">
                 <svg viewBox="0 0 20 20" class="h-3 w-3" v-html="ICON_CLOCK" />
                 {{ activity.time_flexible }}
               </span>
@@ -112,14 +112,14 @@
           </div>
 
           <!-- Row 2: Activity Name (always readonly — view only) -->
-          <p class="text-gray-900 font-semibold leading-snug text-base">
+          <p class="text-gray-900 dark:text-gray-100 font-semibold leading-snug text-base">
             {{ activity.name || activity.description }}
           </p>
 
           <!-- Row 3: Description (always readonly) -->
           <p
             v-if="activity.name && activity.description"
-            class="text-sm text-gray-500 leading-relaxed"
+            class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed"
           >
             {{ activity.description }}
           </p>
@@ -130,21 +130,21 @@
               v-if="activity.google_maps_link"
               :href="activity.google_maps_link"
               target="_blank"
-              class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-full transition-colors"
+              class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 px-2.5 py-1 rounded-full transition-colors"
             >
               <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" v-html="ICON_MAP" />
               Maps
             </a>
             <span
               v-if="activity.rating"
-              class="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100"
+              class="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-full border border-amber-100"
             >
               <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" v-html="ICON_STAR" />
               {{ activity.rating }}
             </span>
             <span
               v-if="activity.duration_minutes"
-              class="inline-flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-50 px-2.5 py-1 rounded-full"
+              class="inline-flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 px-2.5 py-1 rounded-full"
             >
               <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" v-html="ICON_CLOCK" />
               {{ activity.duration_minutes }}min
@@ -153,7 +153,7 @@
 
           <!-- Row 5: Notes (always readonly) -->
           <div v-if="activity.notes" class="pt-1">
-            <p class="text-xs text-gray-500 italic leading-relaxed bg-gray-50 border-l-3 border-gray-200 pl-3 py-1.5 rounded-r-lg">
+            <p class="text-xs text-gray-500 dark:text-gray-400 italic leading-relaxed bg-gray-50 dark:bg-gray-800 border-l-3 border-gray-200 dark:border-gray-700 pl-3 py-1.5 rounded-r-lg">
               {{ activity.notes }}
             </p>
           </div>
@@ -161,11 +161,11 @@
           <!-- Travel time from previous -->
           <div
             v-if="activity.estimated_travel_time_from_previous?.minutes"
-            class="flex items-center gap-1.5 text-xs text-gray-400 pt-1"
+            class="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 pt-1"
           >
             <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" v-html="ICON_ARROW_RIGHT" />
             {{ activity.estimated_travel_time_from_previous.minutes }} min
-            <span v-if="activity.estimated_travel_time_from_previous.method" class="text-gray-300">·</span>
+            <span v-if="activity.estimated_travel_time_from_previous.method" class="text-gray-300 dark:text-gray-600">·</span>
             <span v-if="activity.estimated_travel_time_from_previous.method" class="capitalize">
               {{ activity.estimated_travel_time_from_previous.method }}
             </span>

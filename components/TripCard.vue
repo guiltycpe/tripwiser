@@ -198,13 +198,23 @@ function formatCompactDateRange(start: string, end?: string) {
   border-radius: 1rem;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border, #e2e8f0);
   transition: all 0.2s ease;
 }
 
 .travel-card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  border-color: #cbd5e1;
+  border-color: var(--color-border-hover, #cbd5e1);
+}
+
+:root {
+  --color-border: #e2e8f0;
+  --color-border-hover: #cbd5e1;
+}
+
+:root.dark {
+  --color-border: #334155;
+  --color-border-hover: #475569;
 }
 
 .card-background {

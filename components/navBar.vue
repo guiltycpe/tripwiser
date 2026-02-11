@@ -1,12 +1,12 @@
 <template>
-  <header class="sticky top-0 z-50 bg-white border-b border-slate-200">
+  <header class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
 
       <!-- Left: Logo + Navigation Links (Desktop) -->
       <div class="flex items-center gap-8">
         <NuxtLink to="/" class="flex items-center gap-2.5">
           <img src="~/assets/images/logo.png" alt="TripWiser Logo" class="h-8 w-8 rounded-lg object-cover">
-          <span class="text-lg font-semibold text-slate-900">TripWiser</span>
+          <span class="text-lg font-semibold text-slate-900 dark:text-slate-100">TripWiser</span>
         </NuxtLink>
 
         <nav class="hidden gap-6 md:flex">
@@ -19,10 +19,11 @@
 
       <!-- Right: User Controls -->
       <div class="flex items-center gap-3">
+        <ThemeToggle />
         <LanguageSelector />
 
         <template v-if="!user">
-          <NuxtLink to="/auth/login" class="hidden sm:block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors px-3 py-2">
+          <NuxtLink to="/auth/login" class="hidden sm:block text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors px-3 py-2">
             {{ t.nav.login }}
           </NuxtLink>
           <NuxtLink to="/auth/signup" class="btn-primary text-sm px-4 py-2">
@@ -30,12 +31,12 @@
           </NuxtLink>
         </template>
         <template v-else>
-          <NuxtLink to="/dashboard" class="hidden sm:flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-teal-600 transition-colors px-3 py-2 rounded-lg hover:bg-slate-50">
+          <NuxtLink to="/dashboard" class="hidden sm:flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
             <Icon name="heroicons:squares-2x2-20-solid" class="h-4 w-4" />
             {{ t.nav.dashboard }}
           </NuxtLink>
           <NuxtLink to="/profile" class="group">
-            <div class="h-9 w-9 rounded-full bg-teal-50 border border-slate-200 flex items-center justify-center overflow-hidden hover:border-teal-300 transition-colors">
+            <div class="h-9 w-9 rounded-full bg-teal-50 dark:bg-teal-900/30 border border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden hover:border-teal-300 dark:hover:border-teal-500 transition-colors">
               <img
                 v-if="userProfile?.avatar_url"
                 :src="userProfile.avatar_url"
@@ -50,9 +51,9 @@
         <!-- Mobile Hamburger -->
         <button
           @click="mobileMenuOpen = !mobileMenuOpen"
-          class="md:hidden p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+          class="md:hidden p-2 -mr-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
         >
-          <Icon :name="mobileMenuOpen ? 'heroicons:x-mark-20-solid' : 'heroicons:bars-3-20-solid'" class="h-5 w-5 text-slate-700" />
+          <Icon :name="mobileMenuOpen ? 'heroicons:x-mark-20-solid' : 'heroicons:bars-3-20-solid'" class="h-5 w-5 text-slate-700 dark:text-slate-300" />
         </button>
       </div>
     </div>
@@ -66,7 +67,7 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-2"
     >
-      <nav v-if="mobileMenuOpen" class="md:hidden border-t border-slate-100 bg-white px-6 py-4 space-y-1">
+      <nav v-if="mobileMenuOpen" class="md:hidden border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 py-4 space-y-1">
         <NuxtLink to="/" class="mobile-nav-link" @click="mobileMenuOpen = false">
           <Icon name="heroicons:home-20-solid" class="h-5 w-5 text-slate-400" />
           {{ t.nav.home }}
@@ -84,7 +85,7 @@
           {{ t.nav.about }}
         </NuxtLink>
 
-        <div class="border-t border-slate-100 pt-3 mt-3 space-y-1">
+        <div class="border-t border-slate-100 dark:border-slate-700 pt-3 mt-3 space-y-1">
           <template v-if="!user">
             <NuxtLink to="/auth/login" class="mobile-nav-link" @click="mobileMenuOpen = false">
               <Icon name="heroicons:arrow-right-on-rectangle-20-solid" class="h-5 w-5 text-slate-400" />
@@ -169,7 +170,7 @@ onUnmounted(() => {
 
 <style scoped>
 .nav-link {
-  color: #64748b;
+  color: var(--color-text-secondary);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.875rem;
@@ -178,7 +179,7 @@ onUnmounted(() => {
 }
 
 .nav-link:hover {
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 
 .router-link-exact-active.nav-link {
@@ -194,12 +195,12 @@ onUnmounted(() => {
   border-radius: 0.75rem;
   font-weight: 500;
   font-size: 0.875rem;
-  color: #475569;
+  color: var(--color-text-secondary);
   transition: all 0.15s ease;
 }
 
 .mobile-nav-link:hover {
-  background: #f8fafc;
-  color: #0f172a;
+  background: var(--color-surface-alt);
+  color: var(--color-text-primary);
 }
 </style>

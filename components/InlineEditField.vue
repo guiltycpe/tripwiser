@@ -11,7 +11,7 @@
     :class="[
       displayClass,
       'rounded-md transition-colors duration-200 px-1.5 py-0.5 -mx-1.5 -my-0.5',
-      !props.readonly && 'cursor-pointer select-none hover:bg-gray-100/80 hover:ring-1 hover:ring-gray-200'
+      !props.readonly && 'cursor-pointer select-none hover:bg-gray-100/80 dark:hover:bg-slate-700/80 hover:ring-1 hover:ring-gray-200 dark:hover:ring-gray-600'
     ]"
     :role="props.readonly ? undefined : 'button'"
     :tabindex="props.readonly ? -1 : 0"

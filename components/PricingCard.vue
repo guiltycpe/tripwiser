@@ -3,7 +3,7 @@
     class="card-hover relative overflow-hidden"
     :class="[
       highlighted ? 'ring-2 ring-teal-500 shadow-2xl scale-105' : '',
-      'bg-white'
+      'bg-white dark:bg-slate-900'
     ]"
   >
     <!-- Popular Badge -->
@@ -16,22 +16,22 @@
     
     <div class="p-8">
       <!-- Tier Name -->
-      <h3 class="text-2xl font-bold text-gray-900">
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
         {{ tier }}
       </h3>
       
       <!-- Price -->
       <div class="mt-4 flex items-baseline">
-        <span class="text-5xl font-extrabold tracking-tight text-gray-900">
+        <span class="text-5xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100">
           €{{ price }}
         </span>
-        <span class="ml-2 text-gray-500">
+        <span class="ml-2 text-gray-500 dark:text-gray-400">
           /{{ period }}
         </span>
       </div>
       
       <!-- Description -->
-      <p class="mt-4 text-gray-600">
+      <p class="mt-4 text-gray-600 dark:text-gray-400">
         {{ description }}
       </p>
       
@@ -54,7 +54,7 @@
             name="heroicons:check-circle-20-solid" 
             class="h-6 w-6 flex-shrink-0 text-teal-500 mr-3"
           />
-          <span class="text-gray-700">{{ feature }}</span>
+          <span class="text-gray-700 dark:text-gray-300">{{ feature }}</span>
         </li>
       </ul>
     </div>
@@ -84,6 +84,6 @@ const buttonClass = computed(() => {
   if (props.highlighted) {
     return 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white hover:shadow-lg hover:scale-105'
   }
-  return 'border-2 border-gray-300 text-gray-800 hover:border-teal-500 hover:text-teal-600'
+  return 'border-2 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 hover:border-teal-500 hover:text-teal-600'
 })
 </script>

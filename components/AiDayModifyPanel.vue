@@ -3,15 +3,15 @@
     AiDayModifyPanel — Inline AI panel for day-level modification
     Appears below the day header when triggered. Minimalist violet theme.
   -->
-  <div class="mb-4 overflow-hidden rounded-xl border border-violet-200/60 bg-gradient-to-br from-violet-50/80 to-white shadow-lg shadow-violet-100/50">
+  <div class="mb-4 overflow-hidden rounded-xl border border-violet-200/60 dark:border-violet-700/60 bg-gradient-to-br from-violet-50/80 dark:from-violet-900/30 to-white dark:to-slate-900 shadow-lg shadow-violet-100/50 dark:shadow-violet-900/50">
     <!-- Header -->
     <div class="flex items-center gap-2.5 px-4 pt-3.5 pb-2">
       <div class="h-6 w-6 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-sm">
         <svg viewBox="0 0 20 20" class="h-3.5 w-3.5 text-white" fill="currentColor" v-html="ICON_SPARKLES" />
       </div>
-      <h4 class="text-sm font-bold text-gray-800">{{ t.ai.modifyDay.title }}</h4>
+      <h4 class="text-sm font-bold text-gray-800 dark:text-gray-200">{{ t.ai.modifyDay.title }}</h4>
       <button
-        class="ml-auto p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100/80 transition-colors cursor-pointer"
+        class="ml-auto p-1 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-slate-700/80 transition-colors cursor-pointer"
         @click="$emit('close')"
       >
         <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor">
@@ -28,7 +28,7 @@
           v-model="prompt"
           type="text"
           :placeholder="t.ai.modifyDay.placeholder"
-          class="w-full text-sm rounded-xl border border-violet-200 bg-white px-3.5 py-2.5 pr-10 text-gray-900 placeholder:text-gray-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20 transition-all"
+          class="w-full text-sm rounded-xl border border-violet-200 dark:border-violet-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 pr-10 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20 transition-all"
           @keydown.enter="submit"
           @keydown.escape="$emit('close')"
         />
@@ -53,7 +53,7 @@
         <button
           v-for="s in suggestions"
           :key="s"
-          class="text-xs px-2.5 py-1 rounded-full bg-white text-gray-600 hover:bg-violet-100 hover:text-violet-700 transition-colors cursor-pointer border border-gray-200 hover:border-violet-300"
+          class="text-xs px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-400 hover:bg-violet-100 dark:hover:bg-violet-900/30 hover:text-violet-700 dark:hover:text-violet-300 transition-colors cursor-pointer border border-gray-200 dark:border-gray-700 hover:border-violet-300 dark:hover:border-violet-600"
           @click="prompt = s; submit()"
         >
           {{ s }}
@@ -68,27 +68,27 @@
         <span class="text-xs text-violet-600 font-medium">{{ t.ai.modifyDay.generating }}</span>
       </div>
       <div class="space-y-2">
-        <div class="h-3 bg-violet-100 rounded-full w-full animate-pulse"></div>
-        <div class="h-3 bg-violet-100 rounded-full w-4/5 animate-pulse" style="animation-delay: 75ms"></div>
-        <div class="h-3 bg-violet-100 rounded-full w-3/5 animate-pulse" style="animation-delay: 150ms"></div>
+        <div class="h-3 bg-violet-100 dark:bg-violet-900/40 rounded-full w-full animate-pulse"></div>
+        <div class="h-3 bg-violet-100 dark:bg-violet-900/40 rounded-full w-4/5 animate-pulse" style="animation-delay: 75ms"></div>
+        <div class="h-3 bg-violet-100 dark:bg-violet-900/40 rounded-full w-3/5 animate-pulse" style="animation-delay: 150ms"></div>
       </div>
     </div>
 
     <!-- Preview State -->
     <div v-if="status === 'preview' && preview" class="px-4 pb-4">
-      <div class="bg-violet-50/80 rounded-xl border border-violet-100 p-3 mb-3">
-        <p class="text-xs font-semibold text-violet-700 mb-1.5">AI Proposal</p>
-        <p class="text-xs text-gray-500 mb-2">
+      <div class="bg-violet-50/80 dark:bg-violet-900/30 rounded-xl border border-violet-100 dark:border-violet-800 p-3 mb-3">
+        <p class="text-xs font-semibold text-violet-700 dark:text-violet-300 mb-1.5">AI Proposal</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
           {{ preview.length }} activité{{ preview.length > 1 ? 's' : '' }} proposée{{ preview.length > 1 ? 's' : '' }}
         </p>
         <div class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
           <div
             v-for="(act, i) in preview"
             :key="i"
-            class="flex items-center gap-2.5 text-xs py-1 px-2 rounded-lg bg-white/60"
+            class="flex items-center gap-2.5 text-xs py-1 px-2 rounded-lg bg-white/60 dark:bg-slate-800/60"
           >
             <span class="text-violet-500 font-mono font-semibold tabular-nums min-w-[3rem]">{{ act.time_flexible || '—' }}</span>
-            <span class="text-gray-700 truncate">{{ act.name || act.description }}</span>
+            <span class="text-gray-700 dark:text-gray-300 truncate">{{ act.name || act.description }}</span>
             <span v-if="act.estimated_cost_usd" class="ml-auto text-green-600 font-semibold flex-shrink-0">${{ act.estimated_cost_usd }}</span>
           </div>
         </div>
@@ -101,7 +101,7 @@
           ✓ {{ t.ai.modifyDay.apply }}
         </button>
         <button
-          class="flex-1 text-xs font-semibold px-3 py-2.5 rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
+          class="flex-1 text-xs font-semibold px-3 py-2.5 rounded-xl bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors cursor-pointer"
           @click="$emit('discard')"
         >
           ✕ {{ t.ai.modifyDay.discard }}

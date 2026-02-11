@@ -1,10 +1,10 @@
 <template>
-  <div class="relative h-full w-full overflow-hidden rounded-2xl shadow-inner bg-gray-100 min-h-[400px]">
+  <div class="relative h-full w-full overflow-hidden rounded-2xl shadow-inner bg-gray-100 dark:bg-gray-800 min-h-[400px]">
     <!-- Map Container with Ref -->
     <div ref="mapContainer" class="h-full w-full"></div>
     
     <!-- Loading overlay -->
-    <div v-if="loading" class="absolute inset-0 z-[200] flex items-center justify-center bg-white/80 transition-opacity duration-300">
+    <div v-if="loading" class="absolute inset-0 z-[200] flex items-center justify-center bg-white/80 dark:bg-slate-900/80 transition-opacity duration-300">
       <div class="flex flex-col items-center gap-3">
         <Icon name="heroicons:arrow-path-20-solid" class="h-10 w-10 animate-spin text-teal-500" />
       </div>
@@ -14,7 +14,7 @@
     <div v-if="!loading" class="absolute bottom-6 left-6 z-[200]">
         <button 
           @click="recenterMap"
-          class="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur shadow-lg rounded-full text-xs font-bold text-teal-700 hover:bg-white transition-all transform hover:scale-105"
+          class="flex items-center gap-2 px-4 py-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur shadow-lg rounded-full text-xs font-bold text-teal-700 dark:text-teal-400 hover:bg-white dark:hover:bg-slate-800 transition-all transform hover:scale-105"
         >
           <Icon name="heroicons:arrows-pointing-out-20-solid" class="h-4 w-4" />
           Recenter
@@ -195,7 +195,7 @@ onUnmounted(() => {
 :deep(.leaflet-container) {
   height: 100%;
   width: 100%;
-  background: #f8fafc;
+  background: var(--color-surface, #f8fafc);
 }
 
 :deep(.custom-div-icon) {
