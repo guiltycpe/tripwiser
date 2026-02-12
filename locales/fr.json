@@ -22,26 +22,145 @@
         "hero": {
             "title": "Planifiez Votre Aventure",
             "titleGradient": "Parfaite",
-            "subtitle": "Créez des itinéraires de voyage personnalisés avec des recommandations IA. Découvrez des trésors cachés et rendez chaque voyage inoubliable.",
+            "badge": "Planification de Voyage par IA",
+            "subtitle": "Créez des itinéraires de voyage époustouflants en quelques secondes grâce à l'IA. Découvrez des pépites cachées, optimisez votre budget et rendez chaque voyage inoubliable.",
             "searchLabel": "Où voulez-vous commencer ?",
             "searchPlaceholder": "Paris, Londres, Tokyo...",
-            "startButton": "Commencer à Planifier"
+            "startButton": "Commencer à Planifier",
+            "trustFree": "Gratuit",
+            "trustAi": "Propulsé par l'IA",
+            "trustFast": "Prêt en 30 secondes",
+            "scroll": "Découvrir"
+        },
+        "howItWorks": {
+            "badge": "Simple & Rapide",
+            "title": "Votre Voyage de Rêve en 3 Étapes",
+            "subtitle": "De l'idée à un itinéraire complet en moins d'une minute",
+            "step1": {
+                "title": "Choisissez Votre Destination",
+                "description": "Dites-nous où vous voulez aller, vos dates de voyage et vos préférences. Notre IA s'adapte à votre style."
+            },
+            "step2": {
+                "title": "L'IA Crée Votre Itinéraire",
+                "description": "Notre IA analyse des milliers de possibilités pour construire un itinéraire personnalisé optimisé pour votre budget et vos centres d'intérêt."
+            },
+            "step3": {
+                "title": "Explorez & Personnalisez",
+                "description": "Visualisez votre voyage sur une carte interactive, modifiez les activités avec l'IA et partagez votre itinéraire avec vos compagnons de voyage."
+            }
         },
         "features": {
-            "title": "Pourquoi Choisir TripWiser ?",
+            "badge": "Fonctionnalités Puissantes",
+            "title": "Tout Ce Qu'il Faut pour Voyager Malin",
+            "subtitle": "Des outils avancés conçus pour les voyageurs qui veulent tirer le meilleur de chaque voyage",
             "ai": {
-                "title": "IA de Pointe",
-                "description": "Des itinéraires intelligents adaptés à votre style de voyage et vos préférences uniques."
+                "label": "Intelligence Artificielle",
+                "title": "Des Itinéraires Qui Vous Comprennent",
+                "description": "Notre IA ne se contente pas de lister des lieux. Elle comprend votre style de voyage, optimise les trajets et s'adapte à votre budget pour créer des expériences vraiment personnalisées.",
+                "points": [
+                    "Recommandations personnalisées selon votre style",
+                    "Optimisation automatique des trajets pour gagner du temps",
+                    "Modification en temps réel avec assistance IA"
+                ]
             },
-            "save": {
-                "title": "Économisez",
-                "description": "Un suivi budgétaire optimisé et des recommandations de voyage rentables."
+            "maps": {
+                "label": "Cartes Interactives",
+                "title": "Visualisez Chaque Détail",
+                "description": "Visualisez l'intégralité de votre voyage sur une carte interactive. Chaque activité est géolocalisée, les itinéraires sont optimisés et vous pouvez tout ajuster en un clic.",
+                "points": [
+                    "Toutes vos activités sur une carte dynamique",
+                    "Itinéraires optimisés entre chaque étape",
+                    "Déplacez les activités entre les jours par glisser-déposer"
+                ]
             },
-            "share": {
-                "title": "Collaboratif",
-                "description": "Planifiez avec vos amis et votre famille en temps réel grâce au partage d'accès."
+            "budget": {
+                "label": "Budget Intelligent",
+                "title": "Voyagez Sans Surprise Financière",
+                "description": "Suivez vos dépenses en temps réel avec une ventilation automatique des coûts. Notre IA recommande des alternatives pour rester dans votre budget.",
+                "points": [
+                    "Estimation automatique du coût par activité",
+                    "Ventilation détaillée : hébergement, repas, activités, transport",
+                    "Suggestions d'alternatives économiques"
+                ],
+                "mockupLabel": "Budget Total",
+                "accommodation": "Hébergement",
+                "food": "Repas & Boissons",
+                "activities": "Activités",
+                "transport": "Transport"
             },
             "exploreButton": "Explorer Toutes les Fonctionnalités"
+        },
+        "stats": {
+            "title": "La Confiance des Voyageurs du Monde Entier",
+            "subtitle": "Rejoignez une communauté grandissante de voyageurs malins",
+            "users": "Voyageurs actifs",
+            "trips": "Voyages planifiés",
+            "countries": "Pays couverts",
+            "rating": "Note moyenne"
+        },
+        "destinations": {
+            "badge": "Destinations Populaires",
+            "title": "Inspirez-Vous de Nos Voyageurs",
+            "subtitle": "Découvrez les destinations les plus populaires et commencez à planifier votre prochaine aventure"
+        },
+        "testimonials": {
+            "badge": "Témoignages",
+            "title": "Adoré par les Voyageurs",
+            "subtitle": "Découvrez ce que notre communauté en dit",
+            "items": [
+                {
+                    "quote": "TripWiser a planifié mes 2 semaines au Japon en 30 secondes. L'itinéraire était meilleur que ce que j'avais passé des heures à construire manuellement !",
+                    "name": "Sarah Chen",
+                    "trip": "Tokyo → Kyoto → Osaka",
+                    "initials": "SC",
+                    "avatarBg": "bg-gradient-to-br from-teal-500 to-cyan-500"
+                },
+                {
+                    "quote": "Le suivi budgétaire IA m'a fait économiser plus de 300€ sur mon voyage à Barcelone. Il a suggéré des alternatives gratuites que je n'aurais jamais trouvées.",
+                    "name": "Marco Rossi",
+                    "trip": "Barcelone, 5 jours",
+                    "initials": "MR",
+                    "avatarBg": "bg-gradient-to-br from-indigo-500 to-purple-500"
+                },
+                {
+                    "quote": "J'ai partagé l'itinéraire avec ma famille et on l'a tous personnalisé ensemble. Les fonctionnalités collaboratives sont incroyables.",
+                    "name": "Emma Davis",
+                    "trip": "Road trip USA",
+                    "initials": "ED",
+                    "avatarBg": "bg-gradient-to-br from-amber-500 to-orange-500"
+                },
+                {
+                    "quote": "La carte interactive a rendu si facile la visualisation de notre itinéraire. On pouvait voir exactement comment chaque journée allait se dérouler.",
+                    "name": "Thomas Müller",
+                    "trip": "Tour d'Italie, 10 jours",
+                    "initials": "TM",
+                    "avatarBg": "bg-gradient-to-br from-emerald-500 to-teal-500"
+                },
+                {
+                    "quote": "En tant que voyageuse solo, cet outil change la donne. C'est comme avoir un agent de voyage personnel disponible 24h/24.",
+                    "name": "Aisha Patel",
+                    "trip": "Bali & Thaïlande",
+                    "initials": "AP",
+                    "avatarBg": "bg-gradient-to-br from-pink-500 to-rose-500"
+                },
+                {
+                    "quote": "L'export vers le calendrier fait que je sais toujours ce qui vient ensuite. C'est comme avoir un assistant personnel en vacances.",
+                    "name": "Lucas Martin",
+                    "trip": "Îles Grecques, 7 jours",
+                    "initials": "LM",
+                    "avatarBg": "bg-gradient-to-br from-cyan-500 to-blue-500"
+                }
+            ]
+        },
+        "finalCta": {
+            "title": "Prêt à Planifier Votre Prochaine",
+            "titleHighlight": "Aventure ?",
+            "subtitle": "Rejoignez des milliers de voyageurs qui économisent des heures de planification et découvrent des expériences incroyables grâce à l'IA.",
+            "button": "Commencer — C'est Gratuit",
+            "secondary": "Voir les Tarifs",
+            "trust1": "Sans carte bancaire",
+            "trust2": "Prêt en 30 secondes",
+            "trust3": "Fait pour les voyageurs"
         },
         "cta": {
             "title": "Prêt pour votre prochaine aventure ?",
@@ -52,11 +171,14 @@
         }
     },
     "features": {
+        "badge": "Pourquoi TripWiser",
         "hero": {
             "title": "Fonctionnalités Puissantes pour",
             "titleGradient": "un Voyage Fluide",
             "subtitle": "Tout ce dont vous avez besoin pour planifier, organiser et profiter de votre voyage parfait"
         },
+        "gridTitle": "Tous les Outils Dont Vous Avez Besoin",
+        "gridSubtitle": "De la planification IA au suivi budgétaire, chaque fonctionnalité est conçue pour rendre votre expérience de voyage exceptionnelle",
         "list": {
             "ai": {
                 "title": "Planification Intelligente d'Itinéraire",
@@ -85,15 +207,32 @@
             "recommendations": {
                 "title": "Recommandations Personnalisées",
                 "description": "Recevez des suggestions basées sur votre historique et vos préférences de voyage."
+            },
+            "export": {
+                "title": "Export PDF & Calendrier",
+                "description": "Exportez votre itinéraire en PDF ou synchronisez-le directement avec votre calendrier."
             }
+        },
+        "detail": {
+            "label": "Propulsé par l'IA",
+            "title": "Une Intelligence Qui Comprend Votre Style de Voyage",
+            "description": "Notre IA va au-delà des simples recommandations. Elle apprend vos préférences, optimise les itinéraires en temps réel et suggère des pépites cachées qui correspondent à votre personnalité de voyageur.",
+            "points": [
+                "Apprend de vos préférences et voyages passés",
+                "Optimise les itinéraires pour le temps, le coût et l'expérience",
+                "Suggère des pépites locales hors des sentiers battus",
+                "Ajustements en temps réel selon la météo et les événements"
+            ]
         },
         "cta": {
             "title": "Prêt à Découvrir la Planification de Voyage Sans Effort ?",
+            "subtitle": "Rejoignez des milliers de voyageurs qui économisent des heures de planification et découvrent des expériences incroyables.",
             "startPlanning": "Commencer à Planifier",
             "viewPricing": "Voir les Tarifs"
         }
     },
     "pricing": {
+        "badge": "Tarifs Simples",
         "hero": {
             "title": "Tarifs Simples",
             "titleGradient": "et Transparents",
@@ -146,39 +285,56 @@
         },
         "faq": {
             "title": "Questions Fréquemment Posées",
+            "subtitle": "Tout ce que vous devez savoir sur nos forfaits",
             "q1": "Puis-je annuler mon abonnement ?",
-            "a1": "Absolument. Vous pouvez annuler votre abonnement à tout moment depuis les paramètres de votre compte.",
+            "a1": "Absolument. Vous pouvez annuler votre abonnement à tout moment depuis les paramètres de votre compte. Sans question.",
             "q2": "L'essai gratuit est-il vraiment gratuit ?",
-            "a2": "Absolument ! 14 jours complets pour essayer toutes les fonctionnalités Pro sans carte bancaire."
+            "a2": "Absolument ! 14 jours complets pour essayer toutes les fonctionnalités Pro sans carte bancaire.",
+            "q3": "Puis-je changer de forfait plus tard ?",
+            "a3": "Bien sûr ! Vous pouvez passer à un forfait supérieur ou inférieur à tout moment. Les changements prennent effet au début de votre prochain cycle de facturation.",
+            "q4": "Offrez-vous des remboursements ?",
+            "a4": "Oui, nous offrons une garantie satisfait ou remboursé de 30 jours sur tous les forfaits payants. Si vous n'êtes pas satisfait, contactez simplement notre équipe support."
+        },
+        "cta": {
+            "title": "Commencez à Planifier Votre Voyage de Rêve",
+            "subtitle": "Rejoignez des milliers de voyageurs qui économisent des heures de planification avec TripWiser.",
+            "button": "Commencer Gratuitement",
+            "secondary": "Explorer les Fonctionnalités"
         }
     },
     "about": {
+        "badge": "Notre Histoire",
         "hero": {
-            "title": "À Propos de TripWiser",
-            "subtitle": "Rendre la planification de voyage simple et agréable"
+            "title": "Créé par des Voyageurs,",
+            "titleGradient": "Pour des Voyageurs",
+            "subtitle": "Notre mission : rendre la planification de voyage aussi excitante que le voyage lui-même"
         },
         "mission": {
-            "title": "Notre Mission",
+            "badge": "Notre Mission",
+            "title": "Rendre la Planification de Voyage Simple",
             "description": "Nous croyons que le voyage devrait être synonyme de découverte et de plaisir, pas de planification sans fin. TripWiser utilise l'IA de pointe pour transformer la planification de voyage d'une corvée en une partie passionnante de votre aventure."
         },
         "values": {
+            "badge": "Ce Qui Nous Anime",
             "title": "Nos Valeurs",
             "innovation": "Innovation",
             "innovation_desc": "Nous repoussons constamment les limites de ce que la technologie de voyage peut accomplir.",
             "quality": "Qualité",
             "quality_desc": "Chaque fonctionnalité est conçue avec soin et attention aux détails.",
             "community": "Communauté",
-            "community_desc": "Nous construisons plus qu'un produit - nous construisons une communauté de voyageurs."
+            "community_desc": "Nous construisons plus qu'un produit — nous construisons une communauté de voyageurs.",
+            "accessibility": "Accessibilité",
+            "accessibility_desc": "La planification de voyage devrait être accessible à tous, partout, dans toutes les langues."
         },
         "team": {
-            "title": "L'Équipe",
-            "description": "Des professionnels dédiés travaillant pour révolutionner le voyage.",
+            "title": "L'Équipe Derrière TripWiser",
+            "description": "Des voyageurs passionnés et des bâtisseurs dédiés à révolutionner la façon dont vous planifiez vos aventures.",
             "founding": "Équipe Fondatrice",
-            "founding_desc": "Voyageurs & Développeurs",
+            "founding_desc": "Voyageurs & développeurs qui ont transformé une vision en réalité",
             "design": "Équipe Design",
-            "design_desc": "Créatifs & Experts UX",
+            "design_desc": "Créer des expériences belles qui paraissent naturelles",
             "support": "Équipe Support",
-            "support_desc": "Toujours là pour vous"
+            "support_desc": "Toujours là pour vous aider à planifier le voyage parfait"
         },
         "stats": {
             "activeUsers": "Utilisateurs Actifs",
@@ -186,10 +342,18 @@
             "countries": "Pays Couverts"
         },
         "story": {
+            "label": "Comment Tout a Commencé",
             "title": "Notre Histoire",
             "p1": "Fondée en 2024, TripWiser a commencé comme une idée simple : et si planifier un voyage pouvait être aussi excitant que le vivre ? Nos fondateurs, voyageurs passionnés eux-mêmes, étaient frustrés par la complexité et le temps nécessaire pour planifier des voyages multi-destinations.",
-            "p2": "Après d'innoublables tableurs, onglets de navigateur et maux de tête de planification, nous avons décidé qu'il devait y avoir une meilleure façon. Nous avons créé TripWiser pour être le compagnon de planification de voyage que nous avons toujours souhaité avoir.",
+            "p2": "Après d'innombrables tableurs, onglets de navigateur et maux de tête de planification, nous avons décidé qu'il devait y avoir une meilleure façon. Nous avons créé TripWiser pour être le compagnon de planification de voyage que nous avons toujours souhaité avoir.",
             "p3": "Aujourd'hui, TripWiser aide des milliers de voyageurs à planifier leurs voyages de rêve, des escapades de week-end aux aventures autour du monde. Nous ne faisons que commencer."
+        },
+        "cta": {
+            "title": "Prêt à Commencer Votre",
+            "titleHighlight": "Voyage ?",
+            "subtitle": "Rejoignez notre communauté de voyageurs et commencez à planifier votre prochaine aventure inoubliable.",
+            "button": "Commencer Gratuitement",
+            "secondary": "Explorer les Fonctionnalités"
         }
     },
     "plan": {

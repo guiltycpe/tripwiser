@@ -242,6 +242,25 @@ body {
   animation: card-enter 0.3s ease-out forwards;
 }
 
+/* Generation Loading Screen */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes progressPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-progress-pulse {
+  animation: progressPulse 1.5s ease-in-out infinite;
+}
+
 /* Skeleton */
 @keyframes skeleton-shimmer {
   0% { background-position: -200% 0; }
@@ -257,4 +276,22 @@ body {
 /* Timeline gradient border */
 .border-l-gradient {
   border-image: linear-gradient(to bottom, #5eead4, #22d3ee) 1;
+}
+
+/* ─── Landing Page Scroll Reveal ─── */
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Smooth scroll ─── */
+html {
+  scroll-behavior: smooth;
 }

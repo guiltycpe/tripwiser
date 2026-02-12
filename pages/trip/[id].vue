@@ -163,8 +163,11 @@
           <!-- Map -->
           <div class="w-full md:w-1/2 h-[300px] md:h-full relative border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
             <MapViewer
+              ref="mapViewerRef"
               :activities="mapActivities"
               :active="activeTab === 'itinerary'"
+              :selected-index="selectedActivityIndex"
+              @marker-click="handleMarkerClick"
             />
           </div>
 
@@ -236,8 +239,9 @@
                         v-for="(act, aIdx) in (day.activities as any[])"
                         :key="`${sIdx}-${dIdx}-${aIdx}-${act.time_flexible}`"
                         class="relative"
+                        :data-activity-index="activityKeyToFlatIndex.get(makeActivityKey(sIdx, dIdx, aIdx))"
                       >
-                        <ViewportRender :placeholder-height="140">
+                        <ViewportRender :placeholder-height="140" :force-render="forceRenderAll || isActivitySelected(sIdx, dIdx, aIdx)">
                           <ActivityCard
                             :activity="act"
                             :activity-type="act.activity_type || 'default'"
@@ -246,10 +250,12 @@
                             :activity-idx="aIdx"
                             :ai-loading="isAiLoading(sIdx, dIdx, aIdx)"
                             :is-active="isCardAiActive(sIdx, dIdx, aIdx)"
+                            :is-selected="isActivitySelected(sIdx, dIdx, aIdx)"
                             :edit-mode="editMode"
                             @save-field="(field: string, value: any, prev: any) => handleSaveField(sIdx, dIdx, aIdx, field, value, prev)"
                             @delete="handleDeleteActivity(sIdx, dIdx, aIdx)"
                             @request-move="openMovePopover(sIdx, dIdx, aIdx, $event)"
+                            @select="handleActivitySelect(sIdx, dIdx, aIdx)"
                           />
                         </ViewportRender>
 
@@ -346,7 +352,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, shallowRef, watch } from 'vue'
+import { computed, nextTick, ref, shallowRef, watch } from 'vue'
 import { useItineraryEdit } from '~/composables/useItineraryEdit'
 import type { ActivityIdentifier } from '~/composables/useItineraryEdit'
 import { ICON_PENCIL, ICON_CHECK, ICON_SPARKLES } from '~/utils/cardIcons'
@@ -368,6 +374,17 @@ const budgetPanelOpen = ref(false)
 const editMode = ref(false)
 const timelineRef = ref<HTMLElement | null>(null)
 const showDeleteConfirm = ref(false)
+const mapViewerRef = ref<{ flyTo: (index: number) => void } | null>(null)
+const selectedActivityIndex = ref<number | null>(null)
+const forceRenderAll = ref(false)
+
+// Index mappings between flat map index and (sIdx, dIdx, aIdx)
+const activityKeyToFlatIndex = ref<Map<string, number>>(new Map())
+const flatIndexToActivityKey = ref<Map<number, { sIdx: number; dIdx: number; aIdx: number }>>(new Map())
+
+function makeActivityKey(sIdx: number, dIdx: number, aIdx: number) {
+  return `${sIdx}-${dIdx}-${aIdx}`
+}
 
 // Load trip data
 onMounted(async () => {
@@ -513,10 +530,17 @@ function handleAiDayDiscard() { discardAiDayModification() }
 function buildMapActivities(): any[] {
   if (!tripData.value?.itinerary_sections) return []
   const allActs: any[] = []
-  tripData.value.itinerary_sections.forEach((section: any) => {
-    section.daily_plans.forEach((day: any) => {
-      day.activities.forEach((act: any) => {
+  const keyToFlat = new Map<string, number>()
+  const flatToKey = new Map<number, { sIdx: number; dIdx: number; aIdx: number }>()
+
+  tripData.value.itinerary_sections.forEach((section: any, sIdx: number) => {
+    section.daily_plans.forEach((day: any, dIdx: number) => {
+      day.activities.forEach((act: any, aIdx: number) => {
         if (act.has_physical_location && act.lat && act.lng) {
+          const flatIdx = allActs.length
+          const key = makeActivityKey(sIdx, dIdx, aIdx)
+          keyToFlat.set(key, flatIdx)
+          flatToKey.set(flatIdx, { sIdx, dIdx, aIdx })
           allActs.push({
             lat: act.lat, lng: act.lng,
             description: act.description,
@@ -527,6 +551,9 @@ function buildMapActivities(): any[] {
       })
     })
   })
+
+  activityKeyToFlatIndex.value = keyToFlat
+  flatIndexToActivityKey.value = flatToKey
   return allActs
 }
 
@@ -547,6 +574,60 @@ watch(tripData, (newData) => {
 watch(activeTab, (tab) => {
   if (tab === 'itinerary') scheduleMapUpdate()
 })
+
+// ─── Map ↔ List Sync ───
+function handleMarkerClick(flatIndex: number) {
+  selectedActivityIndex.value = flatIndex
+  const target = flatIndexToActivityKey.value.get(flatIndex)
+  if (!target) return
+
+  // Force ALL ViewportRender instances to render their real content.
+  // Without this, lazy-loaded cards between the current scroll position
+  // and the target are still placeholders (140px). As the browser smooth-
+  // scrolls past them, their IntersectionObserver fires and replaces them
+  // with the real card (different height), shifting the scroll target mid-
+  // animation and landing at the wrong position.
+  forceRenderAll.value = true
+
+  // Wait for Vue to:
+  //   tick 1 — propagate forceRenderAll to all ViewportRender props
+  //   tick 2 — ViewportRender watch fires, sets shouldRender = true
+  //   tick 3 — slot content (ActivityCard) is actually in the DOM
+  nextTick(() => {
+    nextTick(() => {
+      nextTick(() => {
+        const el = timelineRef.value?.querySelector(
+          `[data-activity-index="${flatIndex}"]`
+        )
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      })
+    })
+  })
+}
+
+function handleActivitySelect(sIdx: number, dIdx: number, aIdx: number) {
+  const key = makeActivityKey(sIdx, dIdx, aIdx)
+  const flatIndex = activityKeyToFlatIndex.value.get(key)
+
+  if (flatIndex === undefined) return // activity has no physical location / not on map
+
+  // Toggle off if already selected
+  if (selectedActivityIndex.value === flatIndex) {
+    selectedActivityIndex.value = null
+    return
+  }
+
+  selectedActivityIndex.value = flatIndex
+  mapViewerRef.value?.flyTo(flatIndex)
+}
+
+function isActivitySelected(sIdx: number, dIdx: number, aIdx: number): boolean {
+  if (selectedActivityIndex.value === null) return false
+  const key = makeActivityKey(sIdx, dIdx, aIdx)
+  return activityKeyToFlatIndex.value.get(key) === selectedActivityIndex.value
+}
 
 // ─── Helpers ───
 function getBudgetLabel(tier: string) {

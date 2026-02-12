@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import LocationInput from '~/components/LocationInput.vue'
 import type { UserProfile } from '~/types/profile.types'
@@ -123,6 +123,11 @@ function parseDate(dateStr: string) {
   return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
 }
 
+// SSE streaming for real-time generation progress
+const { state: streamState, startStream, abort: abortStream } = useItineraryStream()
+const isFallbackMode = ref(false)
+
+// Fallback: simulated progress (used when SSE fails)
 const generationStep = ref(0)
 const generationMessages = computed(() => {
   const budgetOptions = t.value.plan.form.budgetOptions as any
@@ -147,6 +152,14 @@ const generationMessages = computed(() => {
     steps.finding.replace('{style}', styleLabel),
     steps.finalizing
   ]
+})
+
+const fallbackProgress = computed(() =>
+  ((generationStep.value + 1) / generationMessages.value.length) * 100
+)
+
+onBeforeUnmount(() => {
+  abortStream()
 })
 
 // Review helpers
@@ -184,37 +197,55 @@ async function generateItinerary() {
     }
 
     const currentUserId = authUser.id
-
     isGenerating.value = true
-    generationStep.value = 0
+    isFallbackMode.value = false
 
-    const stepInterval = setInterval(() => {
-      if (generationStep.value < generationMessages.value.length - 2) {
-        generationStep.value++
-      }
-    }, 1500)
+    const requestBody = {
+      departure: departure.value,
+      destination: destinations.value.join(', '),
+      departure_date: parseDate(departureDate.value) || departureDate.value,
+      return_date: parseDate(returnDate.value) || returnDate.value,
+      budget: budget.value,
+      travel_style: travelStyle.value,
+      road_trip: takeRoadTrip.value,
+      travelers: travelers.value,
+      user_preferences: userProfile.value ? {
+        interests: userProfile.value.travel_preferences?.interests,
+        food_preferences: userProfile.value.travel_preferences?.food_preferences,
+        dietary_restrictions: userProfile.value.dietary_restrictions,
+        avoid: userProfile.value.travel_preferences?.avoid,
+        preferred_pace: userProfile.value.travel_preferences?.preferred_pace,
+        accessibility_needs: userProfile.value.travel_preferences?.accessibility_needs
+      } : undefined
+    }
 
-    const aiResponse = await $fetch('/api/generate-itinerary', {
-      method: 'POST',
-      body: {
-        departure: departure.value,
-        destination: destinations.value.join(', '),
-        departure_date: parseDate(departureDate.value),
-        return_date: parseDate(returnDate.value),
-        budget: budget.value,
-        travel_style: travelStyle.value,
-        road_trip: takeRoadTrip.value,
-        travelers: travelers.value,
-        user_preferences: userProfile.value ? {
-          interests: userProfile.value.travel_preferences?.interests,
-          food_preferences: userProfile.value.travel_preferences?.food_preferences,
-          dietary_restrictions: userProfile.value.dietary_restrictions,
-          avoid: userProfile.value.travel_preferences?.avoid,
-          preferred_pace: userProfile.value.travel_preferences?.preferred_pace,
-          accessibility_needs: userProfile.value.travel_preferences?.accessibility_needs
-        } : undefined
+    let aiResponse: any
+
+    // Try SSE stream first, fallback to regular fetch
+    try {
+      aiResponse = await startStream(requestBody)
+    } catch (streamError) {
+      console.warn('SSE stream failed, falling back to regular fetch:', streamError)
+      isFallbackMode.value = true
+      generationStep.value = 0
+
+      const stepInterval = setInterval(() => {
+        if (generationStep.value < generationMessages.value.length - 2) {
+          generationStep.value++
+        }
+      }, 1500)
+
+      try {
+        aiResponse = await $fetch('/api/generate-itinerary', {
+          method: 'POST',
+          body: requestBody
+        })
+        clearInterval(stepInterval)
+      } catch (fetchError) {
+        clearInterval(stepInterval)
+        throw fetchError
       }
-    }) as any
+    }
 
     let destinationImageUrl = null
     try {
@@ -244,10 +275,10 @@ async function generateItinerary() {
         destination_image_url: destinationImageUrl
     }
 
-    const { error: dbError } = await (supabase
+    const { data: insertedTrips, error: dbError } = await (supabase
       .from('trips' as any)
       .insert([payload] as any)
-      .select() as any)
+      .select('id') as any)
 
     if (dbError) {
       toast.add({
@@ -256,14 +287,13 @@ async function generateItinerary() {
         color: 'error'
       })
       isGenerating.value = false
-      clearInterval(stepInterval)
       return
     }
 
+    const newTripId = insertedTrips?.[0]?.id
+
     setTimeout(() => {
-      generationStep.value = generationMessages.value.length - 1
-      clearInterval(stepInterval)
-      router.push('/dashboard')
+      router.push(newTripId ? `/trip/${newTripId}` : '/dashboard')
     }, 800)
 
   } catch (err: any) {
@@ -279,43 +309,19 @@ async function generateItinerary() {
 
 <template>
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-    <!-- Generation Overlay -->
-    <Transition
-      enter-active-class="transition duration-400 ease-out"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition duration-200 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div v-if="isGenerating" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-sm">
-        <div class="max-w-md w-full px-8 text-center">
-          <div class="relative mb-8 flex justify-center">
-            <div class="relative rounded-2xl bg-teal-600 p-5 shadow-lg">
-              <Icon name="heroicons:sparkles-20-solid" class="h-10 w-10 text-white animate-pulse" />
-            </div>
-          </div>
-
-          <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
-            {{ locale === 'fr' ? 'Génération en cours' : 'Generating Trip' }}
-          </h2>
-          <p class="text-slate-500 dark:text-slate-400 mb-8 h-6 text-sm">
-            {{ generationMessages[generationStep] }}
-          </p>
-
-          <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-4 overflow-hidden">
-            <div
-              class="bg-teal-500 h-full transition-all duration-700 ease-out rounded-full"
-              :style="{ width: ((generationStep + 1) / generationMessages.length) * 100 + '%' }"
-            ></div>
-          </div>
-
-          <p class="text-xs text-slate-400 font-medium tracking-widest uppercase">
-            {{ Math.round(((generationStep + 1) / generationMessages.length) * 100) }}%
-          </p>
-        </div>
-      </div>
-    </Transition>
+    <!-- Generation Loading Screen -->
+    <GenerationLoadingScreen
+      :visible="isGenerating"
+      :destination="destinations.join(', ')"
+      :overall-progress="isFallbackMode ? fallbackProgress : streamState.overallProgress"
+      :phases="streamState.phases"
+      :current-phase="streamState.currentPhase"
+      :validated-places="streamState.validatedPlaces"
+      :total-places="streamState.totalPlaces"
+      :current-fact="streamState.currentFact"
+      :is-fallback="isFallbackMode"
+      :fallback-message="isFallbackMode ? generationMessages[generationStep] : undefined"
+    />
 
     <!-- Header -->
     <div class="mb-8 animate-fade-in">

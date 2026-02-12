@@ -22,23 +22,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 
 const props = withDefaults(defineProps<{
   /** Height of the placeholder skeleton (px) */
   placeholderHeight?: number
   /** IntersectionObserver rootMargin — how far ahead to pre-render */
   rootMargin?: string
+  /** Force immediate render (bypasses lazy loading) */
+  forceRender?: boolean
 }>(), {
   placeholderHeight: 140,
-  rootMargin: '400px 0px'
+  rootMargin: '400px 0px',
+  forceRender: false
 })
 
 const container = ref<HTMLElement | null>(null)
 const shouldRender = ref(false)
 let observer: IntersectionObserver | null = null
 
+// When forceRender becomes true, render immediately and disconnect observer
+watch(() => props.forceRender, (force) => {
+  if (force && !shouldRender.value) {
+    shouldRender.value = true
+    observer?.disconnect()
+    observer = null
+  }
+})
+
 onMounted(() => {
+  if (props.forceRender) {
+    shouldRender.value = true
+    return
+  }
+
   if (!container.value || typeof IntersectionObserver === 'undefined') {
     // SSR or no IntersectionObserver support — render immediately
     shouldRender.value = true

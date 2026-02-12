@@ -9,13 +9,16 @@
     NOT editable: description, notes (view-only always)
   -->
   <div
-    class="group/card relative rounded-2xl border bg-white dark:bg-slate-900"
+    class="group/card relative rounded-2xl border bg-white dark:bg-slate-900 cursor-pointer"
     :class="[
-      isActive
-          ? 'border-blue-200 ring-2 ring-blue-500/10 shadow-lg z-10'
-          : 'border-gray-100 dark:border-gray-700 shadow-sm hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-lg',
-      'transition-[border-color,box-shadow] duration-200',
+      isSelected
+          ? 'border-teal-300 dark:border-teal-600 shadow-lg ring-1 ring-teal-200/50 dark:ring-teal-700/30 bg-teal-50/40 dark:bg-teal-900/10 border-l-[3px] border-l-teal-500'
+          : isActive
+            ? 'border-blue-200 ring-2 ring-blue-500/10 shadow-lg z-10'
+            : 'border-gray-100 dark:border-gray-700 shadow-sm hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-lg',
+      'transition-[border-color,box-shadow,background-color] duration-200',
     ]"
+    @click="$emit('select')"
   >
     <!-- AI Loading Overlay -->
     <div v-if="aiLoading" class="absolute inset-0 z-20 bg-white/80 dark:bg-slate-900/80 rounded-2xl flex items-center justify-center">
@@ -199,6 +202,7 @@ const props = defineProps<{
   activityIdx: number
   aiLoading?: boolean
   isActive?: boolean
+  isSelected?: boolean
   editMode?: boolean
 }>()
 
@@ -206,6 +210,7 @@ const emit = defineEmits<{
   'delete': []
   'save-field': [field: string, value: any, previousValue: any]
   'request-move': []
+  'select': []
 }>()
 
 const activityIconSvg = getActivityIconSvg(props.activityType)

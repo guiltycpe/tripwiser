@@ -78,7 +78,8 @@ export async function validatePlace(
 export async function validateBatch(
     calls: any[],
     concurrencyLimit = 10,
-    throttleMs = 100
+    throttleMs = 100,
+    onProgress?: (validated: number, total: number) => void
 ): Promise<any[]> {
     const results = [];
 
@@ -104,6 +105,7 @@ export async function validateBatch(
         );
 
         results.push(...chunkResults);
+        onProgress?.(results.length, calls.length);
 
         // Throttle between chunks (but not after the last one)
         if (i < chunks.length - 1) {

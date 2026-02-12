@@ -1,8 +1,8 @@
 <template>
   <div class="flex min-h-screen flex-col bg-white dark:bg-slate-900">
-    <navBar />
+    <navBar :transparent="isLandingPage" />
 
-    <main class="flex-1">
+    <main :class="['flex-1', !isLandingPage && 'pt-14']">
       <slot />
     </main>
 
@@ -59,4 +59,7 @@
 <script setup lang="ts">
 const { t } = useTranslations()
 const year = new Date().getFullYear()
+const route = useRoute()
+
+const isLandingPage = computed(() => ['/', '/features', '/pricing', '/about'].includes(route.path))
 </script>

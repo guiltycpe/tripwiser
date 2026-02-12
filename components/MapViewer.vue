@@ -38,17 +38,24 @@ interface Props {
   center?: [number, number]
   zoom?: number
   active?: boolean
+  selectedIndex?: number | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
   zoom: 13,
-  active: true
+  active: true,
+  selectedIndex: null
 })
+
+const emit = defineEmits<{
+  'marker-click': [index: number]
+}>()
 
 const mapContainer = ref<HTMLElement | null>(null)
 const loading = ref(true)
 let map: any = null
 let L: any = null
+let markers: any[] = []
 
 function recenterMap() {
   if (!map || !L) return
@@ -122,39 +129,68 @@ function initMap() {
   }, 200)
 }
 
+function createMarkerIcon(index: number, selected: boolean) {
+  if (selected) {
+    return L.divIcon({
+      className: 'custom-div-icon selected-marker',
+      html: `
+        <div class="marker-ping"></div>
+        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-teal-600 text-white font-bold shadow-xl border-[3px] border-white scale-110" style="position:relative;z-index:10;">
+          ${index + 1}
+        </div>
+      `,
+      iconSize: [40, 40],
+      iconAnchor: [20, 20]
+    })
+  }
+  return L.divIcon({
+    className: 'custom-div-icon',
+    html: `
+      <div class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500 text-white font-bold shadow-lg border-2 border-white transform transition-transform hover:scale-110">
+        ${index + 1}
+      </div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16]
+  })
+}
+
+function updateMarkerIcons() {
+  markers.forEach((marker, index) => {
+    marker.setIcon(createMarkerIcon(index, index === props.selectedIndex))
+    if (index === props.selectedIndex) {
+      marker.setZIndexOffset(1000)
+    } else {
+      marker.setZIndexOffset(0)
+    }
+  })
+}
+
 function updateMap() {
   if (!map || !L) return
 
   // Clear existing markers
-  map.eachLayer((layer: any) => {
-    if (layer instanceof L.Marker) {
-      map.removeLayer(layer)
-    }
-  })
+  markers.forEach(m => map.removeLayer(m))
+  markers = []
 
   const validActivities = props.activities.filter(a => a && a.lat && a.lng)
   if (!validActivities.length) return
 
   const points: [number, number][] = []
-  
+
   validActivities.forEach((activity, index) => {
     const latlng: [number, number] = [activity.lat, activity.lng]
     points.push(latlng)
 
-    const icon = L.divIcon({
-      className: 'custom-div-icon',
-      html: `
-        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500 text-white font-bold shadow-lg border-2 border-white transform transition-transform hover:scale-110">
-          ${index + 1}
-        </div>
-      `,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16]
+    const icon = createMarkerIcon(index, index === props.selectedIndex)
+    const marker = L.marker(latlng, { icon })
+      .addTo(map)
+
+    marker.on('click', () => {
+      emit('marker-click', index)
     })
 
-    L.marker(latlng, { icon })
-      .addTo(map)
-      .bindPopup(`<b class="text-teal-600">${activity.time}</b><br>${activity.description}`)
+    markers.push(marker)
   })
 
   if (points.length > 0) {
@@ -162,10 +198,22 @@ function updateMap() {
   }
 }
 
+function flyTo(index: number) {
+  if (!map || !markers[index]) return
+  const latlng = markers[index].getLatLng()
+  map.flyTo(latlng, 16, { duration: 0.8 })
+}
+
+defineExpose({ flyTo })
+
 // Map data is now a shallowRef from parent — only changes on save events.
 // No need for deep watch; reference equality is sufficient.
 watch(() => props.activities, () => {
   updateMap()
+})
+
+watch(() => props.selectedIndex, () => {
+  updateMarkerIcons()
 })
 
 // Handle visibility: init map when first becoming visible, resize on re-show
@@ -203,8 +251,30 @@ onUnmounted(() => {
   border: none !important;
 }
 
-:deep(.leaflet-popup-content-wrapper) {
-  border-radius: 12px;
-  padding: 4px;
+:deep(.selected-marker) {
+  z-index: 1000 !important;
+}
+
+:deep(.marker-ping) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(20, 184, 166, 0.3);
+  animation: marker-pulse 2s ease-out infinite;
+}
+
+@keyframes marker-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
 }
 </style>

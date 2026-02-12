@@ -22,26 +22,145 @@
         "hero": {
             "title": "Plan Your Perfect",
             "titleGradient": "Adventure",
-            "subtitle": "Create personalized travel itineraries with AI-powered recommendations. Discover hidden gems and make every trip unforgettable.",
+            "badge": "AI-Powered Travel Planning",
+            "subtitle": "Create stunning travel itineraries in seconds with AI. Discover hidden gems, optimize your budget, and make every trip unforgettable.",
             "searchLabel": "Where do you want to start?",
             "searchPlaceholder": "Paris, London, Tokyo...",
-            "startButton": "Start Planning"
+            "startButton": "Start Planning",
+            "trustFree": "Free to use",
+            "trustAi": "AI-powered",
+            "trustFast": "Ready in 30 seconds",
+            "scroll": "Discover"
+        },
+        "howItWorks": {
+            "badge": "Simple & Fast",
+            "title": "Your Dream Trip in 3 Steps",
+            "subtitle": "From idea to a complete itinerary in under a minute",
+            "step1": {
+                "title": "Choose Your Destination",
+                "description": "Tell us where you want to go, your travel dates, and your preferences. Our AI adapts to your style."
+            },
+            "step2": {
+                "title": "AI Creates Your Itinerary",
+                "description": "Our AI analyzes thousands of possibilities to build a personalized itinerary optimized for your budget and interests."
+            },
+            "step3": {
+                "title": "Explore & Customize",
+                "description": "View your trip on an interactive map, modify activities with AI, and share your itinerary with fellow travelers."
+            }
         },
         "features": {
-            "title": "Why Choose TripWiser?",
+            "badge": "Powerful Features",
+            "title": "Everything You Need to Travel Smart",
+            "subtitle": "Advanced tools designed for travelers who want to make the most of every trip",
             "ai": {
-                "title": "AI-Powered",
-                "description": "Smart itineraries tailored to your unique travel style and preferences."
+                "label": "Artificial Intelligence",
+                "title": "Itineraries That Understand You",
+                "description": "Our AI doesn't just list places. It understands your travel style, optimizes routes, and adapts to your budget to create truly personalized experiences.",
+                "points": [
+                    "Personalized recommendations based on your style",
+                    "Automatic route optimization to save time",
+                    "Real-time modification with AI assistance"
+                ]
             },
-            "save": {
-                "title": "Save Money",
-                "description": "Optimized budget tracking and cost-effective travel recommendations."
+            "maps": {
+                "label": "Interactive Maps",
+                "title": "Visualize Every Detail",
+                "description": "See your entire trip on an interactive map. Each activity is geolocated, routes are optimized, and you can adjust everything with a click.",
+                "points": [
+                    "All your activities on a dynamic map",
+                    "Optimized routes between each stop",
+                    "Move activities between days with drag & drop"
+                ]
             },
-            "share": {
-                "title": "Collaborative",
-                "description": "Plan with friends and family in real-time with shared access."
+            "budget": {
+                "label": "Smart Budget",
+                "title": "Travel Without Financial Surprises",
+                "description": "Track your spending in real-time with automatic cost breakdowns. Our AI recommends alternatives to stay within your budget.",
+                "points": [
+                    "Automatic cost estimation per activity",
+                    "Detailed breakdown: lodging, food, activities, transport",
+                    "Budget-friendly alternative suggestions"
+                ],
+                "mockupLabel": "Total Budget",
+                "accommodation": "Accommodation",
+                "food": "Food & Drinks",
+                "activities": "Activities",
+                "transport": "Transport"
             },
             "exploreButton": "Explore All Features"
+        },
+        "stats": {
+            "title": "Trusted by Travelers Worldwide",
+            "subtitle": "Join a growing community of smart travelers",
+            "users": "Active travelers",
+            "trips": "Trips planned",
+            "countries": "Countries covered",
+            "rating": "Average rating"
+        },
+        "destinations": {
+            "badge": "Popular Destinations",
+            "title": "Get Inspired by Our Travelers",
+            "subtitle": "Discover the most popular destinations and start planning your next adventure"
+        },
+        "testimonials": {
+            "badge": "Testimonials",
+            "title": "Loved by Travelers",
+            "subtitle": "See what our community has to say",
+            "items": [
+                {
+                    "quote": "TripWiser planned my 2-week Japan trip in 30 seconds. The itinerary was better than what I spent hours building manually!",
+                    "name": "Sarah Chen",
+                    "trip": "Tokyo → Kyoto → Osaka",
+                    "initials": "SC",
+                    "avatarBg": "bg-gradient-to-br from-teal-500 to-cyan-500"
+                },
+                {
+                    "quote": "The AI budget tracking saved me over €300 on my Barcelona trip. It suggested amazing free alternatives I never would have found.",
+                    "name": "Marco Rossi",
+                    "trip": "Barcelona, 5 days",
+                    "initials": "MR",
+                    "avatarBg": "bg-gradient-to-br from-indigo-500 to-purple-500"
+                },
+                {
+                    "quote": "I shared the itinerary with my family and we all customized it together. The collaborative features are incredible.",
+                    "name": "Emma Davis",
+                    "trip": "Road trip USA",
+                    "initials": "ED",
+                    "avatarBg": "bg-gradient-to-br from-amber-500 to-orange-500"
+                },
+                {
+                    "quote": "The interactive map made it so easy to visualize our route. We could see exactly how each day would flow.",
+                    "name": "Thomas Müller",
+                    "trip": "Italy tour, 10 days",
+                    "initials": "TM",
+                    "avatarBg": "bg-gradient-to-br from-emerald-500 to-teal-500"
+                },
+                {
+                    "quote": "As a solo traveler, this tool is a game changer. It feels like having a personal travel agent available 24/7.",
+                    "name": "Aisha Patel",
+                    "trip": "Bali & Thailand",
+                    "initials": "AP",
+                    "avatarBg": "bg-gradient-to-br from-pink-500 to-rose-500"
+                },
+                {
+                    "quote": "The export to calendar feature means I always know what's next. It's like having a personal assistant on vacation.",
+                    "name": "Lucas Martin",
+                    "trip": "Greek Islands, 7 days",
+                    "initials": "LM",
+                    "avatarBg": "bg-gradient-to-br from-cyan-500 to-blue-500"
+                }
+            ]
+        },
+        "finalCta": {
+            "title": "Ready to Plan Your Next",
+            "titleHighlight": "Adventure?",
+            "subtitle": "Join thousands of travelers who save hours of planning and discover incredible experiences with AI.",
+            "button": "Start Planning — It's Free",
+            "secondary": "View Pricing",
+            "trust1": "No credit card required",
+            "trust2": "Ready in 30 seconds",
+            "trust3": "Made for travelers"
         },
         "cta": {
             "title": "Ready for your next adventure?",
@@ -52,11 +171,14 @@
         }
     },
     "features": {
+        "badge": "Why TripWiser",
         "hero": {
             "title": "Powerful Features for",
             "titleGradient": "Seamless Travel",
             "subtitle": "Everything you need to plan, organize, and enjoy your perfect trip"
         },
+        "gridTitle": "All the Tools You Need",
+        "gridSubtitle": "From AI planning to budget tracking, every feature is designed to make your travel experience exceptional",
         "list": {
             "ai": {
                 "title": "Smart Itinerary Planning",
@@ -85,15 +207,32 @@
             "recommendations": {
                 "title": "Personalized Recommendations",
                 "description": "Receive suggestions based on your travel history and preferences."
+            },
+            "export": {
+                "title": "PDF & Calendar Export",
+                "description": "Export your itinerary as PDF or sync it directly to your calendar."
             }
+        },
+        "detail": {
+            "label": "Powered by AI",
+            "title": "Intelligence That Understands Your Travel Style",
+            "description": "Our AI goes beyond simple recommendations. It learns your preferences, optimizes routes in real-time, and suggests hidden gems that match your unique travel personality.",
+            "points": [
+                "Learns from your preferences and past trips",
+                "Optimizes routes for time, cost, and experience",
+                "Suggests local hidden gems off the tourist path",
+                "Real-time adjustments based on weather and events"
+            ]
         },
         "cta": {
             "title": "Ready to Experience Effortless Travel Planning?",
+            "subtitle": "Join thousands of travelers who save hours of planning and discover incredible experiences.",
             "startPlanning": "Start Planning",
             "viewPricing": "View Pricing"
         }
     },
     "pricing": {
+        "badge": "Simple Pricing",
         "hero": {
             "title": "Simple,",
             "titleGradient": "Transparent Pricing",
@@ -146,39 +285,56 @@
         },
         "faq": {
             "title": "Frequently Asked Questions",
+            "subtitle": "Everything you need to know about our plans",
             "q1": "Can I cancel my subscription?",
-            "a1": "Yes! You can cancel your subscription at any time from your account settings.",
+            "a1": "Yes! You can cancel your subscription at any time from your account settings. No questions asked.",
             "q2": "Is the free trial really free?",
-            "a2": "Absolutely! You get 14 days of full access to all Pro features with no credit card required."
+            "a2": "Absolutely! You get 14 days of full access to all Pro features with no credit card required.",
+            "q3": "Can I switch plans later?",
+            "a3": "Of course! You can upgrade or downgrade your plan at any time. Changes take effect at the start of your next billing cycle.",
+            "q4": "Do you offer refunds?",
+            "a4": "Yes, we offer a 30-day money-back guarantee on all paid plans. If you're not satisfied, just reach out to our support team."
+        },
+        "cta": {
+            "title": "Start Planning Your Dream Trip Today",
+            "subtitle": "Join thousands of travelers who save hours of planning with TripWiser.",
+            "button": "Get Started Free",
+            "secondary": "Explore Features"
         }
     },
     "about": {
+        "badge": "Our Story",
         "hero": {
-            "title": "About TripWiser",
-            "subtitle": "Making travel planning effortless and enjoyable"
+            "title": "Built by Travelers,",
+            "titleGradient": "For Travelers",
+            "subtitle": "We're on a mission to make travel planning as exciting as the journey itself"
         },
         "mission": {
-            "title": "Our Mission",
+            "badge": "Our Mission",
+            "title": "Making Travel Planning Effortless",
             "description": "We believe travel should be about discovery and enjoyment, not endless planning. TripWiser uses cutting-edge AI to transform trip planning from a chore into an exciting part of your adventure."
         },
         "values": {
+            "badge": "What Drives Us",
             "title": "Our Values",
             "innovation": "Innovation",
             "innovation_desc": "We constantly push the boundaries of what travel technology can accomplish.",
             "quality": "Quality",
             "quality_desc": "Every feature is designed with care and attention to detail.",
             "community": "Community",
-            "community_desc": "We're building more than a product—we're building a community of travelers."
+            "community_desc": "We're building more than a product—we're building a community of travelers.",
+            "accessibility": "Accessibility",
+            "accessibility_desc": "Travel planning should be accessible to everyone, everywhere, in every language."
         },
         "team": {
-            "title": "The Team",
-            "description": "Dedicated professionals working to revolutionize travel.",
+            "title": "The Team Behind TripWiser",
+            "description": "Passionate travelers and builders dedicated to revolutionizing how you plan your adventures.",
             "founding": "Founding Team",
-            "founding_desc": "Travelers & Developers",
+            "founding_desc": "Travelers & developers who turned a vision into reality",
             "design": "Design Team",
-            "design_desc": "Creatives & UX Experts",
+            "design_desc": "Crafting beautiful experiences that feel natural",
             "support": "Support Team",
-            "support_desc": "Always here for you"
+            "support_desc": "Always here to help you plan your perfect trip"
         },
         "stats": {
             "activeUsers": "Active Users",
@@ -186,10 +342,18 @@
             "countries": "Countries Covered"
         },
         "story": {
+            "label": "How It Started",
             "title": "Our Story",
             "p1": "Founded in 2024, TripWiser started as a simple idea: what if planning a trip could be as exciting as taking one? Our founders, passionate travelers themselves, were frustrated with the complexity and time required to plan multi-destination trips.",
             "p2": "After countless spreadsheets, browser tabs, and planning headaches, we decided there had to be a better way. We built TripWiser to be the travel planning companion we always wished we had—smart, collaborative, and beautifully simple.",
             "p3": "Today, TripWiser helps thousands of travelers plan their dream trips, from weekend getaways to round-the-world adventures. We're just getting started."
+        },
+        "cta": {
+            "title": "Ready to Start Your",
+            "titleHighlight": "Journey?",
+            "subtitle": "Join our community of travelers and start planning your next unforgettable adventure.",
+            "button": "Start Planning Free",
+            "secondary": "Explore Features"
         }
     },
     "plan": {
